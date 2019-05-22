@@ -1,2 +1,2 @@
-# tests-app
+# Tests App
 Practice project
