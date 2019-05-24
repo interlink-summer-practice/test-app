@@ -19,7 +19,6 @@ public class Question {
     @Column
     private int mark;
 
-    @Column
     @ManyToOne
     @JoinColumn(name = "topic_id")
     private Topic topic;

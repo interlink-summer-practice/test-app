@@ -11,12 +11,10 @@ public class QuizAnswers {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column
     @ManyToOne
     @JoinColumn(name = "session_id")
     private QuizSession quizSession;
 
-    @Column
     @OneToMany
     @JoinColumn(name = "answer_id")
     private List<Answer> answers;

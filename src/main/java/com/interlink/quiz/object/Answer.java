@@ -13,7 +13,6 @@ public class Answer {
     @Column
     private String name;
 
-    @Column
     @ManyToOne
     @JoinColumn(name = "question_id")
     private Question question;

@@ -10,7 +10,6 @@ public class QuizSession {
     @Column(name = "session_id")
     private String sessionId;
 
-    @Column
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
