@@ -16,6 +16,7 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
+    @Column
     private String email;
 
     @Column(name = "password_hash")
