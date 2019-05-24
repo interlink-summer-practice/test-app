@@ -1,9 +1,6 @@
 package com.interlink.quiz.object;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "quiz_session")
@@ -13,8 +10,10 @@ public class QuizSession {
     @Column(name = "session_id")
     private String sessionId;
 
-    @Column(name = "user_id")
-    private String userId;
+    @Column
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public String getSessionId() {
         return sessionId;
@@ -24,11 +23,11 @@ public class QuizSession {
         this.sessionId = sessionId;
     }
 
-    public String getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 }
