@@ -10,10 +10,13 @@ import java.util.List;
 @Service
 public class QuestionService {
     private final QuestionRepository questionRepository;
+    private final TopicService topicService;
 
     @Autowired
-    public QuestionService(QuestionRepository questionRepository) {
+    public QuestionService(QuestionRepository questionRepository,
+                           TopicService topicService) {
         this.questionRepository = questionRepository;
+        this.topicService = topicService;
     }
 
     public void saveQuestion(Question question) {
@@ -21,7 +24,8 @@ public class QuestionService {
     }
 
     public List<Question> getQuestionFromTopic(String nameOfTopic) {
-        return questionRepository.getQuestionFromTopic(nameOfTopic);
+        Integer topicId = topicService.getTopicByName(nameOfTopic).getId();
+        return questionRepository.getQuestionFromTopic(topicId);
     }
 
     public Question getQuestionByName(String nameOfQuestion) {

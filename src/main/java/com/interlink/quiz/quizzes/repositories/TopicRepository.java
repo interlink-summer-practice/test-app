@@ -1,14 +1,12 @@
 package com.interlink.quiz.quizzes.repositories;
 
 import com.interlink.quiz.object.Topic;
-import com.interlink.quiz.quizzes.rowMappers.TopicRowMapper;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,16 +14,10 @@ import java.util.List;
 @Repository
 public class TopicRepository {
     private final SessionFactory sessionFactory;
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private final TopicRowMapper topicRowMapper;
 
     @Autowired
-    public TopicRepository(SessionFactory sessionFactory,
-                           NamedParameterJdbcTemplate namedParameterJdbcTemplate,
-                           TopicRowMapper topicRowMapper) {
+    public TopicRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-        this.topicRowMapper = topicRowMapper;
     }
 
     public void saveTopic(Topic topic) {
@@ -44,11 +36,12 @@ public class TopicRepository {
     }
 
     public Topic getTopicByName(String nameOfTopic) {
-        try {
-            String sql = "SELECT * FROM topics WHERE name = :name";
-            return namedParameterJdbcTemplate.queryForObject(sql, new MapSqlParameterSource("name", nameOfTopic), topicRowMapper);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        Criteria criteria = session.createCriteria(Topic.class);
+        Topic topic = (Topic) criteria.add(Restrictions.eq("name", nameOfTopic)).uniqueResult();
+        transaction.commit();
+        session.close();
+        return topic;
     }
 }

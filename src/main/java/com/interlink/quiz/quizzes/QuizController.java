@@ -33,9 +33,10 @@ public class QuizController {
     }
 
     @RequestMapping(value = "/{nameOfTopic}", method = RequestMethod.GET)
-    public String getQuestionOfTopic(@PathVariable String nameOfTopic, @RequestParam String nameOfQuestion, Model model) {
+    public String getQuestionOfTopic(@PathVariable String nameOfTopic, Model model) {
+        String nameOfQuestion = "QuestionJava1";
         model.addAttribute("listOfQuestion", questionService.getQuestionFromTopic(nameOfTopic));
-        model.addAttribute("listOfAnswer", answerService.getAnswerFromQuestion(nameOfTopic, nameOfQuestion));
+//        model.addAttribute("listOfAnswer", answerService.getAnswerFromQuestion(nameOfTopic, nameOfQuestion));
         return "test.html";
     }
 }
