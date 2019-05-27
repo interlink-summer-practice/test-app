@@ -47,11 +47,10 @@ public class ApplicationConfig {
     @Bean
     public HikariDataSource dataSource() {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:postgresql://localhost:5432/tests");
+        config.setJdbcUrl("jdbc:postgresql://localhost:5432/interlink");
         config.setUsername("postgres");
-        config.setPassword("123456");
+        config.setPassword("1111");
         config.setDriverClassName("org.postgresql.Driver");
-
         return new HikariDataSource(config);
     }
 
@@ -72,7 +71,6 @@ public class ApplicationConfig {
                 .locations("/db/migration/")
                 .load();
         flyway.migrate();
-
         return flyway;
     }
 }
