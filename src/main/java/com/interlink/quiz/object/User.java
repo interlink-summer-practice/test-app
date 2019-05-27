@@ -61,4 +61,29 @@ public class User {
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || this.getClass() != obj.getClass()) return false;
+
+        User user = (User) obj;
+
+        if (id != user.getId()) return false;
+        if (!firstName.equals(user.getFirstName())) return false;
+        if (!lastName.equals(user.getLastName())) return false;
+        if (!email.equals(user.getEmail())) return false;
+
+        return passwordHash.equals(user.getPasswordHash());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + firstName.hashCode();
+        result = 31 * result + lastName.hashCode();
+        result = 31 * result + email.hashCode();
+        result = 31 * result + passwordHash.hashCode();
+        return result;
+    }
 }
