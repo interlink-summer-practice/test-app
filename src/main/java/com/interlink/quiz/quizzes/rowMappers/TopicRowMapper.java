@@ -1,4 +1,4 @@
-package com.interlink.quiz.test.rowMapper;
+package com.interlink.quiz.quizzes.rowMappers;
 
 import com.interlink.quiz.object.Topic;
 import org.springframework.jdbc.core.RowMapper;

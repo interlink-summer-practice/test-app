@@ -14,9 +14,15 @@
     </tr>
     <tr th:each="question: ${listOfQuestion}">
         <td th:text="${question.id}"></td>
-        <td th:text="${question.name}"></td>
+        <td th:text="${question.name}" th:name="${nameOfQuestion}"></td>
         <td th:text="${question.difficulty}"></td>
         <td th:text="${question.mark}"></td>
+    </tr>
+    <tr th:each="answer: ${listOfAnswer}">
+        <td th:text="${answer.id}"></td>
+        <td th:text="${answer.name}"></td>
+        <td th:text="${answer.question}"></td>
+        <td th:text="${answer.right}"></td>
     </tr>
 </table>
 </body>
