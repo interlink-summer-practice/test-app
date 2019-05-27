@@ -20,7 +20,7 @@ public class ApplicationConfig {
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
-        sessionFactory.setPackagesToScan("com.interlink.quiz.object");
+        sessionFactory.setPackagesToScan("com.interlink.quiz");
         sessionFactory.setHibernateProperties(hibernateProperties());
 
         return sessionFactory;
