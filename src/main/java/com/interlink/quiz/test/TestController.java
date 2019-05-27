@@ -19,13 +19,13 @@ public class TestController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String getPage(Model model) {
-        model.addAttribute("list", testService.listTopics());
+        model.addAttribute("listOfTopic", testService.listTopics());
         return "index.html";
     }
 
     @RequestMapping(value = "/{titleOfTopic}", method = RequestMethod.GET)
     public String getFirstTest(@PathVariable String titleOfTopic, Model model) {
-        model.addAttribute("list", testService.getTopic(titleOfTopic));
-        return "index.html";
+        model.addAttribute("listOfQuestion", testService.getQuestionFromTopic(titleOfTopic));
+        return "test.html";
     }
 }

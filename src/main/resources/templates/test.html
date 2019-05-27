@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+</head>
+<body>
+<table>
+    <tr>
+        <th>id</th>
+        <th>question</th>
+        <th>difficult</th>
+        <th>mark</th>
+    </tr>
+    <tr th:each="question: ${listOfQuestion}">
+        <td th:text="${question.id}"></td>
+        <td th:text="${question.name}"></td>
+        <td th:text="${question.difficulty}"></td>
+        <td th:text="${question.mark}"></td>
+    </tr>
+</table>
+</body>
+</html>

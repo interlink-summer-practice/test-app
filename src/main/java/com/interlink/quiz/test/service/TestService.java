@@ -34,7 +34,7 @@ public class TestService {
         return testRepository.listTopics();
     }
 
-    public List<Topic> getTopic(String nameOfTopic) {
-        return testRepository.getTopic(nameOfTopic);
+    public List<Question> getQuestionFromTopic(String nameOfTopic) {
+        return testRepository.getQuestionFromTopic(nameOfTopic);
     }
 }

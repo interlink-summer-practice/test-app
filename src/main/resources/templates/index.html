@@ -5,15 +5,15 @@
     <title>Tests</title>
 </head>
 <body>
-<h1>Added to db!</h1>
+<h1>Tests for choice</h1>
 <table>
     <tr>
         <th>id</th>
         <th>name</th>
     </tr>
-    <tr th:each="topics: ${list}">
-        <td th:text="${topics.id}"></td>
-        <td th:text="${topics.name}"></td>
+    <tr th:each="topic: ${listOfTopic}">
+        <td th:text="${topic.id}"></td>
+        <td><a th:href="@{${topic.name}}" th:text="${topic.name}"></a></td>
     </tr>
 </table>
 </body>
