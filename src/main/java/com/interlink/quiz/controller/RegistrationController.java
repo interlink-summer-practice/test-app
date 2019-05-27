@@ -21,7 +21,6 @@ public class RegistrationController {
     @PostMapping("/registration")
     @ResponseBody
     public String register(@RequestBody UserRegistrationForm userRegistrationForm) {
-        System.out.println(userRegistrationForm);
         userService.register(userRegistrationForm);
 
         return "OK";
