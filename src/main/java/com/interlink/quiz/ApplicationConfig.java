@@ -47,9 +47,9 @@ public class ApplicationConfig {
     @Bean
     public HikariDataSource dataSource() {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:postgresql://localhost:5432/tests");
+        config.setJdbcUrl("jdbc:postgresql://localhost:5432/quizes");
         config.setUsername("postgres");
-        config.setPassword("123456");
+        config.setPassword("m1a1d1r1i1d1S4");
         config.setDriverClassName("org.postgresql.Driver");
 
         return new HikariDataSource(config);
