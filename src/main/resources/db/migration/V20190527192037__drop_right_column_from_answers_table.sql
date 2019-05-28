@@ -1,0 +1,1 @@
+alter table answers drop column "right";
