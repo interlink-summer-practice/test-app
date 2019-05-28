@@ -1,11 +1,10 @@
 package com.interlink.quiz.object;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "quiz_answers")
-public class QuizAnswers {
+public class QuizAnswer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,9 +14,13 @@ public class QuizAnswers {
     @JoinColumn(name = "session_id")
     private QuizSession quizSession;
 
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "answer_id")
-    private List<Answer> answers;
+    private Answer answer;
+
+    @ManyToOne
+    @JoinColumn(name = "question_id")
+    private Question question;
 
     public int getId() {
         return id;
@@ -35,11 +38,19 @@ public class QuizAnswers {
         this.quizSession = quizSession;
     }
 
-    public List<Answer> getAnswers() {
-        return answers;
+    public Answer getAnswer() {
+        return answer;
     }
 
-    public void setAnswers(List<Answer> answers) {
-        this.answers = answers;
+    public void setAnswer(Answer answer) {
+        this.answer = answer;
+    }
+
+    public Question getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
     }
 }
