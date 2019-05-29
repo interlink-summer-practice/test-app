@@ -25,8 +25,8 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
+    testImplementation 'org.springframework.boot:spring-boot-starter-quizzes'
+    
     compile group: 'org.flywaydb', name: 'flyway-core', version: '5.2.4'
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.5'
     compile group: 'com.zaxxer', name: 'HikariCP', version: '3.3.0'

@@ -29,20 +29,4 @@ public class QuizSession {
     public void setUser(User user) {
         this.user = user;
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-
-        QuizSession quizSession = (QuizSession) obj;
-        return sessionId.equals(quizSession.getSessionId());
-    }
-
-    @Override
-    public int hashCode() {
-        int result = sessionId.hashCode();
-        result = 31 * result + user.hashCode();
-        return result;
-    }
 }

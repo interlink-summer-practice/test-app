@@ -22,7 +22,6 @@ public class ApplicationConfig {
         sessionFactory.setDataSource(dataSource());
         sessionFactory.setPackagesToScan("com.interlink.quiz");
         sessionFactory.setHibernateProperties(hibernateProperties());
-
         return sessionFactory;
     }
 
@@ -40,7 +39,6 @@ public class ApplicationConfig {
                 "hibernate.ddl-auto", "create-drop");
         hibernateProperties.setProperty(
                 "hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-
         return hibernateProperties;
     }
 
@@ -51,7 +49,6 @@ public class ApplicationConfig {
         config.setUsername("postgres");
         config.setPassword("123456");
         config.setDriverClassName("org.postgresql.Driver");
-
         return new HikariDataSource(config);
     }
 
@@ -62,7 +59,6 @@ public class ApplicationConfig {
                 .locations("/db/migration/")
                 .load();
         flyway.migrate();
-
         return flyway;
     }
 
