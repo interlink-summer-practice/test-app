@@ -44,7 +44,7 @@ public class QuizAnswerRepository {
                         "   t, " +
                         "   SUM(CASE WHEN qa.quizSession = :quizSession THEN 1 ELSE 0 END )," +
                         "   SUM(CASE WHEN qa.quizSession = :quizSession AND qa.answer = q.rightAnswer THEN 1 ELSE 0 END ))" +
-                        "FROM QuizAnswer qa ORDER BY DESC, LIMIT 1", QuizResult.class);
+                        "FROM QuizAnswer qa WHERE qa.quizSession = :quizSession ORDER BY DESC", QuizResult.class);
         query.setParameter("quizSession", quizSession);
         return query.list();
     }
