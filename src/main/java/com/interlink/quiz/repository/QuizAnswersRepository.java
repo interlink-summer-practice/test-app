@@ -1,8 +1,14 @@
 package com.interlink.quiz.repository;
 
+import com.interlink.quiz.object.QuizAnswer;
+import com.interlink.quiz.object.QuizSession;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class QuizAnswersRepository {
@@ -12,5 +18,18 @@ public class QuizAnswersRepository {
     @Autowired
     public QuizAnswersRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
+    }
+
+    public void saveQuizAnswer(QuizAnswer quizAnswer) {
+        Session session = sessionFactory.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        session.save(quizAnswer);
+        transaction.commit();
+    }
+
+    public List<QuizAnswer> getAnswersByQuizSession(QuizSession quizSession) {
+        return sessionFactory.getCurrentSession()
+                .createQuery("from QuizAnswer where quiz_session_id = :quiz_session_id", QuizAnswer.class)
+                .setParameter("quiz_session_id", quizSession.getId()).list();
     }
 }

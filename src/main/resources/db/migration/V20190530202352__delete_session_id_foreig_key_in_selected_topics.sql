@@ -1,0 +1,2 @@
+alter table selected_topics drop constraint selected_topics_quiz_session_session_id_fk;
+

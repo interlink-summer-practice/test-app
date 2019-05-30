@@ -1,5 +1,6 @@
 package com.interlink.quiz.service;
 
+import com.interlink.quiz.object.QuizAnswer;
 import com.interlink.quiz.repository.QuizAnswersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,5 +13,9 @@ public class QuizAnswersService {
     @Autowired
     public QuizAnswersService(QuizAnswersRepository quizAnswersRepository) {
         this.quizAnswersRepository = quizAnswersRepository;
+    }
+
+    public void saveQuizAnswer(QuizAnswer quizAnswer) {
+        quizAnswersRepository.saveQuizAnswer(quizAnswer);
     }
 }

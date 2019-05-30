@@ -11,7 +11,7 @@ public class QuizAnswer {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "session_id")
+    @JoinColumn(name = "quiz_session_id")
     private QuizSession quizSession;
 
     @ManyToOne
