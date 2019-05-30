@@ -1,4 +1,4 @@
-package com.interlink.quiz.contoller;
+package com.interlink.quiz.controller;
 
 import com.interlink.quiz.object.QuizResult;
 import com.interlink.quiz.object.QuizSession;
