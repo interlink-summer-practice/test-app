@@ -26,4 +26,12 @@ public class QuizAnswerService {
                         qr.getNumberOfCorrectAnswers() * 100.0 / qr.getNumberOfAnswers()))
                 .collect(Collectors.toList());
     }
+
+    public List<QuizResult> getPercentRightQuizAnswer(QuizSession quizSession) {
+        return quizAnswerRepository.getPercentRightQuizAnswer(quizSession)
+                .stream()
+                .peek(qr -> qr.setResult(
+                        qr.getNumberOfCorrectAnswers() * 100.0 / qr.getNumberOfAnswers()))
+                .collect(Collectors.toList());
+    }
 }

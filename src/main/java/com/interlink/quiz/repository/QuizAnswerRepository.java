@@ -36,4 +36,16 @@ public class QuizAnswerRepository {
         query.setParameter("quizSession", quizSession);
         return query.list();
     }
+
+    public List<QuizResult> getPercentRightQuizAnswer(QuizSession quizSession) {
+        Session session = sessionFactory.getCurrentSession();
+        Query<QuizResult> query = session
+                .createQuery("SELECT NEW com.interlink.quiz.object.QuizResult (" +
+                        "   t, " +
+                        "   SUM(CASE WHEN qa.quizSession = :quizSession THEN 1 ELSE 0 END )," +
+                        "   SUM(CASE WHEN qa.quizSession = :quizSession AND qa.answer = q.rightAnswer THEN 1 ELSE 0 END ))" +
+                        "FROM QuizAnswer qa ORDER BY DESC, LIMIT 1", QuizResult.class);
+        query.setParameter("quizSession", quizSession);
+        return query.list();
+    }
 }

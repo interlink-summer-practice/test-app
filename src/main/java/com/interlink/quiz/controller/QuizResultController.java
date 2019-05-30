@@ -1,4 +1,4 @@
-package com.interlink.quiz.contoller;
+package com.interlink.quiz.controller;
 
 import com.interlink.quiz.object.QuizResult;
 import com.interlink.quiz.object.QuizSession;
@@ -12,7 +12,6 @@ import java.util.List;
 
 @RestController
 public class QuizResultController {
-
     private final QuizAnswerService quizAnswerService;
 
     @Autowired
@@ -22,7 +21,12 @@ public class QuizResultController {
 
 
     @GetMapping("/result")
-    public List<QuizResult> getQuizResult(@RequestBody QuizSession quizSession) {
+    public List<QuizResult> getQuizResultByTopic(@RequestBody QuizSession quizSession) {
         return quizAnswerService.getQuizAnswersBySession(quizSession);
+    }
+
+    @GetMapping("/resultForLastTest")
+    public List<QuizResult> getQuizResultByLastTest(@RequestBody QuizSession quizSession){
+        return quizAnswerService.getPercentRightQuizAnswer(quizSession);
     }
 }
