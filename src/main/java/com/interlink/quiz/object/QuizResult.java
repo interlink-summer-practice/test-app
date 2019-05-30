@@ -9,6 +9,11 @@ public class QuizResult {
 
     public QuizResult() { }
 
+    public QuizResult(long numberOfAnswers, long numberOfCorrectAnswers) {
+        this.numberOfAnswers = numberOfAnswers;
+        this.numberOfCorrectAnswers = numberOfCorrectAnswers;
+    }
+
     public QuizResult(Topic topic, long numberOfAnswers, long numberOfCorrectAnswers) {
         this.topic = topic;
         this.numberOfAnswers = numberOfAnswers;

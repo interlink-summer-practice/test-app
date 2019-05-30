@@ -26,7 +26,7 @@ public class QuizResultController {
     }
 
     @GetMapping("/resultForLastTest")
-    public List<QuizResult> getQuizResultByLastTest(@RequestBody QuizSession quizSession){
+    public QuizResult getQuizResultByLastTest(@RequestBody QuizSession quizSession){
         return quizAnswerService.getPercentRightQuizAnswer(quizSession);
     }
 }
