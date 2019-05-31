@@ -19,7 +19,7 @@ public class QuizController {
 
     @GetMapping("/import")
     public void saveQuizFromCsvFile() {
-        File file = new File("C:\\test.csv");
+        File file = new File("E:\\test.csv");
         csvParserService.parseCsvFileToDataBase(file);
     }
 }
