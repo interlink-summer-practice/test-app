@@ -1,11 +1,9 @@
 package com.interlink.quiz.repository;
 
 import com.interlink.quiz.object.Topic;
-import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -29,19 +27,15 @@ public class TopicRepository {
     }
 
     public List<Topic> getTopics() {
-        Session session = sessionFactory.getCurrentSession();
-        Transaction transaction = session.beginTransaction();
-        List<Topic> topics = (List<Topic>) session.createQuery("FROM Topic").list();
-        transaction.commit();
-        return topics;
+        return sessionFactory.getCurrentSession()
+                .createQuery("FROM Topic", Topic.class)
+                .list();
     }
 
-    public Topic getTopicByName(String nameOfTopic) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        Criteria criteria = session.createCriteria(Topic.class);
-        Topic topic = (Topic) criteria.add(Restrictions.eq("name", nameOfTopic)).uniqueResult();
-        transaction.commit();
-        session.close();
-        return topic;
-    }}
+    public Topic getTopicByName(String name) {
+        sessionFactory.getCurrentSession()
+                .createQuery("from Topic where lower(name) = lower(:name)", Topic.class)
+                .setParameter("name", name)
+                .uniqueResult();
+    }
+}

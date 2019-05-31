@@ -8,8 +8,6 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public class AnswerRepository {
 
@@ -27,16 +25,10 @@ public class AnswerRepository {
         transaction.commit();
     }
 
-    public List<Answer> getAnswerFromQuestion(Integer questionId, Integer topicId) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        String sql = "FROM Answer AS a, Question AS q WHERE a.question_id = :question_id AND q.topic_id = :topic_id";
-        Query<Answer> query = session.createQuery(sql);
-        query.setParameter("question_id", questionId);
-        query.setParameter("topic_id", topicId);
-        List<Answer> topics = query.list();
-        transaction.commit();
-        session.close();
-        return topics;
+    public Answer getAnswerByName(String name) {
+        Session session = sessionFactory.getCurrentSession();
+        Query<Answer> query = session.createQuery("from Answer where lower(name) = :name", Answer.class);
+        query.setParameter("name", name);
+        return query.uniqueResult();
     }
 }

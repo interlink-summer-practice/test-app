@@ -3,11 +3,9 @@ package com.interlink.quiz.repository;
 import com.interlink.quiz.object.Question;
 import com.interlink.quiz.object.QuizSession;
 import com.interlink.quiz.object.Topic;
-import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -24,15 +22,23 @@ public class QuestionRepository {
         this.sessionFactory = sessionFactory;
     }
 
+    public void saveQuestion(Question question) {
+        Session session = sessionFactory.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        session.save(question);
+        transaction.commit();
+    }
+
     public List<Question> getQuestionsByTopic(Topic topic) {
-        Query<Question> query = sessionFactory.getCurrentSession()
-                .createQuery("FROM Question WHERE topic = :topic", Question.class);
-        query.setParameter("topic", topic);
-        return query.list();
+        return sessionFactory.getCurrentSession()
+                .createQuery("FROM Question WHERE topic = :topic", Question.class)
+                .setParameter("topic", topic)
+                .list();
     }
 
     public List<Question> getNotPassedQuestionsByTopic(Topic topic, QuizSession quizSession) {
-        return sessionFactory.getCurrentSession().createNativeQuery("" +
+        return sessionFactory.getCurrentSession()
+                .createNativeQuery("" +
                 "SELECT q.* " +
                 "FROM questions q " +
                 "       LEFT JOIN topics t on q.topic_id = t.id " +

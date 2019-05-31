@@ -1,5 +1,6 @@
 package com.interlink.quiz.controller;
 
+import com.interlink.quiz.csv.CsvParserService;
 import com.interlink.quiz.object.QuizAnswer;
 import com.interlink.quiz.object.Topic;
 import com.interlink.quiz.object.dto.QuestionsDto;
@@ -9,12 +10,10 @@ import com.interlink.quiz.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.util.List;
 
 @RestController
@@ -23,15 +22,17 @@ public class QuizController {
     private final TopicService topicService;
     private final QuestionService questionService;
     private final QuizAnswersService quizAnswersService;
+    private final CsvParserService csvParserService;
 
     @Autowired
     public QuizController(TopicService topicService,
                           QuestionService questionService,
-                          QuizAnswersService quizAnswersService) {
+                          QuizAnswersService quizAnswersService, CsvParserService csvParserService) {
 
         this.topicService = topicService;
         this.questionService = questionService;
         this.quizAnswersService = quizAnswersService;
+        this.csvParserService = csvParserService;
     }
 
     @GetMapping("/get_topics")
@@ -52,5 +53,10 @@ public class QuizController {
         quizAnswersService.saveQuizAnswer(quizAnswer);
 
         return "OK";
+    }
+
+    @GetMapping("/import")
+    public void saveQuizFromCsvFile(@RequestBody File file) {
+        csvParserService.parseCsvFileToDataBase(file);
     }
 }
