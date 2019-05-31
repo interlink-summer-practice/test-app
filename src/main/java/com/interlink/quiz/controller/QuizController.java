@@ -5,7 +5,7 @@ import com.interlink.quiz.object.QuizAnswer;
 import com.interlink.quiz.object.Topic;
 import com.interlink.quiz.object.dto.QuestionsDto;
 import com.interlink.quiz.service.QuestionService;
-import com.interlink.quiz.service.QuizAnswersService;
+import com.interlink.quiz.service.QuizAnswerService;
 import com.interlink.quiz.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,17 +21,17 @@ public class QuizController {
 
     private final TopicService topicService;
     private final QuestionService questionService;
-    private final QuizAnswersService quizAnswersService;
+    private final QuizAnswerService quizAnswerService;
     private final CsvParserService csvParserService;
 
     @Autowired
     public QuizController(TopicService topicService,
                           QuestionService questionService,
-                          QuizAnswersService quizAnswersService, CsvParserService csvParserService) {
-
+                          QuizAnswerService quizAnswerService,
+                          CsvParserService csvParserService) {
         this.topicService = topicService;
         this.questionService = questionService;
-        this.quizAnswersService = quizAnswersService;
+        this.quizAnswerService = quizAnswerService;
         this.csvParserService = csvParserService;
     }
 
@@ -50,7 +50,7 @@ public class QuizController {
 
     @PostMapping("/save_quiz_answer")
     public String saveQuizAnswer(@RequestParam QuizAnswer quizAnswer) {
-        quizAnswersService.saveQuizAnswer(quizAnswer);
+        quizAnswerService.saveQuizAnswer(quizAnswer);
 
         return "OK";
     }

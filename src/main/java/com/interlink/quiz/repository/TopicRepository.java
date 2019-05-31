@@ -33,7 +33,7 @@ public class TopicRepository {
     }
 
     public Topic getTopicByName(String name) {
-        sessionFactory.getCurrentSession()
+        return sessionFactory.getCurrentSession()
                 .createQuery("from Topic where lower(name) = lower(:name)", Topic.class)
                 .setParameter("name", name)
                 .uniqueResult();

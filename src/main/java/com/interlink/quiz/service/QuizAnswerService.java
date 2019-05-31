@@ -1,5 +1,6 @@
 package com.interlink.quiz.service;
 
+import com.interlink.quiz.object.QuizAnswer;
 import com.interlink.quiz.object.QuizResult;
 import com.interlink.quiz.object.QuizSession;
 import com.interlink.quiz.repository.QuizAnswerRepository;
@@ -17,6 +18,10 @@ public class QuizAnswerService {
     @Autowired
     public QuizAnswerService(QuizAnswerRepository quizAnswerRepository) {
         this.quizAnswerRepository = quizAnswerRepository;
+    }
+
+    public void saveQuizAnswer(QuizAnswer quizAnswer) {
+        quizAnswerRepository.saveQuizAnswer(quizAnswer);
     }
 
     public List<QuizResult> getQuizAnswersBySession(QuizSession quizSession) {

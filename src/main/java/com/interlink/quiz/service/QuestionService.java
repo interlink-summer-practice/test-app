@@ -1,9 +1,12 @@
 package com.interlink.quiz.service;
 
-import com.interlink.quiz.object.*;
+import com.interlink.quiz.object.Question;
+import com.interlink.quiz.object.QuizAnswer;
+import com.interlink.quiz.object.QuizSession;
+import com.interlink.quiz.object.Topic;
 import com.interlink.quiz.object.dto.QuestionsDto;
 import com.interlink.quiz.repository.QuestionRepository;
-import com.interlink.quiz.repository.QuizAnswersRepository;
+import com.interlink.quiz.repository.QuizAnswerRepository;
 import com.interlink.quiz.repository.QuizSessionRepository;
 import com.interlink.quiz.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,18 +27,18 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
     private final QuizSessionRepository quizSessionRepository;
-    private final QuizAnswersRepository quizAnswersRepository;
+    private final QuizAnswerRepository quizAnswerRepository;
 
     @Autowired
     public QuestionService(QuestionRepository questionRepository,
                            UserRepository userRepository,
                            QuizSessionRepository quizSessionRepository,
-                           QuizAnswersRepository quizAnswersRepository) {
+                           QuizAnswerRepository quizAnswerRepository) {
 
         this.questionRepository = questionRepository;
         this.userRepository = userRepository;
         this.quizSessionRepository = quizSessionRepository;
-        this.quizAnswersRepository = quizAnswersRepository;
+        this.quizAnswerRepository = quizAnswerRepository;
     }
 
     public QuestionsDto getQuestions(Topic[] topicsArray,
@@ -57,7 +60,7 @@ public class QuestionService {
                     quizSession.setDate(LocalDateTime.now().toString());
 
                     quizSessionRepository.updateQuizSession(quizSession);
-                    quizAnswersRepository.deleteQuizAnswersByQuizSession(quizSession);
+                    quizAnswerRepository.deleteQuizAnswersByQuizSession(quizSession);
 
                     questionsDto.setQuizSession(quizSession);
                     questionsDto.setQuestions(getQuestionsByTopics(topics));
@@ -121,7 +124,7 @@ public class QuestionService {
 
     private boolean isDoneQuiz(List<Topic> topics, QuizSession quizSession) {
         List<Question> questionsByTopics = getQuestionsByTopics(topics);
-        List<QuizAnswer> answers = quizAnswersRepository.getAnswersByQuizSession(quizSession);
+        List<QuizAnswer> answers = quizAnswerRepository.getAnswersByQuizSession(quizSession);
         Set<Question> questions = answers.stream().map(QuizAnswer::getQuestion).collect(Collectors.toSet());
         return questionsByTopics.size() == questions.size();
     }

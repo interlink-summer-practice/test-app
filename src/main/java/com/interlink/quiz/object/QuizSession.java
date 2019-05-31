@@ -7,7 +7,6 @@ import java.util.List;
 @Table(name = "quiz_session")
 public class QuizSession {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
