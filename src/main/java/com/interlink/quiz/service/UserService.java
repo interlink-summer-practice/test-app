@@ -36,6 +36,10 @@ public class UserService {
         roleRepository.addRoleToUser(userRole);
     }
 
+    public User getUserByEmail(String email) {
+        return userRepository.getUserByEmail(email);
+    }
+
     private User createUser(UserRegistrationForm userRegistrationForm) {
         User user = new User();
         user.setFirstName(userRegistrationForm.getFirstName());

@@ -27,6 +27,13 @@ public class QuizSessionRepository {
         transaction.commit();
     }
 
+    public void updateQuizSession(QuizSession quizSession) {
+        Session session = sessionFactory.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        session.update(quizSession);
+        transaction.commit();
+    }
+
     public List<QuizSession> getQuizSessionBySessionId(String sessionId) {
         return sessionFactory.getCurrentSession()
                 .createQuery("from QuizSession where session_id = :session_id", QuizSession.class)
@@ -36,15 +43,8 @@ public class QuizSessionRepository {
 
     public List<QuizSession> getQuizSessionsByUserId(User user) {
         return sessionFactory.getCurrentSession()
-                .createQuery("from QuizSession where user = :user", QuizSession.class)
-                .setParameter("user", user)
+                .createQuery("from QuizSession qs where qs.user.id = :userId", QuizSession.class)
+                .setParameter("userId", user.getId())
                 .list();
-    }
-
-    public void updateQuizSession(QuizSession quizSession) {
-        Session session = sessionFactory.getCurrentSession();
-        Transaction transaction = session.beginTransaction();
-        session.update(quizSession);
-        transaction.commit();
     }
 }

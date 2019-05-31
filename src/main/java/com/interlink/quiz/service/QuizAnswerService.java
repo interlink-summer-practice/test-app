@@ -23,18 +23,4 @@ public class QuizAnswerService {
     public void saveQuizAnswer(QuizAnswer quizAnswer) {
         quizAnswerRepository.saveQuizAnswer(quizAnswer);
     }
-
-    public List<QuizResult> getQuizAnswersBySession(QuizSession quizSession) {
-        return quizAnswerRepository.getQuizAnswersBySession(quizSession)
-                .stream()
-                .peek(qr -> qr.setResult(
-                        qr.getNumberOfCorrectAnswers() * 100.0 / qr.getNumberOfAnswers()))
-                .collect(Collectors.toList());
-    }
-
-    public QuizResult getPercentRightQuizAnswer(QuizSession quizSession) {
-        QuizResult quizResult = quizAnswerRepository.getPercentRightQuizAnswer(quizSession);
-        quizResult.setResult(quizResult.getNumberOfCorrectAnswers() * 100.0 / quizResult.getNumberOfAnswers());
-        return quizResult;
-    }
 }
