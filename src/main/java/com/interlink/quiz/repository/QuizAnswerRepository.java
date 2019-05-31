@@ -12,7 +12,6 @@ import java.util.List;
 
 @Repository
 public class QuizAnswerRepository {
-
     private final SessionFactory sessionFactory;
 
     @Autowired
@@ -41,10 +40,11 @@ public class QuizAnswerRepository {
         Session session = sessionFactory.getCurrentSession();
         Query<QuizResult> query = session
                 .createQuery("SELECT NEW com.interlink.quiz.object.QuizResult (" +
-                        "   SUM(CASE WHEN qa.quizSession = :quizSession THEN 1 ELSE 0 END )," +
-                        "   SUM(CASE WHEN qa.quizSession = :quizSession AND qa.answer = q.rightAnswer THEN 1 ELSE 0 END ))" +
-                        "FROM QuizAnswer qa WHERE qa.quizSession = :quizSession ORDER BY DESC", QuizResult.class);
-        query.setParameter("quizSession", quizSession);
+                        "SUM(CASE WHEN qa.quizSession = :quizSession THEN 1 ELSE 0 END )," +
+                        "SUM(CASE WHEN qa.quizSession = :quizSession AND qa.answer = q.rightAnswer THEN 1 ELSE 0 END ))" +
+                        "from QuizAnswer qa " +
+                        "       left join Question q on qa.question.id = q.id " +
+                        "GROUP BY qa.quizSession ORDER BY qa.quizSession DESC", QuizResult.class).setParameter("quizSession", quizSession);
         return query.getSingleResult();
     }
 }

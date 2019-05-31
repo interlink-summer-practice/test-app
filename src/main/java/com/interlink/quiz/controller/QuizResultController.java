@@ -2,6 +2,7 @@ package com.interlink.quiz.controller;
 
 import com.interlink.quiz.object.QuizResult;
 import com.interlink.quiz.object.QuizSession;
+import com.interlink.quiz.object.User;
 import com.interlink.quiz.service.QuizAnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

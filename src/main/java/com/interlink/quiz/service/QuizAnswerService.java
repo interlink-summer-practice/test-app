@@ -28,7 +28,7 @@ public class QuizAnswerService {
     }
 
     public QuizResult getPercentRightQuizAnswer(QuizSession quizSession) {
-        QuizResult quizResult = quizAnswerRepository.getPercentRightQuizAnswer(quizSession);
+        QuizResult quizResult = new QuizResult();
         double number = quizResult.getNumberOfCorrectAnswers() * 100.0 / quizResult.getNumberOfAnswers();
         quizResult.setResult(number);
         return quizAnswerRepository.getPercentRightQuizAnswer(quizSession);
