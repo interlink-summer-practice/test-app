@@ -1,6 +1,7 @@
 package com.interlink.quiz.repository;
 
 import com.interlink.quiz.object.QuizSession;
+import com.interlink.quiz.object.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -31,5 +32,19 @@ public class QuizSessionRepository {
                 .createQuery("from QuizSession where session_id = :session_id", QuizSession.class)
                 .setParameter("session_id", sessionId)
                 .list();
+    }
+
+    public List<QuizSession> getQuizSessionsByUserId(User user) {
+        return sessionFactory.getCurrentSession()
+                .createQuery("from QuizSession where user = :user", QuizSession.class)
+                .setParameter("user", user)
+                .list();
+    }
+
+    public void updateQuizSession(QuizSession quizSession) {
+        Session session = sessionFactory.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        session.update(quizSession);
+        transaction.commit();
     }
 }

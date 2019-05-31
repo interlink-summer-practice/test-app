@@ -32,4 +32,13 @@ public class QuizAnswersRepository {
                 .createQuery("from QuizAnswer where quiz_session_id = :quiz_session_id", QuizAnswer.class)
                 .setParameter("quiz_session_id", quizSession.getId()).list();
     }
+
+    public void deleteQuizAnswersByQuizSession(QuizSession quizSession) {
+        Session session = sessionFactory.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        session.createQuery("delete from QuizAnswer where quizSession = :quizSession")
+                .setParameter("quizSession", quizSession)
+                .executeUpdate();
+        transaction.commit();
+    }
 }

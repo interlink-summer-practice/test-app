@@ -1,8 +1,8 @@
 package com.interlink.quiz.controller;
 
-import com.interlink.quiz.object.Question;
 import com.interlink.quiz.object.QuizAnswer;
 import com.interlink.quiz.object.Topic;
+import com.interlink.quiz.object.dto.QuestionsDto;
 import com.interlink.quiz.service.QuestionService;
 import com.interlink.quiz.service.QuizAnswersService;
 import com.interlink.quiz.service.TopicService;
@@ -40,9 +40,9 @@ public class QuizController {
     }
 
     @GetMapping("/get_questions")
-    public List<Question> getQuestions(@RequestParam Topic[] topics,
-                                       @AuthenticationPrincipal UserDetails userDetails,
-                                       HttpSession httpSession) {
+    public QuestionsDto getQuestions(@RequestParam Topic[] topics,
+                                     @AuthenticationPrincipal UserDetails userDetails,
+                                     HttpSession httpSession) {
 
         return questionService.getQuestions(topics, userDetails, httpSession);
     }
