@@ -1,14 +1,13 @@
 package com.interlink.quiz.controller;
 
-import com.interlink.quiz.object.UserRegistrationForm;
+import com.interlink.quiz.object.UserDto;
 import com.interlink.quiz.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class RegistrationController {
 
     private final UserService userService;
@@ -19,9 +18,8 @@ public class RegistrationController {
     }
 
     @PostMapping("/registration")
-    @ResponseBody
-    public String register(@RequestBody UserRegistrationForm userRegistrationForm) {
-        userService.register(userRegistrationForm);
+    public String register(@RequestBody UserDto userDto) {
+        userService.register(userDto);
 
         return "OK";
     }

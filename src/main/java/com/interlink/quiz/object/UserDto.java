@@ -1,12 +1,10 @@
 package com.interlink.quiz.object;
 
-public class UserRegistrationForm {
+public class UserDto {
 
     private String firstName;
     private String lastName;
-
     private String email;
-
     private String password;
     private String passwordConfirmation;
 

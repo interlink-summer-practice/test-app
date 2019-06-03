@@ -35,12 +35,12 @@ public class QuizController {
         this.csvParserService = csvParserService;
     }
 
-    @GetMapping("/get_topics")
+    @GetMapping("/get/topics")
     public List<Topic> getTopics() {
         return topicService.getTopics();
     }
 
-    @GetMapping("/get_questions")
+    @GetMapping("/get/questions")
     public QuestionsDto getQuestions(@RequestParam Topic[] topics,
                                      @AuthenticationPrincipal UserDetails userDetails,
                                      HttpSession httpSession) {
@@ -48,7 +48,7 @@ public class QuizController {
         return questionService.getQuestions(topics, userDetails, httpSession);
     }
 
-    @PostMapping("/save_quiz_answer")
+    @PostMapping("/save/quiz-answer")
     public String saveQuizAnswer(@RequestParam QuizAnswer quizAnswer) {
         quizAnswerService.saveQuizAnswer(quizAnswer);
 

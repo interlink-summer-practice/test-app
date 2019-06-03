@@ -33,7 +33,7 @@ public class QuizResultController {
         return quizResultService.getQuizResult(quizSession);
     }
 
-    @GetMapping("/test-history")
+    @GetMapping("/result/history")
     public List<QuizResultDto> getTestHistory(@AuthenticationPrincipal UserDetails userDetails) {
         User user = userService.getUserByEmail(userDetails.getUsername());
         return quizResultService.getHistoryOfQuizzesByUser(user);
