@@ -14,33 +14,24 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
-import java.util.List;
 
 @RestController
 public class QuizController {
 
-    private final TopicService topicService;
     private final QuestionService questionService;
     private final QuizAnswerService quizAnswerService;
     private final CsvParserService csvParserService;
 
     @Autowired
-    public QuizController(TopicService topicService,
-                          QuestionService questionService,
+    public QuizController(QuestionService questionService,
                           QuizAnswerService quizAnswerService,
                           CsvParserService csvParserService) {
-        this.topicService = topicService;
         this.questionService = questionService;
         this.quizAnswerService = quizAnswerService;
         this.csvParserService = csvParserService;
     }
 
-    @GetMapping("/get/topics")
-    public List<Topic> getTopics() {
-        return topicService.getTopics();
-    }
-
-    @GetMapping("/get/questions")
+    @GetMapping("/questions")
     public QuestionsDto getQuestions(@RequestParam Topic[] topics,
                                      @AuthenticationPrincipal UserDetails userDetails,
                                      HttpSession httpSession) {
@@ -48,7 +39,7 @@ public class QuizController {
         return questionService.getQuestions(topics, userDetails, httpSession);
     }
 
-    @PostMapping("/save/quiz-answer")
+    @PostMapping("/quiz-answer")
     public String saveQuizAnswer(@RequestParam QuizAnswer quizAnswer) {
         quizAnswerService.saveQuizAnswer(quizAnswer);
 
