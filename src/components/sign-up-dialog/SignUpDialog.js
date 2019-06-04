@@ -38,13 +38,6 @@ class SignUpDialog extends React.Component {
             />
             <TextField
               margin="dense"
-              id="password"
-              label="Password"
-              type="password"
-              fullWidth
-            />
-            <TextField
-              margin="dense"
               id="confirmPassword"
               label="Confirm password"
               type="password"
