@@ -1,0 +1,7 @@
+li {
+    list-style-type: none; 
+}
+.result{
+    display: flex;
+    justify-content: center;
+}
