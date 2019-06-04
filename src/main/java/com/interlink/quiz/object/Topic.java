@@ -14,6 +14,9 @@ public class Topic {
     @Column
     private String name;
 
+    @Column
+    private String url;
+
     public int getId() {
         return id;
     }
@@ -28,6 +31,14 @@ public class Topic {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     @Override
