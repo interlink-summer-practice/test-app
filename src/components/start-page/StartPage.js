@@ -15,7 +15,7 @@ import Button from '@material-ui/core/Button';
 import AuthAppBarControls from '../auth-app-bar-controls/AuthAppBarControls';
 import LogInDialog from "../log-in-dialog/LogInDialog";
 import SignUpDialog from "../sign-up-dialog/SignUpDialog";
-import TestPassing from "../test-passing/TestPassing";
+import StartTestsDialog from "../start-tests-dialog/StartTestsDialog";
 
 class StartPage extends React.Component {
 
@@ -24,26 +24,32 @@ class StartPage extends React.Component {
     this.state = {
       isDrawerOpen: false,
       isLoginDialogOpen: false,
-      isSignUpDialogOpen: false
+      isSignUpDialogOpen: false,
+      isStartTestsDialogOpen: false
     };
 
-    this.loginDialogHandler = this.loginDialogHandler.bind(this);
-    this.signUpDialogHandler = this.signUpDialogHandler.bind(this);
   }
 
-  loginDialogHandler() {
+  loginDialogHandler = () => {
     this.setState({
       isDrawerOpen: false,
       isLoginDialogOpen: !this.state.isLoginDialogOpen
     });
-  }
+  };
 
-  signUpDialogHandler() {
+  signUpDialogHandler = () => {
     this.setState({
       isDrawerOpen: false,
       isSignUpDialogOpen: !this.state.isSignUpDialogOpen
     });
-  }
+  };
+
+  startTestsDialogHandler = () => {
+    this.setState({
+      isDrawerOpen: false,
+      isStartTestsDialogOpen: !this.state.isStartTestsDialogOpen
+    })
+  };
 
   toggleDrawer(event) {
     if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -104,14 +110,24 @@ class StartPage extends React.Component {
           <Typography className="mainContentText" variant="h4">
             Prove your skills with our tests
           </Typography>
-          <Button variant="contained" color="primary" onClick={this.startTest} >
+
+          <Button variant="contained" color="primary" onClick={this.startTestsDialogHandler}
+          className="startTestsButton">
+
             Start Tests
           </Button>
+
+          <div className="shadow"></div>
+
         </div>
 
         <LogInDialog open={this.state.isLoginDialogOpen} loginDialogHandler={this.loginDialogHandler} />
 
         <SignUpDialog open={this.state.isSignUpDialogOpen} signUpDialogHandler={this.signUpDialogHandler} />
+
+        <StartTestsDialog open={this.state.isStartTestsDialogOpen} startTestsDialogHandler={this.startTestsDialogHandler}/>
+
+
       </div>
     )
   }
