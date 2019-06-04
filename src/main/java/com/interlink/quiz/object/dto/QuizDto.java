@@ -1,20 +1,19 @@
 package com.interlink.quiz.object.dto;
 
-import com.interlink.quiz.object.Question;
 import com.interlink.quiz.object.QuizSession;
 
 import java.util.List;
 
-public class QuestionsDto {
+public class QuizDto {
 
-    private List<Question> questions;
+    private List<QuestionDto> questions;
     private QuizSession quizSession;
 
-    public List<Question> getQuestions() {
+    public List<QuestionDto> getQuestions() {
         return questions;
     }
 
-    public void setQuestions(List<Question> questions) {
+    public void setQuestions(List<QuestionDto> questions) {
         this.questions = questions;
     }
 
