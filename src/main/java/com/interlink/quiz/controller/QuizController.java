@@ -30,7 +30,7 @@ public class QuizController {
         this.csvParserService = csvParserService;
     }
 
-    @GetMapping("/questions")
+    @PostMapping("/questions")
     public QuizDto getQuestions(@RequestBody Topic[] topics,
                                 @AuthenticationPrincipal UserDetails userDetails,
                                 HttpSession httpSession) {
