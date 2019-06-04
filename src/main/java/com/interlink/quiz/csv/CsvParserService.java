@@ -35,33 +35,46 @@ public class CsvParserService {
     }
 
     public void parseCsvFileToDataBase(File file) {
-        List<CSVQuiz> csvQuizzes = parseCsvFileToListOfQuizzes(file);
+        List<QuizLine> lines = parseCsvFileToListOfQuizzes(file);
 
-        for (CSVQuiz csvQuiz : csvQuizzes) {
+        for (QuizLine quizLine : lines) {
+            String[] answersArray = quizLine.getAnswers().split("\\n");
             List<Answer> answers = new ArrayList<>();
-            for (String a : csvQuiz.getAnswers()) {
-                Answer answer = answerRepository.getAnswerByName(a);
+            for (String s : answersArray) {
+                Answer answer = answerRepository.getAnswerByName(s);
                 if (answer == null) {
                     answer = new Answer();
-                    answer.setName(a);
+                    answer.setName(s);
                     answerRepository.saveAnswer(answer);
                 }
                 answers.add(answer);
             }
 
-            Answer rightAnswer = answerRepository.getAnswerByName(csvQuiz.getRightAnswer());
+            Answer rightAnswer = answerRepository.getAnswerByName(quizLine.getRightAnswer());
 
-            Topic topic = topicRepository.getTopicByName(csvQuiz.getTopicName());
+            Topic topic = topicRepository.getTopicByName(quizLine.getTopic());
             if (topic == null) {
                 topic = new Topic();
-                topic.setName(csvQuiz.getTopicName());
+                topic.setName(quizLine.getTopic());
                 topicRepository.saveTopic(topic);
             }
 
             Question question = new Question();
-            question.setName(csvQuiz.getQuestionName());
-            question.setDifficulty(csvQuiz.getDifficulty());
-            question.setMark(csvQuiz.getMark());
+            question.setName(quizLine.getQuestion());
+            question.setDifficulty(quizLine.getDifficulty());
+
+            switch (quizLine.getDifficulty()) {
+                case "Просте":
+                    question.setMark(1);
+                    break;
+                case "Середнє":
+                    question.setMark(2);
+                    break;
+                case "Складне":
+                    question.setMark(3);
+                    break;
+            }
+
             question.setTopic(topic);
             question.setRightAnswer(rightAnswer);
             question.setAnswers(answers);
@@ -69,24 +82,17 @@ public class CsvParserService {
         }
     }
 
-    private List<CSVQuiz> parseCsvFileToListOfQuizzes(File file) {
-        List<CSVQuiz> result = Collections.emptyList();
+    private List<QuizLine> parseCsvFileToListOfQuizzes(File file) {
+        List<QuizLine> result = Collections.emptyList();
         try (Reader reader = Files.newBufferedReader(file.toPath())) {
-            CsvToBean<CSVQuiz> csvToBean = new CsvToBeanBuilder<CSVQuiz>(reader)
-                    .withType(CSVQuiz.class)
+            CsvToBean<QuizLine> csvToBean = new CsvToBeanBuilder<QuizLine>(reader)
+                    .withType(QuizLine.class)
                     .withIgnoreLeadingWhiteSpace(true)
                     .build();
             result = csvToBean.parse();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result.stream()
-                .peek(e -> e.setAnswers(
-                        Arrays.asList(
-                                e.getFirstAnswer(),
-                                e.getSecondAnswer(),
-                                e.getThirdAnswer(),
-                                e.getFourthAnswer())))
-                .collect(Collectors.toList());
+        return result;
     }
 }
