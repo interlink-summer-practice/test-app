@@ -1,6 +1,6 @@
 package com.interlink.quiz.controller;
 
-import com.interlink.quiz.object.UserDto;
+import com.interlink.quiz.object.dto.UserDto;
 import com.interlink.quiz.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

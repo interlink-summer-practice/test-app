@@ -27,7 +27,7 @@ public class AnswerRepository {
 
     public Answer getAnswerByName(String name) {
         Session session = sessionFactory.getCurrentSession();
-        Query<Answer> query = session.createQuery("from Answer where lower(name) = :name", Answer.class);
+        Query<Answer> query = session.createQuery("from Answer where lower(name) = lower(:name)", Answer.class);
         query.setParameter("name", name);
         return query.uniqueResult();
     }

@@ -1,6 +1,7 @@
 package com.interlink.quiz.object.dto;
 
 import com.interlink.quiz.object.QuizResult;
+import com.interlink.quiz.object.TopicResult;
 import com.interlink.quiz.object.QuizSession;
 
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.List;
 public class QuizResultDto {
 
     private QuizSession quizSession;
-    private List<QuizResult> results;
+    private QuizResult quizResult;
 
     public QuizSession getQuizSession() {
         return quizSession;
@@ -18,11 +19,11 @@ public class QuizResultDto {
         this.quizSession = quizSession;
     }
 
-    public List<QuizResult> getResults() {
-        return results;
+    public QuizResult getQuizResult() {
+        return quizResult;
     }
 
-    public void setResults(List<QuizResult> results) {
-        this.results = results;
+    public void setQuizResult(QuizResult quizResult) {
+        this.quizResult = quizResult;
     }
 }
