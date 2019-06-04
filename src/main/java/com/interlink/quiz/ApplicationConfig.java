@@ -50,7 +50,7 @@ public class ApplicationConfig {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl("jdbc:postgresql://localhost:5432/quizzes");
         config.setUsername("postgres");
-        config.setPassword("123456");
+        config.setPassword("postgres");
         config.setDriverClassName("org.postgresql.Driver");
 
         return new HikariDataSource(config);

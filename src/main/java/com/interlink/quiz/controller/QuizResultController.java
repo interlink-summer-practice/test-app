@@ -2,6 +2,7 @@ package com.interlink.quiz.controller;
 
 import com.interlink.quiz.object.QuizResult;
 import com.interlink.quiz.object.QuizSession;
+import com.interlink.quiz.object.TopicResult;
 import com.interlink.quiz.object.User;
 import com.interlink.quiz.object.dto.QuizResultDto;
 import com.interlink.quiz.service.QuizResultService;
@@ -19,23 +20,22 @@ import java.util.List;
 public class QuizResultController {
 
     private final QuizResultService quizResultService;
-    private final UserService userService;
 
     @Autowired
-    public QuizResultController(QuizResultService quizResultService,
-                                UserService userService) {
+    public QuizResultController(QuizResultService quizResultService) {
         this.quizResultService = quizResultService;
-        this.userService = userService;
     }
 
     @GetMapping("/result")
-    public List<QuizResult> getQuizResult(@RequestBody QuizSession quizSession) {
-        return quizResultService.getQuizResult(quizSession);
+    public QuizResult getQuizResult(@RequestBody QuizSession quizSession,
+                                    @AuthenticationPrincipal UserDetails userDetails) {
+
+        return quizResultService.getQuizResult(quizSession, userDetails);
     }
 
     @GetMapping("/result/history")
     public List<QuizResultDto> getTestHistory(@AuthenticationPrincipal UserDetails userDetails) {
-        User user = userService.getUserByEmail(userDetails.getUsername());
-        return quizResultService.getHistoryOfQuizzesByUser(user);
+
+        return quizResultService.getHistoryOfQuizzesByUser(userDetails);
     }
 }

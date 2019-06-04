@@ -1,6 +1,6 @@
 package com.interlink.quiz.repository;
 
-import com.interlink.quiz.object.QuizResult;
+import com.interlink.quiz.object.TopicResult;
 import com.interlink.quiz.object.QuizSession;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +18,10 @@ public class QuizResultRepository {
         this.sessionFactory = sessionFactory;
     }
 
-    public List<QuizResult> getQuizAnswersBySession(QuizSession quizSession) {
+    public List<TopicResult> getQuizAnswersBySession(QuizSession quizSession) {
         return sessionFactory.getCurrentSession()
                 .createQuery("" +
-                        "select new com.interlink.quiz.object.QuizResult (" +
+                        "select new com.interlink.quiz.object.TopicResult (" +
                         "   t, " +
                         "   sum(case when qa.quizSession.id = :quizSessionId then 1 else 0 end )," +
                         "   sum(case when qa.quizSession.id = :quizSessionId and qa.answer = q.rightAnswer then 1 else 0 end ))" +
@@ -30,20 +30,20 @@ public class QuizResultRepository {
                         "       left join Answer a on qa.answer.id = a.id " +
                         "       left join Topic t on q.topic.id = t.id " +
                         "where qa.quizSession.id = :quizSessionId " +
-                        "group by t.id", QuizResult.class)
+                        "group by t.id", TopicResult.class)
                 .setParameter("quizSessionId", quizSession.getId())
                 .list();
     }
 
-    public QuizResult getPercentRightQuizAnswer(QuizSession quizSession) {
+    public TopicResult getPercentRightQuizAnswer(QuizSession quizSession) {
         return sessionFactory.getCurrentSession()
-                .createQuery("SELECT NEW com.interlink.quiz.object.QuizResult (" +
+                .createQuery("SELECT NEW com.interlink.quiz.object.TopicResult (" +
                         "SUM(CASE WHEN qa.quizSession.id = :quizSessionId THEN 1 ELSE 0 END )," +
                         "SUM(CASE WHEN qa.quizSession.id = :quizSessionId AND qa.answer = q.rightAnswer THEN 1 ELSE 0 END ))" +
                         "FROM QuizAnswer qa " +
                         "       LEFT JOIN Question q ON qa.question.id = q.id " +
                         "WHERE qa.quizSession.id = :quizSessionId " +
-                        "GROUP BY qa.quizSession", QuizResult.class)
+                        "GROUP BY qa.quizSession", TopicResult.class)
                 .setParameter("quizSessionId", quizSession.getId())
                 .uniqueResult();
     }

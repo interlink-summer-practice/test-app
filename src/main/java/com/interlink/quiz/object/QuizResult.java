@@ -1,54 +1,34 @@
 package com.interlink.quiz.object;
 
+import java.util.List;
+
 public class QuizResult {
 
-    private Topic topic;
-    private long numberOfAnswers;
-    private long numberOfCorrectAnswers;
-    private double result;
+    private int mark;
+    private double percentOfPassingQuiz;
+    private List<TopicResult> topicResults;
 
-    public QuizResult() { }
-
-    public QuizResult(long numberOfAnswers, long numberOfCorrectAnswers) {
-        this.numberOfAnswers = numberOfAnswers;
-        this.numberOfCorrectAnswers = numberOfCorrectAnswers;
+    public int getMark() {
+        return mark;
     }
 
-    public QuizResult(Topic topic, long numberOfAnswers, long numberOfCorrectAnswers) {
-        this.topic = topic;
-        this.numberOfAnswers = numberOfAnswers;
-        this.numberOfCorrectAnswers = numberOfCorrectAnswers;
+    public void setMark(int mark) {
+        this.mark = mark;
     }
 
-    public Topic getTopic() {
-        return topic;
+    public double getPercentOfPassingQuiz() {
+        return percentOfPassingQuiz;
     }
 
-    public void setTopic(Topic topic) {
-        this.topic = topic;
+    public void setPercentOfPassingQuiz(double percentOfPassingQuiz) {
+        this.percentOfPassingQuiz = percentOfPassingQuiz;
     }
 
-    public long getNumberOfAnswers() {
-        return numberOfAnswers;
+    public List<TopicResult> getTopicResults() {
+        return topicResults;
     }
 
-    public void setNumberOfAnswers(long numberOfAnswers) {
-        this.numberOfAnswers = numberOfAnswers;
-    }
-
-    public long getNumberOfCorrectAnswers() {
-        return numberOfCorrectAnswers;
-    }
-
-    public void setNumberOfCorrectAnswers(long numberOfCorrectAnswers) {
-        this.numberOfCorrectAnswers = numberOfCorrectAnswers;
-    }
-
-    public double getResult() {
-        return result;
-    }
-
-    public void setResult(double result) {
-        this.result = result;
+    public void setTopicResults(List<TopicResult> topicResults) {
+        this.topicResults = topicResults;
     }
 }

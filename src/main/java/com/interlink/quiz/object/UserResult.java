@@ -11,10 +11,6 @@ public class UserResult {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @ManyToOne
     @JoinColumn(name = "quiz_session_id")
     private QuizSession quizSession;
 
@@ -29,13 +25,6 @@ public class UserResult {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 
     public QuizSession getQuizSession() {
         return quizSession;
@@ -50,10 +39,6 @@ public class UserResult {
     }
 
     public void setResult(int result) {
-        this.result = result;
-    }
-
-    public UserResult(int result) {
         this.result = result;
     }
 }

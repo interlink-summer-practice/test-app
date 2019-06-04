@@ -47,4 +47,16 @@ public class QuizSessionRepository {
                 .setParameter("userId", user.getId())
                 .list();
     }
+
+    public Integer getMarkByQuizSesion(QuizSession quizSession) {
+        return sessionFactory.getCurrentSession()
+                .createNativeQuery("SELECT sum(q.mark) " +
+                        "FROM quiz_session qs" +
+                        "         LEFT JOIN quiz_answers qa on qs.id = qa.quiz_session_id " +
+                        "         LEFT JOIN answers a on qa.answer_id = a.id " +
+                        "         LEFT JOIN questions q on a.id = q.answer_id " +
+                        "WHERE qs.id = '1' AND qa.answer_id = q.answer_id;", Integer.class)
+                .setParameter("quiz_session_id", quizSession.getId())
+                .uniqueResult();
+    }
 }
