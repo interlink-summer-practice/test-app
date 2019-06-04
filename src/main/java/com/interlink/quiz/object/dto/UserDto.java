@@ -1,4 +1,4 @@
-package com.interlink.quiz.object;
+package com.interlink.quiz.object.dto;
 
 public class UserDto {
 

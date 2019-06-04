@@ -1,7 +1,7 @@
 package com.interlink.quiz.service;
 
 import com.interlink.quiz.object.User;
-import com.interlink.quiz.object.UserDto;
+import com.interlink.quiz.object.dto.UserDto;
 import com.interlink.quiz.object.UserRole;
 import com.interlink.quiz.repository.RoleRepository;
 import com.interlink.quiz.repository.UserRepository;
