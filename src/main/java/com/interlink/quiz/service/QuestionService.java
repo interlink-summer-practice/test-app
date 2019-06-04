@@ -4,7 +4,8 @@ import com.interlink.quiz.object.Question;
 import com.interlink.quiz.object.QuizAnswer;
 import com.interlink.quiz.object.QuizSession;
 import com.interlink.quiz.object.Topic;
-import com.interlink.quiz.object.dto.QuestionsDto;
+import com.interlink.quiz.object.dto.QuestionDto;
+import com.interlink.quiz.object.dto.QuizDto;
 import com.interlink.quiz.repository.QuestionRepository;
 import com.interlink.quiz.repository.QuizAnswerRepository;
 import com.interlink.quiz.repository.QuizSessionRepository;
@@ -20,6 +21,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.*;
 
 @Service
 public class QuestionService {
@@ -41,13 +44,13 @@ public class QuestionService {
         this.quizAnswerRepository = quizAnswerRepository;
     }
 
-    public QuestionsDto getQuestions(Topic[] topicsArray,
-                                     UserDetails userDetails,
-                                     HttpSession httpSession) {
+    public QuizDto getQuestions(Topic[] topicsArray,
+                                UserDetails userDetails,
+                                HttpSession httpSession) {
 
-        QuestionsDto questionsDto = new QuestionsDto();
+        QuizDto quizDto = new QuizDto();
         List<QuizSession> quizSessions;
-        List<Topic> topics = Arrays.stream(topicsArray).collect(Collectors.toList());
+        List<Topic> topics = Arrays.stream(topicsArray).collect(toList());
         if (userDetails == null) {
             quizSessions = quizSessionRepository.getQuizSessionBySessionId(httpSession.getId());
         } else {
@@ -62,29 +65,42 @@ public class QuestionService {
                     quizSessionRepository.updateQuizSession(quizSession);
                     quizAnswerRepository.deleteQuizAnswersByQuizSession(quizSession);
 
-                    questionsDto.setQuizSession(quizSession);
-                    questionsDto.setQuestions(getQuestionsByTopics(topics));
-                    return questionsDto;
+                    quizDto.setQuizSession(quizSession);
+                    quizDto.setQuestions(getQuestionsByTopics(topics));
+                    return quizDto;
                 } else {
-                    questionsDto.setQuizSession(quizSession);
-                    questionsDto.setQuestions(getNotPassedQuestionsByTopics(topics, quizSession));
-                    return questionsDto;
+                    quizDto.setQuizSession(quizSession);
+                    quizDto.setQuestions(getNotPassedQuestionsByTopics(topics, quizSession));
+                    return quizDto;
                 }
             }
         }
 
-        questionsDto.setQuizSession(createNewQuizSession(httpSession, userDetails, topics));
-        questionsDto.setQuestions(getQuestionsByTopics(topics));
-        return questionsDto;
+        quizDto.setQuizSession(createNewQuizSession(httpSession, userDetails, topics));
+        quizDto.setQuestions(getQuestionsByTopics(topics));
+        return quizDto;
     }
 
-    private List<Question> getQuestionsByTopics(List<Topic> topics) {
+    private List<QuestionDto> getQuestionsByTopics(List<Topic> topics) {
         List<Question> questions = new ArrayList<>();
         for (Topic topic : topics) {
             questions.addAll(questionRepository.getQuestionsByTopic(topic));
         }
 
-        return questions;
+        return questions.stream()
+                .map(this::createQuestionDto)
+                .collect(toList());
+    }
+
+    private List<QuestionDto> getNotPassedQuestionsByTopics(List<Topic> topics, QuizSession quizSession) {
+        List<Question> questions = new ArrayList<>();
+        for (Topic topic : topics) {
+            questions.addAll(questionRepository.getNotPassedQuestionsByTopic(topic, quizSession));
+        }
+
+        return questions.stream()
+                .map(this::createQuestionDto)
+                .collect(toList());
     }
 
     private QuizSession createNewQuizSession(HttpSession httpSession,
@@ -103,15 +119,6 @@ public class QuestionService {
         return newQuizSession;
     }
 
-    private List<Question> getNotPassedQuestionsByTopics(List<Topic> topics, QuizSession quizSession) {
-        List<Question> questions = new ArrayList<>();
-        for (Topic topic : topics) {
-            questions.addAll(questionRepository.getNotPassedQuestionsByTopic(topic, quizSession));
-        }
-
-        return questions;
-    }
-
     private boolean isAlreadyPassedQuiz(List<Topic> selectedTopics, QuizSession quizSession) {
         if (quizSession == null) return false;
         for (Topic sessionTopic : quizSession.getTopics()) {
@@ -123,9 +130,20 @@ public class QuestionService {
     }
 
     private boolean isDoneQuiz(List<Topic> topics, QuizSession quizSession) {
-        List<Question> questionsByTopics = getQuestionsByTopics(topics);
+        List<QuestionDto> questionsByTopics = getQuestionsByTopics(topics);
         List<QuizAnswer> answers = quizAnswerRepository.getAnswersByQuizSession(quizSession);
-        Set<Question> questions = answers.stream().map(QuizAnswer::getQuestion).collect(Collectors.toSet());
+        Set<Question> questions = answers.stream().map(QuizAnswer::getQuestion).collect(toSet());
         return questionsByTopics.size() == questions.size();
+    }
+
+    private QuestionDto createQuestionDto(Question question) {
+        QuestionDto questionDto = new QuestionDto();
+        questionDto.setId(question.getId());
+        questionDto.setName(question.getName());
+        questionDto.setDifficulty(question.getDifficulty());
+        questionDto.setTopic(question.getTopic());
+        questionDto.setAnswers(question.getAnswers());
+
+        return questionDto;
     }
 }

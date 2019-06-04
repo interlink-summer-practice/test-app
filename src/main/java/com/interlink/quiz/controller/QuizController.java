@@ -3,10 +3,9 @@ package com.interlink.quiz.controller;
 import com.interlink.quiz.csv.CsvParserService;
 import com.interlink.quiz.object.QuizAnswer;
 import com.interlink.quiz.object.Topic;
-import com.interlink.quiz.object.dto.QuestionsDto;
+import com.interlink.quiz.object.dto.QuizDto;
 import com.interlink.quiz.service.QuestionService;
 import com.interlink.quiz.service.QuizAnswerService;
-import com.interlink.quiz.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,9 +31,9 @@ public class QuizController {
     }
 
     @GetMapping("/questions")
-    public QuestionsDto getQuestions(@RequestParam Topic[] topics,
-                                     @AuthenticationPrincipal UserDetails userDetails,
-                                     HttpSession httpSession) {
+    public QuizDto getQuestions(@RequestBody Topic[] topics,
+                                @AuthenticationPrincipal UserDetails userDetails,
+                                HttpSession httpSession) {
 
         return questionService.getQuestions(topics, userDetails, httpSession);
     }
@@ -47,8 +46,7 @@ public class QuizController {
     }
 
     @GetMapping("/import")
-    public void saveQuizFromCsvFile(/*>@RequestBody File file*/) {
-        File file = new File("/home/intern/Downloads/test.csv");
+    public void saveQuizFromCsvFile(@RequestBody File file) {
         csvParserService.parseCsvFileToDataBase(file);
     }
 }
