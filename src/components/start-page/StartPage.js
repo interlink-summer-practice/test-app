@@ -15,6 +15,7 @@ import Button from '@material-ui/core/Button';
 import AuthAppBarControls from '../auth-app-bar-controls/AuthAppBarControls';
 import LogInDialog from "../log-in-dialog/LogInDialog";
 import SignUpDialog from "../sign-up-dialog/SignUpDialog";
+import TestPassing from "../test-passing/TestPassing";
 
 class StartPage extends React.Component {
 
@@ -49,9 +50,12 @@ class StartPage extends React.Component {
       return;
     }
 
-    this.setState({isDrawerOpen: !this.state.isDrawerOpen});
+    this.setState({ isDrawerOpen: !this.state.isDrawerOpen });
   }
 
+  startTest =() =>{
+    this.props.startTest();
+  }
 
   render() {
     return (
@@ -59,7 +63,7 @@ class StartPage extends React.Component {
         {/* App bar */}
         <AppBar position="static" color="default">
           <Toolbar>
-            <Menu onClick={(e) => this.toggleDrawer(e)} className="menuIcon"/>
+            <Menu onClick={(e) => this.toggleDrawer(e)} className="menuIcon" />
             <Typography className="appBarTitle" variant="h6" color="inherit">
               Tests App
             </Typography>
@@ -76,7 +80,7 @@ class StartPage extends React.Component {
         <Drawer open={this.state.isDrawerOpen} onClose={(e) => this.toggleDrawer(e)}>
           <List>
             <ListItem button onClick={this.signUpDialogHandler}>
-              <ListItemIcon><AccountCircle/></ListItemIcon>
+              <ListItemIcon><AccountCircle /></ListItemIcon>
               <ListItemText>Create account</ListItemText>
             </ListItem>
 
@@ -84,7 +88,7 @@ class StartPage extends React.Component {
               <ListItemIcon>
                 <SvgIcon>
                   <path fill="#000000"
-                        d="M10,17V14H3V10H10V7L15,12L10,17M10,2H19A2,2 0 0,1 21,4V20A2,2 0 0,1 19,22H10A2,2 0 0,1 8,20V18H10V20H19V4H10V6H8V4A2,2 0 0,1 10,2Z"/>
+                    d="M10,17V14H3V10H10V7L15,12L10,17M10,2H19A2,2 0 0,1 21,4V20A2,2 0 0,1 19,22H10A2,2 0 0,1 8,20V18H10V20H19V4H10V6H8V4A2,2 0 0,1 10,2Z" />
                 </SvgIcon>
               </ListItemIcon>
               <ListItemText>Log In</ListItemText>
@@ -100,7 +104,7 @@ class StartPage extends React.Component {
           <Typography className="mainContentText" variant="h4">
             Prove your skills with our tests
           </Typography>
-          <Button variant="contained" color="primary">
+          <Button variant="contained" color="primary" onClick={this.startTest} >
             Start Tests
           </Button>
         </div>
@@ -108,7 +112,6 @@ class StartPage extends React.Component {
         <LogInDialog open={this.state.isLoginDialogOpen} loginDialogHandler={this.loginDialogHandler} />
 
         <SignUpDialog open={this.state.isSignUpDialogOpen} signUpDialogHandler={this.signUpDialogHandler} />
-
       </div>
     )
   }
