@@ -5,6 +5,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { Route } from 'react-router-dom';
 
 class LogInDialog extends React.Component {
 
@@ -34,9 +35,12 @@ class LogInDialog extends React.Component {
             <Button color="primary" onClick={this.props.loginDialogHandler}>
               Cancel
             </Button>
-            <Button color="primary">
-              Log In
-            </Button>
+
+            <Route render={({ history }) => (
+                <Button color="primary" onClick={() => {history.push('/account')}}>
+                  Log In
+                </Button>
+            )} />
           </DialogActions>
         </Dialog>
       </div>
