@@ -55,8 +55,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .permitAll()
                 .and()
-                .formLogin().loginPage("/login").permitAll()
-                .and()
                 .logout().permitAll()
                 .and().csrf().disable();
         http.sessionManagement()
@@ -66,15 +64,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public HttpSessionEventPublisher httpSessionEventPublisher() {
         return new HttpSessionEventPublisher();
-    }
-
-    @Bean
-    public SpringResourceTemplateResolver thymeleafTemplateResolver() {
-        SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-        templateResolver.setPrefix("classpath:templates/");
-        templateResolver.setSuffix(".html");
-        templateResolver.setCacheable(false);
-        templateResolver.setTemplateMode(TemplateMode.HTML);
-        return templateResolver;
     }
 }
