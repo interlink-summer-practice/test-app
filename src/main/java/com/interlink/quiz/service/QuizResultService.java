@@ -45,11 +45,16 @@ public class QuizResultService {
         if(userDetails != null) {
             saveUserResult(quizSession, mark);
         }
-        quizResult.setPercentOfPassingQuiz(getPercentRightQuizAnswer(quizSession).getResult());
+        quizResult.setCountOfQuestion(quizAnswerRepository.getCountOfQuestionBySession(quizSession));
+        quizResult.setCountOfCorrectAnswers(quizAnswerRepository.getCountOfRightAnswerBySession(quizSession));
+        quizResult.setPercentOfPassingQuiz(
+                quizResult.getCountOfCorrectAnswers() * 100.0 / quizResult.getCountOfQuestion()
+        );
 
         List<TopicResult> topicResultList = new ArrayList<>();
         for (Topic topic : quizSession.getTopics()) {
             TopicResult topicResult = new TopicResult();
+            topicResult.setTopic(topic);
             topicResult.setNumberOfQuestions(questionRepository.getCountOfQuestionByTopic(topic));
             topicResult.setNumberOfCorrectAnswers(quizAnswerRepository.getCountOfRightAnswerBySessionAndTopic(quizSession, topic));
             topicResult.setResult(topicResult.getNumberOfCorrectAnswers() * 100.0 / topicResult.getNumberOfQuestions());
@@ -82,9 +87,9 @@ public class QuizResultService {
         userResultRepository.saveUserResult(userResult);
     }
 
-    private TopicResult getPercentRightQuizAnswer(QuizSession quizSession) {
-        TopicResult topicResult = quizResultRepository.getPercentRightQuizAnswer(quizSession);
-        topicResult.setResult(topicResult.getNumberOfCorrectAnswers() * 100.0 / topicResult.getNumberOfQuestions());
-        return topicResult;
+    private double getPercentRightQuizAnswer(QuizSession quizSession) {
+        Long countOfQuestionBySession = quizAnswerRepository.getCountOfQuestionBySession(quizSession);
+        Long countOfRightAnswerBySession = quizAnswerRepository.getCountOfRightAnswerBySession(quizSession);
+        return countOfRightAnswerBySession * 100 / countOfQuestionBySession;
     }
 }

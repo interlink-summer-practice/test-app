@@ -45,6 +45,23 @@ public class QuizAnswerRepository {
                 .uniqueResult();
     }
 
+    public Long getCountOfQuestionBySession(QuizSession quizSession) {
+        return (Long) sessionFactory.getCurrentSession()
+                .createQuery("select count(qa) from QuizAnswer qa " +
+                        "where qa.quizSession.id = :quizSessionId")
+                .setParameter("quizSessionId", quizSession.getId())
+                .uniqueResult();
+    }
+
+    public Long getCountOfRightAnswerBySession(QuizSession quizSession) {
+        return (Long) sessionFactory.getCurrentSession()
+                .createQuery("select count(qa) from QuizAnswer qa " +
+                        "left join Question q on qa.question.id = q.id " +
+                        "where qa.quizSession.id = :quizSessionId and qa.answer.id = q.rightAnswer.id")
+                .setParameter("quizSessionId", quizSession.getId())
+                .uniqueResult();
+    }
+
     public void deleteQuizAnswersByQuizSession(QuizSession quizSession) {
         Session session = sessionFactory.getCurrentSession();
         Transaction transaction = session.beginTransaction();

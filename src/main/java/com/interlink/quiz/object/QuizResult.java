@@ -5,6 +5,8 @@ import java.util.List;
 public class QuizResult {
 
     private int mark;
+    private long countOfQuestion;
+    private long countOfCorrectAnswers;
     private double percentOfPassingQuiz;
     private List<TopicResult> topicResults;
 
@@ -14,6 +16,22 @@ public class QuizResult {
 
     public void setMark(int mark) {
         this.mark = mark;
+    }
+
+    public long getCountOfQuestion() {
+        return countOfQuestion;
+    }
+
+    public void setCountOfQuestion(long countOfQuestion) {
+        this.countOfQuestion = countOfQuestion;
+    }
+
+    public long getCountOfCorrectAnswers() {
+        return countOfCorrectAnswers;
+    }
+
+    public void setCountOfCorrectAnswers(long countOfCorrectAnswers) {
+        this.countOfCorrectAnswers = countOfCorrectAnswers;
     }
 
     public double getPercentOfPassingQuiz() {
