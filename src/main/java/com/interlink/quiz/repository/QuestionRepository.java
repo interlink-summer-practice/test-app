@@ -30,9 +30,16 @@ public class QuestionRepository {
 
     public List<Question> getQuestionsByTopic(Topic topic) {
         return sessionFactory.getCurrentSession()
-                .createQuery("FROM Question WHERE topic = :topic", Question.class)
-                .setParameter("topic", topic)
+                .createQuery("FROM Question WHERE topic.id = :topicId OR topic.subtopic.id = :topicId", Question.class)
+                .setParameter("topicId", topic.getId())
                 .list();
+    }
+
+    public Question getQuestionById(int id) {
+        return sessionFactory.getCurrentSession()
+                .createQuery("from Question where id = :id", Question.class)
+                .setParameter("id", id)
+                .uniqueResult();
     }
 
     public List<Question> getNotPassedQuestionsByTopic(Topic topic, QuizSession quizSession) {

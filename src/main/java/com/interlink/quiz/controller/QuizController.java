@@ -3,10 +3,13 @@ package com.interlink.quiz.controller;
 import com.interlink.quiz.csv.CsvParserService;
 import com.interlink.quiz.object.QuizAnswer;
 import com.interlink.quiz.object.Topic;
+import com.interlink.quiz.object.dto.QuizAnswerDto;
 import com.interlink.quiz.object.dto.QuizDto;
 import com.interlink.quiz.service.QuestionService;
 import com.interlink.quiz.service.QuizAnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -39,10 +42,10 @@ public class QuizController {
     }
 
     @PostMapping("/quiz-answer")
-    public String saveQuizAnswer(@RequestParam QuizAnswer quizAnswer) {
-        quizAnswerService.saveQuizAnswer(quizAnswer);
+    public ResponseEntity saveQuizAnswer(@RequestBody QuizAnswerDto quizAnswerDto) {
+        quizAnswerService.saveQuizAnswer(quizAnswerDto);
 
-        return "OK";
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/import")

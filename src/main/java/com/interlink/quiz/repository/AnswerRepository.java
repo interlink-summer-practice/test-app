@@ -26,9 +26,16 @@ public class AnswerRepository {
     }
 
     public Answer getAnswerByName(String name) {
-        Session session = sessionFactory.getCurrentSession();
-        Query<Answer> query = session.createQuery("from Answer where lower(name) = lower(:name)", Answer.class);
-        query.setParameter("name", name);
-        return query.uniqueResult();
+        return sessionFactory.getCurrentSession()
+                .createQuery("from Answer where lower(name) = lower(:name)", Answer.class)
+                .setParameter("name", name)
+                .uniqueResult();
+    }
+
+    public Answer getAnswerById(int id) {
+        return sessionFactory.getCurrentSession()
+                .createQuery("from Answer where id = :id", Answer.class)
+                .setParameter("id", id)
+                .uniqueResult();
     }
 }
