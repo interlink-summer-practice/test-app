@@ -16,7 +16,6 @@ import AuthAppBarControls from '../auth-app-bar-controls/AuthAppBarControls';
 import LogInDialog from "../log-in-dialog/LogInDialog";
 import SignUpDialog from "../sign-up-dialog/SignUpDialog";
 import StartTestsDialog from "../start-tests-dialog/StartTestsDialog";
-import {BrowserRouter as Router, Route, Link} from "react-router-dom";
 
 class StartPage extends React.Component {
 
