@@ -48,7 +48,7 @@ public class QuizSessionRepository {
                 .list();
     }
 
-    public Integer getMarkByQuizSesion(QuizSession quizSession) {
+    public Integer getMarkByQuizSession(QuizSession quizSession) {
         return sessionFactory.getCurrentSession()
                 .createNativeQuery("SELECT sum(q.mark) " +
                         "FROM quiz_session qs" +
