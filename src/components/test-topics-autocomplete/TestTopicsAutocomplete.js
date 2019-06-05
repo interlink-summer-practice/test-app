@@ -1,4 +1,4 @@
-import React, {Component}from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import Select from 'react-select';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -12,6 +12,23 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import { emphasize } from '@material-ui/core/styles/colorManipulator';
 import PropTypes from 'prop-types';
 
+const suggestions = [
+  { label: 'Java' },
+  { label: 'JavaScript' },
+  { label: 'OOP' },
+  { label: 'Algorithms' },
+  { label: 'Data Structures' },
+  { label: 'Computer Science' },
+  { label: 'C#' },
+  { label: 'C++' },
+  { label: 'Python' },
+  { label: 'Machine Learning' },
+  { label: 'Data Analyse' },
+  { label: 'Data Science' },
+].map(suggestion => ({
+  value: suggestion.label,
+  label: suggestion.label
+}));
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -230,20 +247,13 @@ const components = {
   ValueContainer
 };
 
-function TestTopicsAutocomplete(props) {
-   var suggestions = props.suggestions.map(suggestion => ({
-      value: suggestion.name,
-      label: suggestion.name,
-      id: suggestion.id,
-    }));
-  let selectedValue;
+function TestTopicsAutocomplete() {
   const classes = useStyles();
   const theme = useTheme();
   const [multi, setMulti] = React.useState(null);
 
   function handleChangeMulti(value) {
     setMulti(value);
-    props.selectedTopics(value);
   }
 
   const selectStyles = {
