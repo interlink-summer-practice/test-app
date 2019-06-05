@@ -1,36 +1,23 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './App.css';
 import StartPage from './components/start-page/StartPage';
-import TestPassing from './components/test-passing/TestPassing';
-import { stat } from 'fs';
+import {BrowserRouter as Router, Route} from "react-router-dom";
+import TestPassing from "./components/test-passing/TestPassing";
+
 
 export default class App extends Component {
-  state = {
-    startTest: false,
-  }
-  startTest = ()=> {
-    this.setState((state) =>{
-      state.startTest = true; 
-      return state;
-    })
-  }
 
-  render(){
+    render() {
 
-
-    if(this.state.startTest === true){
-      return (<TestPassing/>);  
-    
+        return (
+            <Router>
+                <div>
+                    <Route path="/" exact component={StartPage}/>
+                    <Route path="/quiz" render={(props) => (<TestPassing topics={props.location.state} />)} />
+                </div>
+            </Router>
+        )
     }
-    else {
-      return (<StartPage startTest={this.startTest}/>);
-    }
-  }
-  // return (
-  //   <div className="App">
-      
-  //      <TestPassing/> 
-  //   </div>
-  // );
+
 }
 
