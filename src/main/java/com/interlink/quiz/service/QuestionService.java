@@ -59,7 +59,7 @@ public class QuestionService {
                     userRepository.getUserByEmail(userDetails.getUsername()));
         }
         for (QuizSession quizSession : quizSessions) {
-            if (isAlreadyPassedQuiz(topics, quizSession)) {
+            if (isAlreadyPassedQuiz(topics, quizSession, difficulty)) {
                 if (isDoneQuiz(topics, quizSession, difficulty)) {
                     quizSession.setDate(LocalDateTime.now().toString());
 
@@ -77,7 +77,7 @@ public class QuestionService {
             }
         }
 
-        quizDto.setQuizSession(createNewQuizSession(httpSession, userDetails, topics));
+        quizDto.setQuizSession(createNewQuizSession(httpSession, userDetails, topics, difficulty));
         quizDto.setQuestions(getQuestionsByTopics(topics, difficulty));
         return quizDto;
     }
@@ -93,7 +93,8 @@ public class QuestionService {
                 .collect(toList());
     }
 
-    private List<QuestionDto> getNotPassedQuestionsByTopics(List<Topic> topics, QuizSession quizSession) {
+    private List<QuestionDto> getNotPassedQuestionsByTopics(List<Topic> topics,
+                                                            QuizSession quizSession) {
         List<Question> questions = new ArrayList<>();
         for (Topic topic : topics) {
             questions.addAll(questionRepository.getNotPassedQuestionsByTopic(topic, quizSession));
@@ -106,12 +107,14 @@ public class QuestionService {
 
     private QuizSession createNewQuizSession(HttpSession httpSession,
                                              UserDetails userDetails,
-                                             List<Topic> topics) {
+                                             List<Topic> topics,
+                                             String difficulty) {
 
         QuizSession newQuizSession = new QuizSession();
         newQuizSession.setSessionId(httpSession.getId());
         newQuizSession.setDate(LocalDateTime.now().toString());
         newQuizSession.setTopics(topics);
+        newQuizSession.setDifficulty(difficulty);
         if (userDetails != null) {
             newQuizSession.setUser(userRepository.getUserByEmail(userDetails.getUsername()));
         }
@@ -120,8 +123,12 @@ public class QuestionService {
         return newQuizSession;
     }
 
-    private boolean isAlreadyPassedQuiz(List<Topic> selectedTopics, QuizSession quizSession) {
+    private boolean isAlreadyPassedQuiz(List<Topic> selectedTopics,
+                                        QuizSession quizSession,
+                                        String currentDifficulty) {
+
         if (quizSession == null) return false;
+        if (!quizSession.getDifficulty().equals(currentDifficulty)) return false;
         for (Topic sessionTopic : quizSession.getTopics()) {
             if (!selectedTopics.contains(sessionTopic)) {
                 return false;

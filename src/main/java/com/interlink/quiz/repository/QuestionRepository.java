@@ -36,21 +36,38 @@ public class QuestionRepository {
                     .list();
         }
 
-        List<Question> list = sessionFactory.getCurrentSession()
+        return sessionFactory.getCurrentSession()
                 .createQuery("FROM Question WHERE topic = :topic AND difficulty = :difficulty", Question.class)
                 .setParameter("topic", topic)
                 .setParameter("difficulty", difficulty)
                 .list();
-        return list;
     }
 
     public List<Question> getNotPassedQuestionsByTopic(Topic topic, QuizSession quizSession) {
+        if (quizSession.getDifficulty().equals("")) {
+            return sessionFactory.getCurrentSession()
+                    .createNativeQuery("" +
+                            "SELECT q.* " +
+                            "FROM questions q " +
+                            "       LEFT JOIN topics t on q.topic_id = t.id " +
+                            "WHERE t.id = :topic_id " +
+                            "EXCEPT " +
+                            "SELECT q.* " +
+                            "FROM questions q " +
+                            "       LEFT JOIN topics t on q.topic_id = t.id " +
+                            "       LEFT JOIN quiz_answers qa on q.id = qa.question_id " +
+                            "WHERE qa.quiz_session_id = :session_id", Question.class)
+                    .setParameter("topic_id", topic.getId())
+                    .setParameter("session_id", quizSession.getId())
+                    .list();
+        }
+
         return sessionFactory.getCurrentSession()
                 .createNativeQuery("" +
                 "SELECT q.* " +
                 "FROM questions q " +
                 "       LEFT JOIN topics t on q.topic_id = t.id " +
-                "WHERE t.id = :topic_id " +
+                "WHERE t.id = :topic_id AND q.difficulty = :difficulty " +
                 "EXCEPT " +
                 "SELECT q.* " +
                 "FROM questions q " +
@@ -59,6 +76,7 @@ public class QuestionRepository {
                 "WHERE qa.quiz_session_id = :session_id", Question.class)
                 .setParameter("topic_id", topic.getId())
                 .setParameter("session_id", quizSession.getId())
+                .setParameter("difficulty", quizSession.getDifficulty())
                 .list();
     }
 }
