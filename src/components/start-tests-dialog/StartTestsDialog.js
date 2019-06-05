@@ -17,10 +17,13 @@ class StartTestsDialog extends React.Component {
   }
 
   startTest = () => {
+    let questions = [];
     axios.post('/questions',this.state.selectedTopics)
 
-        .then()
+        .then(res => {questions = res})
+
         .catch()
+    return questions;
   }
 
 

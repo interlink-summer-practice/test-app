@@ -60,7 +60,7 @@ class StartPage extends React.Component {
   }
 
   startTest =() =>{
-    this.props.startTest();
+    console.log(this.props.startTest());
   }
 
   render() {
