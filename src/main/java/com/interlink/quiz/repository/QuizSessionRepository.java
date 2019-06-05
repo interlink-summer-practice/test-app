@@ -49,18 +49,21 @@ public class QuizSessionRepository {
                 .list();
     }
 
-    public Integer getMarkByQuizSession(QuizSession quizSession) {
-        BigInteger mark = (BigInteger) sessionFactory.getCurrentSession()
-                .createNativeQuery("SELECT sum(q.mark) " +
-                        "FROM quiz_session qs" +
-                        "         LEFT JOIN quiz_answers qa on qs.id = qa.quiz_session_id " +
-                        "         LEFT JOIN answers a on qa.answer_id = a.id " +
-                        "         LEFT JOIN questions q on a.id = q.answer_id " +
-                        "WHERE qs.id = :quiz_session_id AND qa.answer_id = q.answer_id;")
-                .setParameter("quiz_session_id", quizSession.getId())
-                .uniqueResult();
-
-        return mark.intValue();
+    public int getMarkByQuizSession(QuizSession quizSession) {
+        try {
+            BigInteger mark = (BigInteger) sessionFactory.getCurrentSession()
+                    .createNativeQuery("SELECT sum(q.mark) " +
+                            "FROM quiz_session qs" +
+                            "         LEFT JOIN quiz_answers qa on qs.id = qa.quiz_session_id " +
+                            "         LEFT JOIN answers a on qa.answer_id = a.id " +
+                            "         LEFT JOIN questions q on a.id = q.answer_id " +
+                            "WHERE qs.id = :quiz_session_id AND qa.answer_id = q.answer_id;")
+                    .setParameter("quiz_session_id", quizSession.getId())
+                    .uniqueResult();
+            return mark.intValue();
+        } catch (NullPointerException e) {
+            return 0;
+        }
     }
 
     public QuizSession getQuizSessionById(int id) {
