@@ -2,6 +2,7 @@ package com.interlink.quiz.service;
 
 import com.interlink.quiz.object.*;
 import com.interlink.quiz.object.dto.QuizResultDto;
+import com.interlink.quiz.object.dto.QuizSessionDto;
 import com.interlink.quiz.repository.QuizResultRepository;
 import com.interlink.quiz.repository.QuizSessionRepository;
 import com.interlink.quiz.repository.UserResultRepository;
@@ -33,9 +34,10 @@ public class QuizResultService {
         this.userService = userService;
     }
 
-    public QuizResult getQuizResult(QuizSession quizSession, UserDetails userDetails) {
+    public QuizResult getQuizResult(QuizSessionDto quizSessionDto, UserDetails userDetails) {
         QuizResult quizResult = new QuizResult();
-        Integer mark = quizSessionRepository.getMarkByQuizSesion(quizSession);
+        QuizSession quizSession = quizSessionRepository.getQuizSessionById(quizSessionDto.getId());
+        Integer mark = quizSessionRepository.getMarkByQuizSession(quizSession);
         quizResult.setMark(mark);
         if(userDetails != null) {
             saveUserResult(quizSession, mark);
@@ -54,7 +56,9 @@ public class QuizResultService {
         for (QuizSession quizSession : quizSessions) {
             QuizResultDto quizResultDto = new QuizResultDto();
             quizResultDto.setQuizSession(quizSession);
-            quizResultDto.setQuizResult(getQuizResult(quizSession, userDetails));
+            QuizSessionDto quizSessionDto = new QuizSessionDto();
+            quizSessionDto.setId(quizSession.getId());
+            quizResultDto.setQuizResult(getQuizResult(quizSessionDto, userDetails));
             result.add(quizResultDto);
         }
         return result;
