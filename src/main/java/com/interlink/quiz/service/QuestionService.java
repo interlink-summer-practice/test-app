@@ -121,6 +121,7 @@ public class QuestionService {
 
     private boolean isAlreadyPassedQuiz(List<Topic> selectedTopics, QuizSession quizSession) {
         if (quizSession == null) return false;
+        if (selectedTopics.size() != quizSession.getTopics().size()) return false;
         for (Topic sessionTopic : quizSession.getTopics()) {
             if (!selectedTopics.contains(sessionTopic)) {
                 return false;
