@@ -32,7 +32,6 @@ class StartTestsDialog extends React.Component {
       </div>
     )
   }
-
 }
 
 export default StartTestsDialog;
