@@ -30,7 +30,7 @@ public class QuestionRepository {
 
     public List<Question> getQuestionsByTopic(Topic topic) {
         return sessionFactory.getCurrentSession()
-                .createQuery("FROM Question WHERE topic.id = :topicId OR topic.subtopic.id = :topicId", Question.class)
+                .createQuery("FROM Question WHERE topic.id = :topicId", Question.class)
                 .setParameter("topicId", topic.getId())
                 .list();
     }

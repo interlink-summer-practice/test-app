@@ -8,6 +8,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @Repository
@@ -49,7 +50,7 @@ public class QuizSessionRepository {
     }
 
     public Integer getMarkByQuizSession(QuizSession quizSession) {
-        return (Integer) sessionFactory.getCurrentSession()
+        BigInteger mark = (BigInteger) sessionFactory.getCurrentSession()
                 .createNativeQuery("SELECT sum(q.mark) " +
                         "FROM quiz_session qs" +
                         "         LEFT JOIN quiz_answers qa on qs.id = qa.quiz_session_id " +
@@ -58,6 +59,8 @@ public class QuizSessionRepository {
                         "WHERE qs.id = :quiz_session_id AND qa.answer_id = q.answer_id;")
                 .setParameter("quiz_session_id", quizSession.getId())
                 .uniqueResult();
+
+        return mark.intValue();
     }
 
     public QuizSession getQuizSessionById(int id) {
