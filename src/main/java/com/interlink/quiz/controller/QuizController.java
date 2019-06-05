@@ -2,7 +2,7 @@ package com.interlink.quiz.controller;
 
 import com.interlink.quiz.csv.CsvParserService;
 import com.interlink.quiz.object.QuizAnswer;
-import com.interlink.quiz.object.Topic;
+import com.interlink.quiz.object.dto.FilteredQuizDto;
 import com.interlink.quiz.object.dto.QuizDto;
 import com.interlink.quiz.service.QuestionService;
 import com.interlink.quiz.service.QuizAnswerService;
@@ -31,11 +31,16 @@ public class QuizController {
     }
 
     @PostMapping("/questions")
-    public QuizDto getQuestions(@RequestBody Topic[] topics,
+    public QuizDto getQuestions(@RequestBody FilteredQuizDto filteredQuizDto,
                                 @AuthenticationPrincipal UserDetails userDetails,
                                 HttpSession httpSession) {
 
-        return questionService.getQuestions(topics, userDetails, httpSession);
+        return questionService.getQuestions(
+                filteredQuizDto.getTopics(),
+                userDetails,
+                httpSession,
+                filteredQuizDto.getDifficulty()
+        );
     }
 
     @PostMapping("/quiz-answer")
@@ -46,7 +51,8 @@ public class QuizController {
     }
 
     @GetMapping("/import")
-    public void saveQuizFromCsvFile(@RequestBody File file) {
+    public void saveQuizFromCsvFile(/*@RequestBody File file*/) {
+        File file = new File("/home/intern/Downloads/test.csv");
         csvParserService.parseCsvFileToDataBase(file);
     }
 }

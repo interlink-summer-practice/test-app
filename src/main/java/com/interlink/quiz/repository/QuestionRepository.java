@@ -28,11 +28,20 @@ public class QuestionRepository {
         transaction.commit();
     }
 
-    public List<Question> getQuestionsByTopic(Topic topic) {
-        return sessionFactory.getCurrentSession()
-                .createQuery("FROM Question WHERE topic = :topic", Question.class)
+    public List<Question> getQuestionsByTopic(Topic topic, String difficulty) {
+        if (difficulty.equals("")) {
+            return sessionFactory.getCurrentSession()
+                    .createQuery("FROM Question WHERE topic = :topic", Question.class)
+                    .setParameter("topic", topic)
+                    .list();
+        }
+
+        List<Question> list = sessionFactory.getCurrentSession()
+                .createQuery("FROM Question WHERE topic = :topic AND difficulty = :difficulty", Question.class)
                 .setParameter("topic", topic)
+                .setParameter("difficulty", difficulty)
                 .list();
+        return list;
     }
 
     public List<Question> getNotPassedQuestionsByTopic(Topic topic, QuizSession quizSession) {

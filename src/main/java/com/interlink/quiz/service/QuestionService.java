@@ -46,7 +46,8 @@ public class QuestionService {
 
     public QuizDto getQuestions(Topic[] topicsArray,
                                 UserDetails userDetails,
-                                HttpSession httpSession) {
+                                HttpSession httpSession,
+                                String difficulty) {
 
         QuizDto quizDto = new QuizDto();
         List<QuizSession> quizSessions;
@@ -59,14 +60,14 @@ public class QuestionService {
         }
         for (QuizSession quizSession : quizSessions) {
             if (isAlreadyPassedQuiz(topics, quizSession)) {
-                if (isDoneQuiz(topics, quizSession)) {
+                if (isDoneQuiz(topics, quizSession, difficulty)) {
                     quizSession.setDate(LocalDateTime.now().toString());
 
                     quizSessionRepository.updateQuizSession(quizSession);
                     quizAnswerRepository.deleteQuizAnswersByQuizSession(quizSession);
 
                     quizDto.setQuizSession(quizSession);
-                    quizDto.setQuestions(getQuestionsByTopics(topics));
+                    quizDto.setQuestions(getQuestionsByTopics(topics, difficulty));
                     return quizDto;
                 } else {
                     quizDto.setQuizSession(quizSession);
@@ -77,14 +78,14 @@ public class QuestionService {
         }
 
         quizDto.setQuizSession(createNewQuizSession(httpSession, userDetails, topics));
-        quizDto.setQuestions(getQuestionsByTopics(topics));
+        quizDto.setQuestions(getQuestionsByTopics(topics, difficulty));
         return quizDto;
     }
 
-    private List<QuestionDto> getQuestionsByTopics(List<Topic> topics) {
+    private List<QuestionDto> getQuestionsByTopics(List<Topic> topics, String difficulty) {
         List<Question> questions = new ArrayList<>();
         for (Topic topic : topics) {
-            questions.addAll(questionRepository.getQuestionsByTopic(topic));
+            questions.addAll(questionRepository.getQuestionsByTopic(topic, difficulty));
         }
 
         return questions.stream()
@@ -129,8 +130,8 @@ public class QuestionService {
         return true;
     }
 
-    private boolean isDoneQuiz(List<Topic> topics, QuizSession quizSession) {
-        List<QuestionDto> questionsByTopics = getQuestionsByTopics(topics);
+    private boolean isDoneQuiz(List<Topic> topics, QuizSession quizSession, String difficulty) {
+        List<QuestionDto> questionsByTopics = getQuestionsByTopics(topics, difficulty);
         List<QuizAnswer> answers = quizAnswerRepository.getAnswersByQuizSession(quizSession);
         Set<Question> questions = answers.stream().map(QuizAnswer::getQuestion).collect(toSet());
         return questionsByTopics.size() == questions.size();

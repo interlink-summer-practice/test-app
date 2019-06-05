@@ -6,7 +6,7 @@ import java.util.List;
 
 public class QuizLine {
 
-    @CsvBindByName(column = "\uFEFFName")
+    @CsvBindByName(column = "Name")
     private String question;
 
     @CsvBindByName(column = "Відповіді")
