@@ -49,37 +49,41 @@ public class QuestionService {
                                 HttpSession httpSession,
                                 String difficulty) {
 
-        QuizDto quizDto = new QuizDto();
-        List<QuizSession> quizSessions;
         List<Topic> topics = Arrays.stream(topicsArray).collect(toList());
-        if (userDetails == null) {
-            quizSessions = quizSessionRepository.getQuizSessionBySessionId(httpSession.getId());
-        } else {
-            quizSessions = quizSessionRepository.getQuizSessionsByUserId(
-                    userRepository.getUserByEmail(userDetails.getUsername()));
-        }
-        for (QuizSession quizSession : quizSessions) {
-            if (isAlreadyPassedQuiz(topics, quizSession, difficulty)) {
-                if (isDoneQuiz(topics, quizSession, difficulty)) {
-                    quizSession.setDate(LocalDateTime.now().toString());
+        if (isPresentQuestionsWithThisDifficulty(topics, difficulty)) {
+            QuizDto quizDto = new QuizDto();
+            List<QuizSession> quizSessions;
+            if (userDetails == null) {
+                quizSessions = quizSessionRepository.getQuizSessionBySessionId(httpSession.getId());
+            } else {
+                quizSessions = quizSessionRepository.getQuizSessionsByUserId(
+                        userRepository.getUserByEmail(userDetails.getUsername()));
+            }
+            for (QuizSession quizSession : quizSessions) {
+                if (isAlreadyPassedQuiz(topics, quizSession, difficulty)) {
+                    if (isDoneQuiz(topics, quizSession, difficulty)) {
+                        quizSession.setDate(LocalDateTime.now().toString());
 
-                    quizSessionRepository.updateQuizSession(quizSession);
-                    quizAnswerRepository.deleteQuizAnswersByQuizSession(quizSession);
+                        quizSessionRepository.updateQuizSession(quizSession);
+                        quizAnswerRepository.deleteQuizAnswersByQuizSession(quizSession);
 
-                    quizDto.setQuizSession(quizSession);
-                    quizDto.setQuestions(getQuestionsByTopics(topics, difficulty));
-                    return quizDto;
-                } else {
-                    quizDto.setQuizSession(quizSession);
-                    quizDto.setQuestions(getNotPassedQuestionsByTopics(topics, quizSession));
-                    return quizDto;
+                        quizDto.setQuizSession(quizSession);
+                        quizDto.setQuestions(getQuestionsByTopics(topics, difficulty));
+                        return quizDto;
+                    } else {
+                        quizDto.setQuizSession(quizSession);
+                        quizDto.setQuestions(getNotPassedQuestionsByTopics(topics, quizSession));
+                        return quizDto;
+                    }
                 }
             }
+
+            quizDto.setQuizSession(createNewQuizSession(httpSession, userDetails, topics, difficulty));
+            quizDto.setQuestions(getQuestionsByTopics(topics, difficulty));
+            return quizDto;
         }
 
-        quizDto.setQuizSession(createNewQuizSession(httpSession, userDetails, topics, difficulty));
-        quizDto.setQuestions(getQuestionsByTopics(topics, difficulty));
-        return quizDto;
+        return null;
     }
 
     private List<QuestionDto> getQuestionsByTopics(List<Topic> topics, String difficulty) {
@@ -135,6 +139,14 @@ public class QuestionService {
             }
         }
         return true;
+    }
+
+    private boolean isPresentQuestionsWithThisDifficulty(List<Topic> topics, String difficulty) {
+        long sum = topics.stream()
+                .mapToLong(topic -> questionRepository.getCountByTopicAndDifficulty(difficulty, topic))
+                .sum();
+        
+        return sum > 0;
     }
 
     private boolean isDoneQuiz(List<Topic> topics, QuizSession quizSession, String difficulty) {

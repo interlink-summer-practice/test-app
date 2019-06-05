@@ -28,6 +28,15 @@ public class QuestionRepository {
         transaction.commit();
     }
 
+    public Long getCountByTopicAndDifficulty(String difficulty, Topic topic) {
+        return (Long) sessionFactory.getCurrentSession()
+                .createQuery("select count(q) from Question q " +
+                        "WHERE topic = :topic and difficulty = :difficulty")
+                .setParameter("topic", topic)
+                .setParameter("difficulty", difficulty)
+                .uniqueResult();
+    }
+
     public List<Question> getQuestionsByTopic(Topic topic, String difficulty) {
         if (difficulty.equals("")) {
             return sessionFactory.getCurrentSession()
