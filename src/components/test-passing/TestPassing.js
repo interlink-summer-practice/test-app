@@ -19,19 +19,22 @@ export default class TestPassing extends Component {
         allSubjects: [],
         showResultBySubjects: false,
     };
+
     nextQuestion = () => {
         this.setState((state) => {
-            state.i = state.i + 1
+            state.i = state.i + 1;
             return state;
         });
-    }
+    };
+
     selectedOption = (value) => {
         this.setState((state) => {
             state.questions[state.i].chosenOption = value;
             return state;
         });
         console.log(this.state.questions[this.state.i]);
-    }
+    };
+
     checkIsCorrectAnswer = () => {
         this.state.questions.forEach(element => {
             if (element.chosenOption === element.rightAnswer) {
@@ -50,7 +53,7 @@ export default class TestPassing extends Component {
             }
         });
         // console.log(this.state.questions);
-    }
+    };
 
     numberOfCorrectAnswers = () => {
         // console.log(this.state.questions);
@@ -61,10 +64,11 @@ export default class TestPassing extends Component {
             }
         });
         return count;
-    }
+    };
+
     percentOfCorrectAnswers = () => {
         return Math.floor(this.numberOfCorrectAnswers() * 100 / this.state.questions.length);
-    }
+    };
 
 
     allSubjectsWithoutRepetition = () => {
@@ -79,7 +83,8 @@ export default class TestPassing extends Component {
         });
         this.setState({ allSubjects: subjects });
         console.log(this.state.allSubjects);
-    }
+    };
+
     resultBySubjects = () => {
         this.state.questions.forEach((element) => {
             this.state.allSubjects.forEach((elem, i) => {
@@ -90,15 +95,19 @@ export default class TestPassing extends Component {
                     }
                 }
             });
-        })
+        });
+
         return this.state.allSubjects;
-    }
+    };
+
     showResultBySubjects = () => {
         this.setState({ showResultBySubjects: true });
         console.log("show");
-    }
+    };
+
     componentDidMount() {
         this.allSubjectsWithoutRepetition();
+        console.log(this.props.topics);
     }
     render() {
         if (questions[this.state.i] !== undefined) {
