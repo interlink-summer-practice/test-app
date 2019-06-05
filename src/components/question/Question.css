@@ -1,0 +1,15 @@
+.test{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+fieldset{
+    width: 400px;
+}
+.MuiFormLabel-root {
+    width: 400px;
+    display: flex;
+    justify-content: center;
+}
