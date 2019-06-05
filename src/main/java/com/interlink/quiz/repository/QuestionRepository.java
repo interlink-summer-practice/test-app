@@ -42,19 +42,26 @@ public class QuestionRepository {
                 .uniqueResult();
     }
 
+    public Long getCountOfQuestionByTopic(Topic topic) {
+        return (Long) sessionFactory.getCurrentSession()
+                .createQuery("select count(q) from Question q where q.topic.id = :topicId")
+                .setParameter("topicId", topic.getId())
+                .uniqueResult();
+    }
+
     public List<Question> getNotPassedQuestionsByTopic(Topic topic, QuizSession quizSession) {
         return sessionFactory.getCurrentSession()
                 .createNativeQuery("" +
-                "SELECT q.* " +
-                "FROM questions q " +
-                "       LEFT JOIN topics t on q.topic_id = t.id " +
-                "WHERE t.id = :topic_id " +
-                "EXCEPT " +
-                "SELECT q.* " +
-                "FROM questions q " +
-                "       LEFT JOIN topics t on q.topic_id = t.id " +
-                "       LEFT JOIN quiz_answers qa on q.id = qa.question_id " +
-                "WHERE qa.quiz_session_id = :session_id", Question.class)
+                        "SELECT q.* " +
+                        "FROM questions q " +
+                        "       LEFT JOIN topics t on q.topic_id = t.id " +
+                        "WHERE t.id = :topic_id " +
+                        "EXCEPT " +
+                        "SELECT q.* " +
+                        "FROM questions q " +
+                        "       LEFT JOIN topics t on q.topic_id = t.id " +
+                        "       LEFT JOIN quiz_answers qa on q.id = qa.question_id " +
+                        "WHERE qa.quiz_session_id = :session_id", Question.class)
                 .setParameter("topic_id", topic.getId())
                 .setParameter("session_id", quizSession.getId())
                 .list();

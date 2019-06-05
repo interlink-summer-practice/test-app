@@ -2,6 +2,7 @@ package com.interlink.quiz.repository;
 
 import com.interlink.quiz.object.QuizAnswer;
 import com.interlink.quiz.object.QuizSession;
+import com.interlink.quiz.object.Topic;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -32,6 +33,16 @@ public class QuizAnswerRepository {
                 .createQuery("from QuizAnswer where quiz_session_id = :quiz_session_id", QuizAnswer.class)
                 .setParameter("quiz_session_id", quizSession.getId())
                 .list();
+    }
+
+    public Long getCountOfRightAnswerBySessionAndTopic(QuizSession quizSession, Topic topic) {
+        return (Long) sessionFactory.getCurrentSession()
+                .createQuery("select count(qa) from QuizAnswer qa " +
+                        "left join Question q on qa.question.id = q.id " +
+                        "where qa.quizSession.id = :quizSessionId and q.topic.id = :topicId and qa.answer.id = q.rightAnswer.id")
+                .setParameter("quizSessionId", quizSession.getId())
+                .setParameter("topicId", topic.getId())
+                .uniqueResult();
     }
 
     public void deleteQuizAnswersByQuizSession(QuizSession quizSession) {

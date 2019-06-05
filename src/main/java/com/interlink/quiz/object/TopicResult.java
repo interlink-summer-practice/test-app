@@ -3,22 +3,9 @@ package com.interlink.quiz.object;
 public class TopicResult {
 
     private Topic topic;
-    private long numberOfAnswers;
+    private long numberOfQuestions;
     private long numberOfCorrectAnswers;
     private double result;
-
-    public TopicResult() { }
-
-    public TopicResult(long numberOfAnswers, long numberOfCorrectAnswers) {
-        this.numberOfAnswers = numberOfAnswers;
-        this.numberOfCorrectAnswers = numberOfCorrectAnswers;
-    }
-
-    public TopicResult(Topic topic, long numberOfAnswers, long numberOfCorrectAnswers) {
-        this.topic = topic;
-        this.numberOfAnswers = numberOfAnswers;
-        this.numberOfCorrectAnswers = numberOfCorrectAnswers;
-    }
 
     public Topic getTopic() {
         return topic;
@@ -28,12 +15,12 @@ public class TopicResult {
         this.topic = topic;
     }
 
-    public long getNumberOfAnswers() {
-        return numberOfAnswers;
+    public long getNumberOfQuestions() {
+        return numberOfQuestions;
     }
 
-    public void setNumberOfAnswers(long numberOfAnswers) {
-        this.numberOfAnswers = numberOfAnswers;
+    public void setNumberOfQuestions(long numberOfQuestions) {
+        this.numberOfQuestions = numberOfQuestions;
     }
 
     public long getNumberOfCorrectAnswers() {
