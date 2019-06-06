@@ -31,4 +31,11 @@ public class AnswerRepository {
         query.setParameter("name", name);
         return query.uniqueResult();
     }
+
+    public Answer getAnswerById(int id) {
+        return sessionFactory.getCurrentSession()
+                .createQuery("from Answer where id = :id", Answer.class)
+                .setParameter("id", id)
+                .uniqueResult();
+    }
 }

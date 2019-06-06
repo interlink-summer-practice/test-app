@@ -28,6 +28,13 @@ public class QuestionRepository {
         transaction.commit();
     }
 
+    public Question getQuestionById(int id) {
+        return sessionFactory.getCurrentSession()
+                .createQuery("from Question where id = :id", Question.class)
+                .setParameter("id", id)
+                .uniqueResult();
+    }
+
     public Long getCountByTopicAndDifficulty(String difficulty, Topic topic) {
         return (Long) sessionFactory.getCurrentSession()
                 .createQuery("select count(q) from Question q " +

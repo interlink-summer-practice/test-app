@@ -3,6 +3,7 @@ package com.interlink.quiz.controller;
 import com.interlink.quiz.csv.CsvParserService;
 import com.interlink.quiz.object.QuizAnswer;
 import com.interlink.quiz.object.dto.FilteredQuizDto;
+import com.interlink.quiz.object.dto.QuizAnswerDto;
 import com.interlink.quiz.object.dto.QuizDto;
 import com.interlink.quiz.service.QuestionService;
 import com.interlink.quiz.service.QuizAnswerService;
@@ -44,7 +45,7 @@ public class QuizController {
     }
 
     @PostMapping("/quiz-answer")
-    public String saveQuizAnswer(@RequestParam QuizAnswer quizAnswer) {
+    public String saveQuizAnswer(@RequestParam QuizAnswerDto quizAnswer) {
         quizAnswerService.saveQuizAnswer(quizAnswer);
 
         return "OK";

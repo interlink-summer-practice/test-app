@@ -34,6 +34,13 @@ public class QuizSessionRepository {
         transaction.commit();
     }
 
+    public QuizSession getQuizSessionById(int id) {
+        return sessionFactory.getCurrentSession()
+                .createQuery("from QuizSession where id = :id", QuizSession.class)
+                .setParameter("id", id)
+                .uniqueResult();
+    }
+
     public List<QuizSession> getQuizSessionBySessionId(String sessionId) {
         return sessionFactory.getCurrentSession()
                 .createQuery("from QuizSession where session_id = :session_id", QuizSession.class)
