@@ -47,7 +47,9 @@ export default class TestPassing extends Component {
     }
 
     componentDidMount() {
-        axios.post('/questions', this.props.topics.topics)
+        console.log(this.props.topics);
+        console.log(this.props.topics.topics);
+        axios.post('/questions', this.props.topics)
             .then(res => {
                 this.setState((state) => {
                     state.sessionId = res.data.quizSession.id;
@@ -66,7 +68,7 @@ export default class TestPassing extends Component {
                 console.log(this.state.showResultBySubjects);
                 return (<ResultBySubjects sessionId={this.state.sessionId} showResultBySubjects={this.showResultBySubjects}/>)
             }
-            else if (this.state.questions[this.state.i] !== undefined) {
+            else if (this.state.questions[this.state.i] !== undefined ) {
                 return (<React.Fragment>
                     <Question question={this.state.questions[0 + this.state.i]} nextQuestion={this.nextQuestion}/>
                     <UpdateResultAlertDialog showResultBySubjects={this.showResultBySubjects} restartTest={this.restartTest} open={this.state.isAlreadyPassed}/>
@@ -78,11 +80,10 @@ export default class TestPassing extends Component {
             }
 
         }
-                        
+
         else {
             return(<div>Loading...</div>)
         }
-
 
     }
 }
