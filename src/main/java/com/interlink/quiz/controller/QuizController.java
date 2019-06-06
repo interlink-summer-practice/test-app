@@ -39,7 +39,7 @@ public class QuizController {
 
     @PostMapping("/questions")
     public QuizDto getQuestions(@RequestBody FilteredQuizDto filteredQuizDto,
-                                @RequestHeader(value = "auth-token", required = false) String token,
+                                @RequestHeader("auth-token") String token,
                                 HttpSession httpSession) {
 
         Long userId;
@@ -71,7 +71,7 @@ public class QuizController {
 
     @PutMapping("/quiz-answer")
     public void updateQuizSessionAndAnswers(@RequestBody QuizSessionDto quizSessionDto,
-                                            @RequestHeader(value = "auth-token", required = false) String token) {
+                                            @RequestHeader("auth-token") String token) {
         questionService.updateResultsOfPassedQuiz(quizSessionDto, token);
     }
 }
