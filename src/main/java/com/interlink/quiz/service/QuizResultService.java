@@ -40,16 +40,16 @@ public class QuizResultService {
     public QuizResult getQuizResult(QuizSessionDto quizSessionDto, Long userId) {
         QuizResult quizResult = new QuizResult();
         QuizSession quizSession = quizSessionRepository.getQuizSessionById(quizSessionDto.getId());
-        int mark = quizSessionRepository.getMarkByQuizSession(quizSession);
-        quizResult.setMark(mark);
-        if (userId != null) {
-            saveUserResult(quizSession, mark);
-        }
+        quizResult.setMark(quizSessionRepository.getMarkByQuizSession(quizSession));
         quizResult.setCountOfQuestion(quizAnswerRepository.getCountOfQuestionBySession(quizSession));
         quizResult.setCountOfCorrectAnswers(quizAnswerRepository.getCountOfRightAnswerBySession(quizSession));
         quizResult.setPercentOfPassingQuiz(
                 quizResult.getCountOfCorrectAnswers() * 100.0 / quizResult.getCountOfQuestion());
         quizResult.setTopicResults(getTopicResultsBySessions(quizSession));
+
+        if (userId != null) {
+            saveUserResult(quizSession, quizResult.getMark());
+        }
 
         return quizResult;
     }
@@ -74,12 +74,7 @@ public class QuizResultService {
     private List<TopicResult> getTopicResultsBySessions(QuizSession quizSession) {
         List<TopicResult> topicResultList = new ArrayList<>();
         for (Topic topic : quizSession.getTopics()) {
-            TopicResult topicResult = new TopicResult();
-            topicResult.setTopic(topic);
-            topicResult.setNumberOfQuestions(questionRepository.getCountOfQuestionByTopic(topic));
-            topicResult.setNumberOfCorrectAnswers(quizAnswerRepository.getCountOfRightAnswerBySessionAndTopic(quizSession, topic));
-            topicResult.setResult(topicResult.getNumberOfCorrectAnswers() * 100.0 / topicResult.getNumberOfQuestions());
-            topicResultList.add(topicResult);
+            topicResultList.add(createTopicResult(quizSession, topic));
         }
 
         return topicResultList;
@@ -97,5 +92,17 @@ public class QuizResultService {
                 quizResultDto.getCountOfCorrectAnswers() * 100.0 / quizResultDto.getCountOfQuestions());
         quizResultDto.setTopics(quizSession.getTopics());
         return quizResultDto;
+    }
+
+    private TopicResult createTopicResult(QuizSession quizSession, Topic topic) {
+        TopicResult topicResult = new TopicResult();
+        topicResult.setTopic(topic);
+        topicResult.setNumberOfQuestions(
+                questionRepository.getCountByTopicAndDifficulty(quizSession.getDifficulty(), topic));
+        topicResult.setNumberOfCorrectAnswers(
+                quizAnswerRepository.getCountOfRightAnswerBySessionAndTopic(quizSession, topic));
+        topicResult.setResult(topicResult.getNumberOfCorrectAnswers() * 100.0 / topicResult.getNumberOfQuestions());
+
+        return topicResult;
     }
 }

@@ -38,7 +38,7 @@ public class QuizController {
 
     @PostMapping("/questions")
     public QuizDto getQuestions(@RequestBody FilteredQuizDto filteredQuizDto,
-                                @RequestHeader("auth-token") String token,
+                                @RequestHeader(value = "auth-token", required = false) String token,
                                 HttpSession httpSession) {
 
         Long userId = null;
@@ -61,14 +61,17 @@ public class QuizController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @GetMapping("/import")
-    public void saveQuizFromCsvFile(@RequestBody File file) {
+    @PostMapping("/import")
+    public ResponseEntity saveQuizFromCsvFile(/*@RequestBody File file*/) {
+        File file = new File("C:\\Users\\User\\Downloads\\test.csv");
         csvParserService.parseCsvFileToDataBase(file);
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @PutMapping("/quiz-answer")
     public void updateQuizSessionAndAnswers(@RequestBody QuizSessionDto quizSessionDto,
-                                            @RequestHeader("auth-token") String token) {
+                                            @RequestHeader(value = "auth-token", required = false) String token) {
         questionService.updateResultsOfPassedQuiz(quizSessionDto, token);
     }
 }

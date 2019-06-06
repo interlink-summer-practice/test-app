@@ -59,13 +59,6 @@ public class QuestionRepository {
                 .list();
     }
 
-    public Long getCountOfQuestionByTopic(Topic topic) {
-        return (Long) sessionFactory.getCurrentSession()
-                .createQuery("select count(q) from Question q where q.topic.id = :topicId")
-                .setParameter("topicId", topic.getId())
-                .uniqueResult();
-    }
-
     public List<Question> getNotPassedQuestionsByTopic(Topic topic, QuizSession quizSession) {
         if (quizSession.getDifficulty().equals("NaN")) {
             return sessionFactory.getCurrentSession()
