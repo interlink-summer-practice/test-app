@@ -6,6 +6,7 @@ import com.interlink.quiz.object.QuizSession;
 import com.interlink.quiz.object.Topic;
 import com.interlink.quiz.object.dto.QuestionDto;
 import com.interlink.quiz.object.dto.QuizDto;
+import com.interlink.quiz.object.dto.QuizSessionDto;
 import com.interlink.quiz.repository.QuestionRepository;
 import com.interlink.quiz.repository.QuizAnswerRepository;
 import com.interlink.quiz.repository.QuizSessionRepository;
@@ -79,36 +80,8 @@ public class QuestionService {
         return quizDto;
     }
 
-    public QuizDto passQuizAgain(Topic[] topicsArray,
-                                 UserDetails userDetails,
-                                 HttpSession httpSession) {
-
-        List<Topic> topics = Arrays.stream(topicsArray).collect(toList());
-        QuizDto quizDto = new QuizDto();
-        List<QuizSession> sessions;
-        if (userDetails == null) {
-            sessions = quizSessionRepository.getQuizSessionBySessionId(httpSession.getId());
-        } else {
-            sessions = quizSessionRepository.getQuizSessionsByUserId(
-                    userRepository.getUserByEmail(userDetails.getUsername()));
-        }
-        for (QuizSession session : sessions) {
-            if (isAlreadyPassedQuiz(topics, session)) {
-                if (isDoneQuiz(topics, session)) {
-                    session.setDate(LocalDateTime.now().toString());
-                    quizSessionRepository.updateQuizSession(session);
-                    quizAnswerRepository.deleteQuizAnswersByQuizSession(session);
-                    quizDto.setQuizSession(session);
-                    quizDto.setQuestions(getQuestionsByTopics(topics));
-                    return quizDto;
-                }
-            }
-        }
-
-        return quizDto;
-    }
-
-    public void updateResultsOfPassedQuiz(QuizSession quizSession) {
+    public void updateResultsOfPassedQuiz(QuizSessionDto quizSessionDto) {
+        QuizSession quizSession = quizSessionRepository.getQuizSessionById(quizSessionDto.getId());
         quizSession.setDate(LocalDateTime.now().toString());
         quizSessionRepository.updateQuizSession(quizSession);
         quizAnswerRepository.deleteQuizAnswersByQuizSession(quizSession);

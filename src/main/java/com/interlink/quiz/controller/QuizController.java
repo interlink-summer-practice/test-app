@@ -6,6 +6,7 @@ import com.interlink.quiz.object.QuizSession;
 import com.interlink.quiz.object.Topic;
 import com.interlink.quiz.object.dto.QuizAnswerDto;
 import com.interlink.quiz.object.dto.QuizDto;
+import com.interlink.quiz.object.dto.QuizSessionDto;
 import com.interlink.quiz.service.QuestionService;
 import com.interlink.quiz.service.QuizAnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,7 @@ public class QuizController {
     }
 
     @PutMapping("/quiz-answer")
-    public void updateQuizSessionAndAnswers(@RequestBody QuizSession quizSession) {
-        questionService.updateResultsOfPassedQuiz(quizSession);
+    public void updateQuizSessionAndAnswers(@RequestBody QuizSessionDto quizSessionDto) {
+        questionService.updateResultsOfPassedQuiz(quizSessionDto);
     }
 }
