@@ -4,6 +4,7 @@ import com.interlink.quiz.object.User;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -41,7 +42,11 @@ public class UserRepository {
                 .setParameter("email", email).uniqueResult();
     }
 
-    public Integer saveUser(User user) {
-        return (Integer) sessionFactory.getCurrentSession().save(user);
+    public User saveUser(User user) {
+        Session session = sessionFactory.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        session.save(user);
+        transaction.commit();
+        return user;
     }
 }
