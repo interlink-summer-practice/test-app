@@ -16,7 +16,11 @@ export default class TotalResultTesting extends Component {
         console.log(this.props.sessionId);
         axios.post('/result', {id: this.props.sessionId})
             .then(res => {
-                this.setState({totalPercent: res.data.percentOfPassingQuiz, totalCountOfQuestions:res.data.countOfQuestion, totalCountOfCorrectAnswers:res.data.countOfCorrectAnswers});
+                this.setState({
+                    totalPercent: res.data.percentOfPassingQuiz,
+                    totalCountOfQuestions: res.data.countOfQuestion,
+                    totalCountOfCorrectAnswers: res.data.countOfCorrectAnswers
+                });
 
             })
     }
@@ -24,11 +28,14 @@ export default class TotalResultTesting extends Component {
     render() {
         return (
             <div className="totalResult">
-                <div className="number">{this.state.totalCountOfCorrectAnswers} of {this.state.totalCountOfQuestions}</div>
+                <div
+                    className="number">{this.state.totalCountOfCorrectAnswers} of {this.state.totalCountOfQuestions}</div>
                 <div className="percent">{(this.state.totalPercent).toFixed(2)}%</div>
-                {/*<Button color="secondary" onClick={this.showResultBySubjects}>*/}
-                {/*    More*/}
-                {/*</Button>*/}
+                <div className="more">
+                    <Button color="secondary" onClick={this.showResultBySubjects}>
+                        More
+                    </Button>
+                </div>
             </div>
 
         );

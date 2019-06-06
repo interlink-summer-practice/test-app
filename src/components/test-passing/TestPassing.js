@@ -14,7 +14,7 @@ export default class TestPassing extends Component {
         i: 0,
         isDataLoaded: false,
         questions: [],
-        selectedTopics: [{id:4},{id:5}],
+        selectedTopics: [{id:4}],
         sessionId: 0,
     };
     nextQuestion = (questionId,answerId) => {
