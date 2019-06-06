@@ -38,21 +38,6 @@ export default class Question extends Component {
         }
     }
 
-    // setChosenOption = () => {
-    //     if (this.state.value !== ' ') {
-    //         questions[this.props.i].chosenOption = this.state.value;
-    //     }
-    //     this.setState({ value: ' ' });
-    // }
-    // isOptionChosen = () => {
-    //     if (this.state.value !== ' ') {
-    //         return true;
-    //     }
-    //     else {
-    //         return false;
-    //     }
-    // }
-
     render() {
 
         const {id, name, difficulty, topic, answers} = this.props.question;
@@ -73,7 +58,7 @@ export default class Question extends Component {
                     </RadioGroup>
                 </FormControl>
                 <Button variant="contained" color="primary" onClick={this.nextQuestion}>
-                    Відповісти
+                    ANSWER
                 </Button>
             </div>
         );
