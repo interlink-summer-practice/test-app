@@ -27,12 +27,11 @@ public class QuizResultController {
     public QuizResult getQuizResult(@RequestBody QuizSessionDto quizSessionDto,
                                     @RequestHeader(value = "auth-token", required = false) String token) {
 
-        Long userId;
+        Long userId = null;
         if (token != null) {
             userId = jwtTokenProvider.getUserIdFromJWT(token);
-        } else {
-            userId = null;
         }
+
         return quizResultService.getQuizResult(quizSessionDto, userId);
     }
 
@@ -40,11 +39,9 @@ public class QuizResultController {
     public List<QuizResultDto> getTestHistory(
             @RequestHeader(value = "auth-token", required = false) String token) {
 
-        Long userId;
+        Long userId = null;
         if (token != null) {
             userId = jwtTokenProvider.getUserIdFromJWT(token);
-        } else {
-            userId = null;
         }
 
         return quizResultService.getHistoryOfQuizzesByUser(userId);

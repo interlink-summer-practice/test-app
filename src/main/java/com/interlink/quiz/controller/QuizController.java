@@ -42,11 +42,9 @@ public class QuizController {
                                 @RequestHeader(value = "auth-token", required = false) String token,
                                 HttpSession httpSession) {
 
-        Long userId;
+        Long userId = null;
         if (token != null) {
             userId = jwtTokenProvider.getUserIdFromJWT(token);
-        } else {
-            userId = null;
         }
 
         return questionService.getQuestions(
