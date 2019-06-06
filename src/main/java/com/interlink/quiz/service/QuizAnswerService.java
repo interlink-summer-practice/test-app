@@ -31,7 +31,6 @@ public class QuizAnswerService {
 
     public void saveQuizAnswer(QuizAnswerDto quizAnswerDto) {
 
-
         quizAnswerRepository.saveQuizAnswer(createQuizAnswer(quizAnswerDto));
     }
 
