@@ -2,7 +2,7 @@ package com.interlink.quiz.controller;
 
 import com.interlink.quiz.auth.security.JwtTokenProvider;
 import com.interlink.quiz.csv.CsvParserService;
-import com.interlink.quiz.object.Topic;
+import com.interlink.quiz.object.dto.FilteredQuizDto;
 import com.interlink.quiz.object.dto.QuizAnswerDto;
 import com.interlink.quiz.object.dto.QuizDto;
 import com.interlink.quiz.object.dto.QuizSessionDto;
@@ -11,6 +11,8 @@ import com.interlink.quiz.service.QuizAnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -36,11 +38,16 @@ public class QuizController {
     }
 
     @PostMapping("/questions")
-    public QuizDto getQuestions(@RequestBody Topic[] topics,
+    public QuizDto getQuestions(@RequestBody FilteredQuizDto filteredQuizDto,
                                 @RequestHeader("auth-token") String token,
                                 HttpSession httpSession) {
-        Long userId = jwtTokenProvider.getUserIdFromJWT(token);
-        return questionService.getQuestions(topics, userId, httpSession);
+
+        return questionService.getQuestions(
+                filteredQuizDto.getTopics(),
+                jwtTokenProvider.getUserIdFromJWT(token),
+                httpSession,
+                filteredQuizDto.getDifficulty()
+        );
     }
 
     @PostMapping("/quiz-answer")

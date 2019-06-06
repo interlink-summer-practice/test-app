@@ -22,6 +22,7 @@ public class QuizAnswerService {
                              AnswerRepository answerRepository,
                              QuestionRepository questionRepository,
                              QuizSessionRepository quizSessionRepository) {
+
         this.quizAnswerRepository = quizAnswerRepository;
         this.answerRepository = answerRepository;
         this.questionRepository = questionRepository;

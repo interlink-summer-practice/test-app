@@ -20,6 +20,7 @@ public class QuizSession {
 
     @Column
     private String date;
+    private String difficulty;
 
     @ManyToMany
     @JoinTable(
@@ -27,6 +28,7 @@ public class QuizSession {
             joinColumns = {@JoinColumn(name = "quiz_session_id")},
             inverseJoinColumns = {@JoinColumn(name = "topic_id")}
     )
+
     private List<Topic> topics;
 
     public int getId() {
@@ -67,5 +69,13 @@ public class QuizSession {
 
     public void setTopics(List<Topic> topics) {
         this.topics = topics;
+    }
+
+    public String getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
     }
 }

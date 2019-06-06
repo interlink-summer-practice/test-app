@@ -6,8 +6,6 @@ import com.interlink.quiz.object.dto.QuizResultDto;
 import com.interlink.quiz.object.dto.QuizSessionDto;
 import com.interlink.quiz.service.QuizResultService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
