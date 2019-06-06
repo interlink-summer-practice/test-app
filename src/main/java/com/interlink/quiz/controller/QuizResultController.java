@@ -25,13 +25,28 @@ public class QuizResultController {
 
     @PostMapping("/result")
     public QuizResult getQuizResult(@RequestBody QuizSessionDto quizSessionDto,
-                                    @RequestHeader("auth-token") String token) {
-        Long userId = jwtTokenProvider.getUserIdFromJWT(token);
+                                    @RequestHeader(value = "auth-token", required = false) String token) {
+
+        Long userId;
+        if (token != null) {
+            userId = jwtTokenProvider.getUserIdFromJWT(token);
+        } else {
+            userId = null;
+        }
         return quizResultService.getQuizResult(quizSessionDto, userId);
     }
 
     @GetMapping("/account")
-    public List<QuizResultDto> getTestHistory(@RequestHeader("auth-token") String token) {
-        return quizResultService.getHistoryOfQuizzesByUser(jwtTokenProvider.getUserIdFromJWT(token));
+    public List<QuizResultDto> getTestHistory(
+            @RequestHeader(value = "auth-token", required = false) String token) {
+
+        Long userId;
+        if (token != null) {
+            userId = jwtTokenProvider.getUserIdFromJWT(token);
+        } else {
+            userId = null;
+        }
+
+        return quizResultService.getHistoryOfQuizzesByUser(userId);
     }
 }

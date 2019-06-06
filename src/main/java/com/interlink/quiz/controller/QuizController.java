@@ -39,12 +39,19 @@ public class QuizController {
 
     @PostMapping("/questions")
     public QuizDto getQuestions(@RequestBody FilteredQuizDto filteredQuizDto,
-                                @RequestHeader("auth-token") String token,
+                                @RequestHeader(value = "auth-token", required = false) String token,
                                 HttpSession httpSession) {
+
+        Long userId;
+        if (token != null) {
+            userId = jwtTokenProvider.getUserIdFromJWT(token);
+        } else {
+            userId = null;
+        }
 
         return questionService.getQuestions(
                 filteredQuizDto.getTopics(),
-                jwtTokenProvider.getUserIdFromJWT(token),
+                userId,
                 httpSession,
                 filteredQuizDto.getDifficulty()
         );
@@ -64,7 +71,7 @@ public class QuizController {
 
     @PutMapping("/quiz-answer")
     public void updateQuizSessionAndAnswers(@RequestBody QuizSessionDto quizSessionDto,
-                                            @RequestHeader("auth-token") String token) {
+                                            @RequestHeader(value = "auth-token", required = false) String token) {
         questionService.updateResultsOfPassedQuiz(quizSessionDto, token);
     }
 }
