@@ -18,7 +18,7 @@ public class UserRepository {
         this.sessionFactory = sessionFactory;
     }
 
-    public User getUserById(int id) {
+    public User getUserById(Long id) {
         Session session;
         try {
             session = sessionFactory.getCurrentSession();
@@ -27,7 +27,7 @@ public class UserRepository {
         }
         return session
                 .createQuery("from User where id = :id", User.class)
-                .setParameter("id", id).uniqueResult();
+                .setParameter("id", id.intValue()).uniqueResult();
     }
 
     public User getUserByEmail(String email) {

@@ -52,8 +52,8 @@ public class QuizResultService {
         return quizResult;
     }
 
-    public List<QuizResultDto> getHistoryOfQuizzesByUser(UserDetails userDetails) {
-        User user = userService.getUserByEmail(userDetails.getUsername());
+    public List<QuizResultDto> getHistoryOfQuizzesByUser(Long userId) {
+        User user = userService.getUserById(userId);
         List<QuizResultDto> result = new ArrayList<>();
         for (QuizSession quizSession : quizSessionRepository.getQuizSessionsByUserId(user)) {
             result.add(createQuizResultDto(quizSession));

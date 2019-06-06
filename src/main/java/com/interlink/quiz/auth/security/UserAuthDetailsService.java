@@ -29,7 +29,7 @@ public class UserAuthDetailsService implements UserDetailsService {
         return UserPrincipal.create(user);
     }
 
-    public UserDetails loadUserById(int id) {
+    public UserDetails loadUserById(Long id) {
         User user = userRepository.getUserById(id);
         if (user == null) {
             throw new UsernameNotFoundException("User not found with id : " + id);
