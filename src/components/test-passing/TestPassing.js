@@ -102,12 +102,10 @@ export default class TestPassing extends Component {
 
     showResultBySubjects = () => {
         this.setState({ showResultBySubjects: true });
-        console.log("show");
     };
 
     componentDidMount() {
         this.allSubjectsWithoutRepetition();
-        console.log(this.props.topics);
     }
     render() {
         if (questions[this.state.i] !== undefined) {
