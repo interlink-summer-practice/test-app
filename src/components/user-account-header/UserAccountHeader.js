@@ -4,21 +4,14 @@ import Typography from "@material-ui/core/Typography";
 
 export default class UserAccountHeader extends React.Component {
 
-    fullName = 'Yaroslav Kirilenko';
-
-    firstLetters = () => {
-        const firstAndLastNames = this.fullName.split(' ');
-        return firstAndLastNames[0][0] + firstAndLastNames[1][0];
-    };
-
     render() {
         return (
             <div className="userAccountHeader">
                 <Typography className="userFullName" variant="subtitle1" color="inherit">
-                    {this.fullName}
+                    {this.props.firstName + ' ' + this.props.lastName}
                 </Typography>
                 <Typography className="userLogo" variant="subtitle1" color="inherit">
-                    {this.firstLetters()}
+                    {this.props.firstName[0] + this.props.lastName[0]}
                 </Typography>
             </div>
         );

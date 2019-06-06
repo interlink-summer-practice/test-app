@@ -8,7 +8,7 @@ import {Redirect} from "react-router-dom";
 export default class UserAccount extends React.Component {
 
     state = {
-        userAccount: {}
+        userTests: []
     };
 
     componentDidMount() {
@@ -16,7 +16,9 @@ export default class UserAccount extends React.Component {
         if (localStorage.getItem('auth-token') !== null) {
             axios.get('/account')
                 .then(res => {
-                    console.log(res);
+                    this.setState({
+                        userTests: res.data
+                    })
                 })
         }
 
@@ -28,20 +30,37 @@ export default class UserAccount extends React.Component {
             return <Redirect to='/'/>
         }
 
+        if (this.state.userTests.length !== 0) {
+            return (
+                <div>
+                    <UserAccountHeader firstName={this.state.userTests[0].firstName}
+                                       lastName={this.state.userTests[0].lastName}/>
+                    <div className="userPassedTests">
+                        {
+                            this.state.userTests.map((passedTest, index) => {
+                                return (
+                                    <PassedTest key={index} testInformation={
+                                        {
+                                            date: passedTest.date,
+                                            topics: passedTest.topics,
+                                            percentOfPassingQuiz: passedTest.percentOfPassingQuiz
+                                        }
+
+                                    }/>
+                                )
+                            })
+                        }
+                    </div>
+                </div>
+            );
+        }
+
         return (
             <div>
-                <UserAccountHeader/>
-                <div className="userPassedTests">
-                    {
-                        // this.testsResults.map(test => {
-                        //     return (
-                        //         <PassedTest testInformation={test}/>
-                        //     )
-                        // })
-                    }
-                </div>
+                <p>Loading...</p>
             </div>
-        );
+        )
+
     }
 
 }

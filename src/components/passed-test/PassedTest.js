@@ -7,13 +7,18 @@ import Card from "@material-ui/core/Card";
 
 export default class PassedTest extends React.Component {
 
+    formatDate = () => {
+        const date = new Date(this.props.testInformation.date);
+        return `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`;
+    };
+
     render() {
         return (
             <div className="passedTest">
                 <Card>
                     <CardContent>
                         <Typography className="date" variant="subtitle1" color="inherit">
-                            {this.props.testInformation.date}
+                            {this.formatDate()}
                         </Typography>
                         <div className="topics">
                             {
@@ -25,13 +30,13 @@ export default class PassedTest extends React.Component {
 
                                     return (
                                         <Chip className="chip"
-                                              label={topic}
+                                              label={topic.name}
                                               style={{
                                                   backgroundColor: "rgb(" + rgb + ")",
                                                   color: 'white',
                                                   paddingRight: '5px'
                                               }}
-                                              key={topic}
+                                              key={topic.name}
                                         />
                                     )
                                 })
@@ -42,10 +47,7 @@ export default class PassedTest extends React.Component {
                                 Right answers:
                             </Typography>
                             <Typography className="rightAnswersPercentage" variant="subtitle1" color="inherit">
-                                25 of 50
-                            </Typography>
-                            <Typography className="rightAnswersPercentage" variant="subtitle1" color="inherit">
-                            {this.props.testInformation.rightAnswersPercentage}
+                            { Math.floor(this.props.testInformation.percentOfPassingQuiz * 100) / 100  + '%' }
                         </Typography>
 
                         </div>
