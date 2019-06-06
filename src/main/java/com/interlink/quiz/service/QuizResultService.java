@@ -14,7 +14,6 @@ import java.util.List;
 @Service
 public class QuizResultService {
 
-    private final QuizResultRepository quizResultRepository;
     private final QuizSessionRepository quizSessionRepository;
     private final UserResultRepository userResultRepository;
     private final QuestionRepository questionRepository;
@@ -22,14 +21,13 @@ public class QuizResultService {
     private final UserService userService;
 
     @Autowired
-    public QuizResultService(QuizResultRepository quizResultRepository,
-                             QuizSessionRepository quizSessionRepository,
-                             UserResultRepository userResultRepository,
-                             QuestionRepository questionRepository,
-                             QuizAnswerRepository quizAnswerRepository,
-                             UserService userService) {
+    public QuizResultService(
+            QuizSessionRepository quizSessionRepository,
+            UserResultRepository userResultRepository,
+            QuestionRepository questionRepository,
+            QuizAnswerRepository quizAnswerRepository,
+            UserService userService) {
 
-        this.quizResultRepository = quizResultRepository;
         this.quizSessionRepository = quizSessionRepository;
         this.userResultRepository = userResultRepository;
         this.questionRepository = questionRepository;
@@ -42,7 +40,7 @@ public class QuizResultService {
         QuizSession quizSession = quizSessionRepository.getQuizSessionById(quizSessionDto.getId());
         int mark = quizSessionRepository.getMarkByQuizSession(quizSession);
         quizResult.setMark(mark);
-        if(userDetails != null) {
+        if (userDetails != null) {
             saveUserResult(quizSession, mark);
         }
         quizResult.setCountOfQuestion(quizAnswerRepository.getCountOfQuestionBySession(quizSession));
@@ -50,17 +48,7 @@ public class QuizResultService {
         quizResult.setPercentOfPassingQuiz(
                 quizResult.getCountOfCorrectAnswers() * 100.0 / quizResult.getCountOfQuestion()
         );
-
-        List<TopicResult> topicResultList = new ArrayList<>();
-        for (Topic topic : quizSession.getTopics()) {
-            TopicResult topicResult = new TopicResult();
-            topicResult.setTopic(topic);
-            topicResult.setNumberOfQuestions(questionRepository.getCountOfQuestionByTopic(topic));
-            topicResult.setNumberOfCorrectAnswers(quizAnswerRepository.getCountOfRightAnswerBySessionAndTopic(quizSession, topic));
-            topicResult.setResult(topicResult.getNumberOfCorrectAnswers() * 100.0 / topicResult.getNumberOfQuestions());
-            topicResultList.add(topicResult);
-        }
-        quizResult.setTopicResults(topicResultList);
+        quizResult.setTopicResults(getTopicResultsBySessions(quizSession));
 
         return quizResult;
     }
@@ -87,9 +75,17 @@ public class QuizResultService {
         userResultRepository.saveUserResult(userResult);
     }
 
-    private double getPercentRightQuizAnswer(QuizSession quizSession) {
-        Long countOfQuestionBySession = quizAnswerRepository.getCountOfQuestionBySession(quizSession);
-        Long countOfRightAnswerBySession = quizAnswerRepository.getCountOfRightAnswerBySession(quizSession);
-        return countOfRightAnswerBySession * 100 / countOfQuestionBySession;
+    private List<TopicResult> getTopicResultsBySessions(QuizSession quizSession) {
+        List<TopicResult> topicResultList = new ArrayList<>();
+        for (Topic topic : quizSession.getTopics()) {
+            TopicResult topicResult = new TopicResult();
+            topicResult.setTopic(topic);
+            topicResult.setNumberOfQuestions(questionRepository.getCountOfQuestionByTopic(topic));
+            topicResult.setNumberOfCorrectAnswers(quizAnswerRepository.getCountOfRightAnswerBySessionAndTopic(quizSession, topic));
+            topicResult.setResult(topicResult.getNumberOfCorrectAnswers() * 100.0 / topicResult.getNumberOfQuestions());
+            topicResultList.add(topicResult);
+        }
+
+        return topicResultList;
     }
 }
