@@ -27,9 +27,9 @@ public class QuizResultController {
 
     @PostMapping("/result")
     public QuizResult getQuizResult(@RequestBody QuizSessionDto quizSessionDto,
-                                    @AuthenticationPrincipal UserDetails userDetails) {
-
-        return quizResultService.getQuizResult(quizSessionDto, userDetails);
+                                    @RequestHeader("auth-token") String token) {
+        Long userId = jwtTokenProvider.getUserIdFromJWT(token);
+        return quizResultService.getQuizResult(quizSessionDto, userId);
     }
 
     @GetMapping("/account")

@@ -12,8 +12,6 @@ import com.interlink.quiz.repository.QuizAnswerRepository;
 import com.interlink.quiz.repository.QuizSessionRepository;
 import com.interlink.quiz.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
@@ -22,9 +20,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 @Service
 public class QuestionService {
@@ -47,17 +45,17 @@ public class QuestionService {
     }
 
     public QuizDto getQuestions(Topic[] topicsArray,
-                                UserDetails userDetails,
+                                Long userId,
                                 HttpSession httpSession) {
 
         QuizDto quizDto = new QuizDto();
         List<QuizSession> quizSessions;
         List<Topic> topics = Arrays.stream(topicsArray).collect(toList());
-        if (userDetails == null) {
+        if (userId == null) {
             quizSessions = quizSessionRepository.getQuizSessionBySessionId(httpSession.getId());
         } else {
             quizSessions = quizSessionRepository.getQuizSessionsByUserId(
-                    userRepository.getUserByEmail(userDetails.getUsername()));
+                    userRepository.getUserById(userId));
         }
         for (QuizSession quizSession : quizSessions) {
             if (isAlreadyPassedQuiz(topics, quizSession)) {
@@ -76,7 +74,7 @@ public class QuestionService {
             }
         }
 
-        quizDto.setQuizSession(createNewQuizSession(httpSession, userDetails, topics));
+        quizDto.setQuizSession(createNewQuizSession(httpSession, userId, topics));
         quizDto.setQuestions(getQuestionsByTopics(topics));
         return quizDto;
     }
@@ -111,15 +109,15 @@ public class QuestionService {
     }
 
     private QuizSession createNewQuizSession(HttpSession httpSession,
-                                             UserDetails userDetails,
+                                             Long userId,
                                              List<Topic> topics) {
 
         QuizSession newQuizSession = new QuizSession();
         newQuizSession.setSessionId(httpSession.getId());
         newQuizSession.setDate(LocalDateTime.now().toString());
         newQuizSession.setTopics(topics);
-        if (userDetails != null) {
-            newQuizSession.setUser(userRepository.getUserByEmail(userDetails.getUsername()));
+        if (userId != null) {
+            newQuizSession.setUser(userRepository.getUserById(userId));
         }
         quizSessionRepository.createQuizSession(newQuizSession);
 
