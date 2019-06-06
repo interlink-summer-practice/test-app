@@ -11,8 +11,6 @@ import com.interlink.quiz.service.QuizAnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -31,6 +29,7 @@ public class QuizController {
                           QuizAnswerService quizAnswerService,
                           CsvParserService csvParserService,
                           JwtTokenProvider jwtTokenProvider) {
+
         this.questionService = questionService;
         this.quizAnswerService = quizAnswerService;
         this.csvParserService = csvParserService;

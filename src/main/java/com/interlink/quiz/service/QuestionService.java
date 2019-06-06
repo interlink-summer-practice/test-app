@@ -107,6 +107,7 @@ public class QuestionService {
 
     private List<QuestionDto> getNotPassedQuestionsByTopics(List<Topic> topics,
                                                             QuizSession quizSession) {
+
         List<Question> questions = new ArrayList<>();
         for (Topic topic : topics) {
             questions.addAll(questionRepository.getNotPassedQuestionsByTopic(topic, quizSession));
@@ -162,6 +163,7 @@ public class QuestionService {
         List<QuestionDto> questionsByTopics = getQuestionsByTopics(topics, difficulty);
         List<QuizAnswer> answers = quizAnswerRepository.getAnswersByQuizSession(quizSession);
         Set<Question> questions = answers.stream().map(QuizAnswer::getQuestion).collect(toSet());
+
         return questionsByTopics.size() == questions.size();
     }
 

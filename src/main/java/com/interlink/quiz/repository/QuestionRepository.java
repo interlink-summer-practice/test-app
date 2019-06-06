@@ -45,7 +45,7 @@ public class QuestionRepository {
     }
 
     public List<Question> getQuestionsByTopic(Topic topic, String difficulty) {
-        if (difficulty.equals("")) {
+        if (difficulty.equals("NaN")) {
             return sessionFactory.getCurrentSession()
                     .createQuery("FROM Question WHERE topic = :topic", Question.class)
                     .setParameter("topic", topic)
@@ -67,7 +67,7 @@ public class QuestionRepository {
     }
 
     public List<Question> getNotPassedQuestionsByTopic(Topic topic, QuizSession quizSession) {
-        if (quizSession.getDifficulty().equals("")) {
+        if (quizSession.getDifficulty().equals("NaN")) {
             return sessionFactory.getCurrentSession()
                     .createNativeQuery("" +
                             "SELECT q.* " +
