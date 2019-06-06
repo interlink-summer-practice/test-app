@@ -30,7 +30,6 @@ export default class Question extends Component {
 
         if (this.state.value !== '') {
             this.setState((state) => {
-                // this.props.selectedOption(this.state.value);
                 state.value = '';
             }, () => this.props.nextQuestion(this.props.question.id, this.state.answerId));
 
