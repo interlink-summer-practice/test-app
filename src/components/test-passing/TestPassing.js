@@ -78,8 +78,7 @@ export default class TestPassing extends Component {
             }
 
         }
-
-
+                        
         else {
             return(<div>Loading...</div>)
         }

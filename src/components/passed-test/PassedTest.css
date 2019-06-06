@@ -1,0 +1,26 @@
+.passedTest {
+    margin-top: 10px;
+}
+
+.date {
+
+}
+
+.topics {
+
+}
+
+.chip {
+    margin: 3px;
+}
+
+.rightAnswersPercentage {
+
+}
+
+.results {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+}
