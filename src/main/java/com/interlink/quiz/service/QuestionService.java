@@ -62,17 +62,15 @@ public class QuestionService {
             for (QuizSession quizSession : quizSessions) {
                 if (isAlreadyPassedQuiz(topics, quizSession, difficulty)) {
                     if (isDoneQuiz(topics, quizSession, difficulty)) {
-                        quizSession.setDate(LocalDateTime.now().toString());
-
-                        quizSessionRepository.updateQuizSession(quizSession);
-                        quizAnswerRepository.deleteQuizAnswersByQuizSession(quizSession);
-
+                        quizDto.setPassed(true);
                         quizDto.setQuizSession(quizSession);
                         quizDto.setQuestions(getQuestionsByTopics(topics, difficulty));
+
                         return quizDto;
                     } else {
                         quizDto.setQuizSession(quizSession);
                         quizDto.setQuestions(getNotPassedQuestionsByTopics(topics, quizSession));
+                        
                         return quizDto;
                     }
                 }
