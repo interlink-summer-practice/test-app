@@ -3,9 +3,11 @@ package com.interlink.quiz.service;
 import com.interlink.quiz.object.*;
 import com.interlink.quiz.object.dto.QuizResultDto;
 import com.interlink.quiz.object.dto.QuizSessionDto;
-import com.interlink.quiz.repository.*;
+import com.interlink.quiz.repository.QuestionRepository;
+import com.interlink.quiz.repository.QuizAnswerRepository;
+import com.interlink.quiz.repository.QuizSessionRepository;
+import com.interlink.quiz.repository.UserResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -35,12 +37,12 @@ public class QuizResultService {
         this.userService = userService;
     }
 
-    public QuizResult getQuizResult(QuizSessionDto quizSessionDto, UserDetails userDetails) {
+    public QuizResult getQuizResult(QuizSessionDto quizSessionDto, Long userId) {
         QuizResult quizResult = new QuizResult();
         QuizSession quizSession = quizSessionRepository.getQuizSessionById(quizSessionDto.getId());
         int mark = quizSessionRepository.getMarkByQuizSession(quizSession);
         quizResult.setMark(mark);
-        if (userDetails != null) {
+        if (userId != null) {
             saveUserResult(quizSession, mark);
         }
         quizResult.setCountOfQuestion(quizAnswerRepository.getCountOfQuestionBySession(quizSession));
