@@ -1,6 +1,6 @@
-package com.interlink.quiz.object.dto;
+package com.interlink.quiz.auth.security;
 
-public class UserDto {
+public class SignUpRequest {
 
     private String firstName;
     private String lastName;

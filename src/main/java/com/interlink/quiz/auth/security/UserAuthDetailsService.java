@@ -1,6 +1,5 @@
-package com.interlink.quiz.service;
+package com.interlink.quiz.auth.security;
 
-import com.interlink.quiz.object.Role;
 import com.interlink.quiz.object.User;
 import com.interlink.quiz.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +25,16 @@ public class UserAuthDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("User " + username + " not found!");
         }
-        org.springframework.security.core.userdetails.User.UserBuilder builder =
-                org.springframework.security.core.userdetails.User.withUsername(username);
-        builder.password(user.getPasswordHash());
-        builder.roles(user.getRoles().stream().map(Role::getName).toArray(String[]::new));
 
-        return builder.build();
+        return UserPrincipal.create(user);
+    }
+
+    public UserDetails loadUserById(Long id) {
+        User user = userRepository.getUserById(id);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with id : " + id);
+        }
+
+        return UserPrincipal.create(user);
     }
 }
