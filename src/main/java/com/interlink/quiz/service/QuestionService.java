@@ -7,10 +7,7 @@ import com.interlink.quiz.object.Topic;
 import com.interlink.quiz.object.dto.QuestionDto;
 import com.interlink.quiz.object.dto.QuizDto;
 import com.interlink.quiz.object.dto.QuizSessionDto;
-import com.interlink.quiz.repository.QuestionRepository;
-import com.interlink.quiz.repository.QuizAnswerRepository;
-import com.interlink.quiz.repository.QuizSessionRepository;
-import com.interlink.quiz.repository.UserRepository;
+import com.interlink.quiz.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,17 +28,20 @@ public class QuestionService {
     private final UserRepository userRepository;
     private final QuizSessionRepository quizSessionRepository;
     private final QuizAnswerRepository quizAnswerRepository;
+    private final UserResultRepository userResultRepository;
 
     @Autowired
     public QuestionService(QuestionRepository questionRepository,
                            UserRepository userRepository,
                            QuizSessionRepository quizSessionRepository,
-                           QuizAnswerRepository quizAnswerRepository) {
+                           QuizAnswerRepository quizAnswerRepository,
+                           UserResultRepository userResultRepository) {
 
         this.questionRepository = questionRepository;
         this.userRepository = userRepository;
         this.quizSessionRepository = quizSessionRepository;
         this.quizAnswerRepository = quizAnswerRepository;
+        this.userResultRepository = userResultRepository;
     }
 
     public QuizDto getQuestions(Topic[] topicsArray,
@@ -79,11 +79,14 @@ public class QuestionService {
         return quizDto;
     }
 
-    public void updateResultsOfPassedQuiz(QuizSessionDto quizSessionDto) {
+    public void updateResultsOfPassedQuiz(QuizSessionDto quizSessionDto, String token) {
         QuizSession quizSession = quizSessionRepository.getQuizSessionById(quizSessionDto.getId());
         quizSession.setDate(LocalDateTime.now().toString());
         quizSessionRepository.updateQuizSession(quizSession);
         quizAnswerRepository.deleteQuizAnswersByQuizSession(quizSession);
+        if (token == null) {
+            userResultRepository.deleteUserResult(quizSession);
+        }
     }
 
     private List<QuestionDto> getQuestionsByTopics(List<Topic> topics) {

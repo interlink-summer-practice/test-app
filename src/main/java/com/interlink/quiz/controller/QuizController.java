@@ -56,7 +56,8 @@ public class QuizController {
     }
 
     @PutMapping("/quiz-answer")
-    public void updateQuizSessionAndAnswers(@RequestBody QuizSessionDto quizSessionDto) {
-        questionService.updateResultsOfPassedQuiz(quizSessionDto);
+    public void updateQuizSessionAndAnswers(@RequestBody QuizSessionDto quizSessionDto,
+                                            @RequestHeader("auth-token") String token) {
+        questionService.updateResultsOfPassedQuiz(quizSessionDto, token);
     }
 }
