@@ -46,8 +46,7 @@ public class QuizResultService {
         quizResult.setCountOfQuestion(quizAnswerRepository.getCountOfQuestionBySession(quizSession));
         quizResult.setCountOfCorrectAnswers(quizAnswerRepository.getCountOfRightAnswerBySession(quizSession));
         quizResult.setPercentOfPassingQuiz(
-                quizResult.getCountOfCorrectAnswers() * 100.0 / quizResult.getCountOfQuestion()
-        );
+                quizResult.getCountOfCorrectAnswers() * 100.0 / quizResult.getCountOfQuestion());
         quizResult.setTopicResults(getTopicResultsBySessions(quizSession));
 
         return quizResult;
@@ -56,15 +55,10 @@ public class QuizResultService {
     public List<QuizResultDto> getHistoryOfQuizzesByUser(UserDetails userDetails) {
         User user = userService.getUserByEmail(userDetails.getUsername());
         List<QuizResultDto> result = new ArrayList<>();
-        List<QuizSession> quizSessions = quizSessionRepository.getQuizSessionsByUserId(user);
-        for (QuizSession quizSession : quizSessions) {
-            QuizResultDto quizResultDto = new QuizResultDto();
-            quizResultDto.setQuizSession(quizSession);
-            QuizSessionDto quizSessionDto = new QuizSessionDto();
-            quizSessionDto.setId(quizSession.getId());
-            quizResultDto.setQuizResult(getQuizResult(quizSessionDto, userDetails));
-            result.add(quizResultDto);
+        for (QuizSession quizSession : quizSessionRepository.getQuizSessionsByUserId(user)) {
+            result.add(createQuizResultDto(quizSession));
         }
+
         return result;
     }
 
@@ -87,5 +81,18 @@ public class QuizResultService {
         }
 
         return topicResultList;
+    }
+
+    private QuizResultDto createQuizResultDto(QuizSession quizSession) {
+        QuizResultDto quizResultDto = new QuizResultDto();
+        quizResultDto.setQuizSessionId(quizSession.getId());
+        quizResultDto.setFirstName(quizSession.getUser().getFirstName());
+        quizResultDto.setLastName(quizSession.getUser().getLastName());
+        quizResultDto.setDate(quizSession.getDate());
+        quizResultDto.setCountOfQuestions(quizAnswerRepository.getCountOfQuestionBySession(quizSession));
+        quizResultDto.setCountOfCorrectAnswers(quizAnswerRepository.getCountOfRightAnswerBySession(quizSession));
+        quizResultDto.setPercentOfPassingQuiz(
+                quizResultDto.getCountOfCorrectAnswers() * 100.0 / quizResultDto.getCountOfQuestions());
+        return quizResultDto;
     }
 }
