@@ -11,6 +11,7 @@ import com.interlink.quiz.repository.QuizAnswerRepository;
 import com.interlink.quiz.repository.QuizSessionRepository;
 import com.interlink.quiz.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -60,17 +61,14 @@ public class QuestionService {
         for (QuizSession quizSession : quizSessions) {
             if (isAlreadyPassedQuiz(topics, quizSession)) {
                 if (isDoneQuiz(topics, quizSession)) {
-                    quizSession.setDate(LocalDateTime.now().toString());
-
-                    quizSessionRepository.updateQuizSession(quizSession);
-                    quizAnswerRepository.deleteQuizAnswersByQuizSession(quizSession);
-
+                    quizDto.setPassed(true);
                     quizDto.setQuizSession(quizSession);
                     quizDto.setQuestions(getQuestionsByTopics(topics));
                     return quizDto;
                 } else {
                     quizDto.setQuizSession(quizSession);
                     quizDto.setQuestions(getNotPassedQuestionsByTopics(topics, quizSession));
+
                     return quizDto;
                 }
             }
@@ -79,6 +77,41 @@ public class QuestionService {
         quizDto.setQuizSession(createNewQuizSession(httpSession, userDetails, topics));
         quizDto.setQuestions(getQuestionsByTopics(topics));
         return quizDto;
+    }
+
+    public QuizDto passQuizAgain(Topic[] topicsArray,
+                                 UserDetails userDetails,
+                                 HttpSession httpSession) {
+
+        List<Topic> topics = Arrays.stream(topicsArray).collect(toList());
+        QuizDto quizDto = new QuizDto();
+        List<QuizSession> sessions;
+        if (userDetails == null) {
+            sessions = quizSessionRepository.getQuizSessionBySessionId(httpSession.getId());
+        } else {
+            sessions = quizSessionRepository.getQuizSessionsByUserId(
+                    userRepository.getUserByEmail(userDetails.getUsername()));
+        }
+        for (QuizSession session : sessions) {
+            if (isAlreadyPassedQuiz(topics, session)) {
+                if (isDoneQuiz(topics, session)) {
+                    session.setDate(LocalDateTime.now().toString());
+                    quizSessionRepository.updateQuizSession(session);
+                    quizAnswerRepository.deleteQuizAnswersByQuizSession(session);
+                    quizDto.setQuizSession(session);
+                    quizDto.setQuestions(getQuestionsByTopics(topics));
+                    return quizDto;
+                }
+            }
+        }
+
+        return quizDto;
+    }
+
+    public void updateResultsOfPassedQuiz(QuizSession quizSession) {
+        quizSession.setDate(LocalDateTime.now().toString());
+        quizSessionRepository.updateQuizSession(quizSession);
+        quizAnswerRepository.deleteQuizAnswersByQuizSession(quizSession);
     }
 
     private List<QuestionDto> getQuestionsByTopics(List<Topic> topics) {

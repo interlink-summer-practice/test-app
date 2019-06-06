@@ -2,12 +2,14 @@ package com.interlink.quiz.object.dto;
 
 import com.interlink.quiz.object.QuizSession;
 
+import javax.xml.transform.sax.SAXResult;
 import java.util.List;
 
 public class QuizDto {
 
     private List<QuestionDto> questions;
     private QuizSession quizSession;
+    private boolean passed;
 
     public List<QuestionDto> getQuestions() {
         return questions;
@@ -23,5 +25,13 @@ public class QuizDto {
 
     public void setQuizSession(QuizSession quizSession) {
         this.quizSession = quizSession;
+    }
+
+    public boolean isPassed() {
+        return passed;
+    }
+
+    public void setPassed(boolean passed) {
+        this.passed = passed;
     }
 }

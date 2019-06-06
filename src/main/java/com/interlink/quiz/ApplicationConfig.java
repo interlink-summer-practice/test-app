@@ -57,16 +57,6 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(dataSource());
-    }
-
-    @Bean
-    public NamedParameterJdbcTemplate namedParameterJdbcTemplate() {
-        return new NamedParameterJdbcTemplate(dataSource());
-    }
-
-    @Bean
     public Flyway flyway() {
         Flyway flyway = Flyway.configure()
                 .dataSource(dataSource())
