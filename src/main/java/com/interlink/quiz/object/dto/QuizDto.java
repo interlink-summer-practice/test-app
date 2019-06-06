@@ -10,6 +10,7 @@ public class QuizDto {
     private List<QuestionDto> questions;
     private QuizSession quizSession;
     private boolean passed;
+    private Long countOfPassedQuestions;
 
     public List<QuestionDto> getQuestions() {
         return questions;
@@ -33,5 +34,13 @@ public class QuizDto {
 
     public void setPassed(boolean passed) {
         this.passed = passed;
+    }
+
+    public Long getCountOfPassedQuestions() {
+        return countOfPassedQuestions;
+    }
+
+    public void setCountOfPassedQuestions(Long countOfPassedQuestions) {
+        this.countOfPassedQuestions = countOfPassedQuestions;
     }
 }

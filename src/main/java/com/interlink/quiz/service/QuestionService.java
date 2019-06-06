@@ -69,6 +69,7 @@ public class QuestionService {
                 } else {
                     quizDto.setQuizSession(quizSession);
                     quizDto.setQuestions(getNotPassedQuestionsByTopics(topics, quizSession));
+                    quizDto.setCountOfPassedQuestions(quizAnswerRepository.getCountOfPassedQuestions(quizSession));
 
                     return quizDto;
                 }
