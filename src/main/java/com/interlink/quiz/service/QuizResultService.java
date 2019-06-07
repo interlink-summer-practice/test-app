@@ -90,6 +90,7 @@ public class QuizResultService {
         quizResultDto.setPercentOfPassingQuiz(
                 quizResultDto.getCountOfCorrectAnswers() * 100.0 / quizResultDto.getCountOfQuestions());
         quizResultDto.setTopics(quizSession.getTopics());
+        quizResultDto.setDifficulty(quizSession.getDifficulty());
         return quizResultDto;
     }
 

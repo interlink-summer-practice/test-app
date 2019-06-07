@@ -14,6 +14,7 @@ public class QuizResultDto {
     private Long countOfQuestions;
     private Long countOfCorrectAnswers;
     private double percentOfPassingQuiz;
+    private String difficulty;
 
     public int getQuizSessionId() {
         return quizSessionId;
@@ -77,5 +78,13 @@ public class QuizResultDto {
 
     public void setPercentOfPassingQuiz(double percentOfPassingQuiz) {
         this.percentOfPassingQuiz = percentOfPassingQuiz;
+    }
+
+    public String getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
     }
 }
