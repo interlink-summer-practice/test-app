@@ -1,6 +1,5 @@
 import React from 'react';
 import './UserAccount.css';
-import UserAccountHeader from "../user-account-header/UserAccountHeader";
 import PassedTest from "../passed-test/PassedTest";
 import axios from 'axios';
 import {Redirect} from "react-router-dom";
@@ -18,8 +17,11 @@ export default class UserAccount extends React.Component {
                 .then(res => {
                     this.setState({
                         userTests: res.data
-                    })
-                })
+                    });
+
+                    sessionStorage.setItem('userFirstName', this.state.userTests[0].firstName);
+                    sessionStorage.setItem('userLastName', this.state.userTests[0].lastNa);
+                });
         }
 
     }
@@ -33,8 +35,6 @@ export default class UserAccount extends React.Component {
         if (this.state.userTests.length !== 0) {
             return (
                 <div>
-                    <UserAccountHeader firstName={this.state.userTests[0].firstName}
-                                       lastName={this.state.userTests[0].lastName}/>
                     <div className="userPassedTests">
                         {
                             this.state.userTests.map((passedTest, index) => {

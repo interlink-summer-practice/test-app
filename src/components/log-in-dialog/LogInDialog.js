@@ -44,6 +44,7 @@ class LogInDialog extends React.Component {
                 const authToken = res.data.accessToken;
                 sessionStorage.setItem('auth-token', authToken);
                 axios.defaults.headers.common['auth-token'] = authToken;
+                this.props.handleAuthentication();
                 history.push('/account');
             })
             .catch(err => {
@@ -104,6 +105,7 @@ class LogInDialog extends React.Component {
 
                         <Route render={({history}) => (
                             <Button color="primary" onClick={() => {
+                                this.props.loginDialogHandler();
                                 this.logIn(history)
                             }}>
                                 Log In

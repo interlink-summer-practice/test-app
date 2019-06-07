@@ -90,6 +90,7 @@ class StartTestsDialog extends React.Component {
 
                         <Route render={({history}) => (
                             <Button color="primary" onClick={() => {
+                                this.props.startTestsDialogHandler();
                                 history.push('/quiz', {
                                     topics: this.state.selectedTopics,
                                     difficulty: this.state.difficulty,
