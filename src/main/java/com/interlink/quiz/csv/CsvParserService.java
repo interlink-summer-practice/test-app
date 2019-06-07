@@ -10,9 +10,7 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,7 +30,7 @@ public class CsvParserService {
         this.answerRepository = answerRepository;
     }
 
-    public void parseCsvFileToDataBase(File file) {
+    public void parseCsvFileToDataBase(byte[] file) {
         List<QuizLine> lines = parseCsvFileToListOfQuizzes(file);
 
         for (QuizLine quizLine : lines) {
@@ -80,9 +78,9 @@ public class CsvParserService {
         }
     }
 
-    private List<QuizLine> parseCsvFileToListOfQuizzes(File file) {
+    private List<QuizLine> parseCsvFileToListOfQuizzes(byte[] file) {
         List<QuizLine> result = Collections.emptyList();
-        try (Reader reader = Files.newBufferedReader(file.toPath())) {
+        try (Reader reader = new InputStreamReader(new ByteArrayInputStream(file))) {
             CsvToBean<QuizLine> csvToBean = new CsvToBeanBuilder<QuizLine>(reader)
                     .withType(QuizLine.class)
                     .withIgnoreLeadingWhiteSpace(true)

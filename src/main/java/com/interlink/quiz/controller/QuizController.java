@@ -62,7 +62,7 @@ public class QuizController {
     }
 
     @PostMapping("/import")
-    public ResponseEntity saveQuizFromCsvFile(@RequestBody File file) {
+    public ResponseEntity saveQuizFromCsvFile(@RequestBody byte[] file) {
         csvParserService.parseCsvFileToDataBase(file);
 
         return new ResponseEntity(HttpStatus.OK);
