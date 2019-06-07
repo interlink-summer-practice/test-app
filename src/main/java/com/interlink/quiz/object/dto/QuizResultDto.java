@@ -7,8 +7,6 @@ import java.util.List;
 public class QuizResultDto {
 
     private int quizSessionId;
-    private String firstName;
-    private String lastName;
     private String date;
     private List<Topic> topics;
     private Long countOfQuestions;
@@ -21,22 +19,6 @@ public class QuizResultDto {
 
     public void setQuizSessionId(int quizSessionId) {
         this.quizSessionId = quizSessionId;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public String getDate() {

@@ -2,7 +2,7 @@ package com.interlink.quiz.controller;
 
 import com.interlink.quiz.auth.security.JwtTokenProvider;
 import com.interlink.quiz.object.QuizResult;
-import com.interlink.quiz.object.dto.QuizResultDto;
+import com.interlink.quiz.object.dto.AccountDto;
 import com.interlink.quiz.object.dto.QuizSessionDto;
 import com.interlink.quiz.service.QuizResultService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class QuizResultController {
     }
 
     @GetMapping("/account")
-    public List<QuizResultDto> getTestHistory(
+    public AccountDto getTestHistory(
             @RequestHeader(value = "auth-token", required = false) String token) {
 
         Long userId = null;

@@ -1,6 +1,7 @@
 package com.interlink.quiz.service;
 
 import com.interlink.quiz.object.*;
+import com.interlink.quiz.object.dto.AccountDto;
 import com.interlink.quiz.object.dto.QuizResultDto;
 import com.interlink.quiz.object.dto.QuizSessionDto;
 import com.interlink.quiz.repository.*;
@@ -52,15 +53,21 @@ public class QuizResultService {
         return quizResult;
     }
 
-    public List<QuizResultDto> getHistoryOfQuizzesByUser(Long userId) {
-        if (userId == null) return Collections.emptyList();
-        User user = userRepository.getUserById(userId);
-        List<QuizResultDto> result = new ArrayList<>();
-        for (QuizSession quizSession : quizSessionRepository.getQuizSessionsByUserId(user)) {
-            result.add(createQuizResultDto(quizSession));
-        }
+    public AccountDto getHistoryOfQuizzesByUser(Long userId) {
+        if (userId == null) return new AccountDto();
 
-        return result;
+        User user = userRepository.getUserById(userId);
+        AccountDto accountDto = new AccountDto();
+        accountDto.setFirstName(user.getFirstName());
+        accountDto.setLastName(user.getFirstName());
+
+        List<QuizResultDto> results = new ArrayList<>();
+        for (QuizSession quizSession : quizSessionRepository.getQuizSessionsByUserId(user)) {
+            results.add(createQuizResultDto(quizSession));
+        }
+        accountDto.setResults(results);
+
+        return accountDto;
     }
 
     private void saveUserResult(QuizSession quizSession, int mark) {
@@ -82,14 +89,12 @@ public class QuizResultService {
     private QuizResultDto createQuizResultDto(QuizSession quizSession) {
         QuizResultDto quizResultDto = new QuizResultDto();
         quizResultDto.setQuizSessionId(quizSession.getId());
-        quizResultDto.setFirstName(quizSession.getUser().getFirstName());
-        quizResultDto.setLastName(quizSession.getUser().getLastName());
         quizResultDto.setDate(quizSession.getDate());
+        quizResultDto.setTopics(quizSession.getTopics());
         quizResultDto.setCountOfQuestions(quizAnswerRepository.getCountOfQuestionBySession(quizSession));
         quizResultDto.setCountOfCorrectAnswers(quizAnswerRepository.getCountOfRightAnswerBySession(quizSession));
-        quizResultDto.setPercentOfPassingQuiz(
-                quizResultDto.getCountOfCorrectAnswers() * 100.0 / quizResultDto.getCountOfQuestions());
-        quizResultDto.setTopics(quizSession.getTopics());
+        quizResultDto.setPercentOfPassingQuiz(quizResultDto.getCountOfCorrectAnswers() * 100.0 / quizResultDto.getCountOfQuestions());
+
         return quizResultDto;
     }
 
