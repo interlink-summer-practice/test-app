@@ -7,9 +7,14 @@
 }
 fieldset{
     width: 400px;
+    margin-top: 50px!important;
 }
 .MuiFormLabel-root {
     width: 400px;
     display: flex;
     justify-content: center;
+}
+.numberOfCurrentQuestion{
+    font-size: 70px;
+    margin-left: -50px;
 }
