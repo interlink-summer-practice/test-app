@@ -2,7 +2,6 @@ package com.interlink.quiz.object.dto;
 
 import com.interlink.quiz.object.QuizSession;
 
-import javax.xml.transform.sax.SAXResult;
 import java.util.List;
 
 public class QuizDto {
