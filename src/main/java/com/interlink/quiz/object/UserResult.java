@@ -25,7 +25,6 @@ public class UserResult {
         this.id = id;
     }
 
-
     public QuizSession getQuizSession() {
         return quizSession;
     }
