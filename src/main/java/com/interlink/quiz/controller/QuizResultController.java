@@ -28,7 +28,7 @@ public class QuizResultController {
                                     @RequestHeader(value = "auth-token", required = false) String token) {
 
         Long userId = null;
-        if (token != null) {
+        if (!token.isEmpty()) {
             userId = jwtTokenProvider.getUserIdFromJWT(token);
         }
 
@@ -40,7 +40,7 @@ public class QuizResultController {
             @RequestHeader(value = "auth-token", required = false) String token) {
 
         Long userId = null;
-        if (token != null) {
+        if (!token.isEmpty()) {
             userId = jwtTokenProvider.getUserIdFromJWT(token);
         }
 

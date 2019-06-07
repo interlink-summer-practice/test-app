@@ -42,7 +42,7 @@ public class QuizController {
                                 HttpSession httpSession) {
 
         Long userId = null;
-        if (token != null) {
+        if (!token.isEmpty()) {
             userId = jwtTokenProvider.getUserIdFromJWT(token);
         }
 
@@ -62,8 +62,7 @@ public class QuizController {
     }
 
     @PostMapping("/import")
-    public ResponseEntity saveQuizFromCsvFile(/*@RequestBody File file*/) {
-        File file = new File("C:\\Users\\User\\Downloads\\test.csv");
+    public ResponseEntity saveQuizFromCsvFile(@RequestBody File file) {
         csvParserService.parseCsvFileToDataBase(file);
 
         return new ResponseEntity(HttpStatus.OK);
@@ -72,12 +71,11 @@ public class QuizController {
     @PutMapping("/quiz-answer")
     public void updateQuizSessionAndAnswers(@RequestBody QuizSessionDto quizSessionDto,
                                             @RequestHeader(value = "auth-token", required = false) String token) {
-
-
         Long userId = null;
-        if (token != null) {
+        if (!token.isEmpty()) {
             userId = jwtTokenProvider.getUserIdFromJWT(token);
         }
+
         questionService.updateResultsOfPassedQuiz(quizSessionDto, userId);
     }
 }
