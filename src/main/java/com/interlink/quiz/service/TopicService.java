@@ -17,15 +17,7 @@ public class TopicService {
         this.topicRepository = topicRepository;
     }
 
-    public void saveTopic(Topic topic) {
-        topicRepository.saveTopic(topic);
-    }
-
     public List<Topic> getTopics() {
         return topicRepository.getTopics();
-    }
-
-    public Topic getTopicByName(String nameOfTopic) {
-        return topicRepository.getTopicByName(nameOfTopic);
     }
 }

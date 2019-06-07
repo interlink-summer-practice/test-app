@@ -35,10 +35,6 @@ public class UserService {
         return userRepository.getUserByEmail(email);
     }
 
-    public User getUserById(Long id) {
-        return userRepository.getUserById(id);
-    }
-
     private User createUser(SignUpRequest signUpRequest) {
         User user = new User();
         user.setFirstName(signUpRequest.getFirstName());

@@ -3,14 +3,12 @@ package com.interlink.quiz.service;
 import com.interlink.quiz.object.*;
 import com.interlink.quiz.object.dto.QuizResultDto;
 import com.interlink.quiz.object.dto.QuizSessionDto;
-import com.interlink.quiz.repository.QuestionRepository;
-import com.interlink.quiz.repository.QuizAnswerRepository;
-import com.interlink.quiz.repository.QuizSessionRepository;
-import com.interlink.quiz.repository.UserResultRepository;
+import com.interlink.quiz.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -20,7 +18,7 @@ public class QuizResultService {
     private final UserResultRepository userResultRepository;
     private final QuestionRepository questionRepository;
     private final QuizAnswerRepository quizAnswerRepository;
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     @Autowired
     public QuizResultService(
@@ -28,13 +26,13 @@ public class QuizResultService {
             UserResultRepository userResultRepository,
             QuestionRepository questionRepository,
             QuizAnswerRepository quizAnswerRepository,
-            UserService userService) {
+            UserRepository userRepository) {
 
         this.quizSessionRepository = quizSessionRepository;
         this.userResultRepository = userResultRepository;
         this.questionRepository = questionRepository;
         this.quizAnswerRepository = quizAnswerRepository;
-        this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     public QuizResult getQuizResult(QuizSessionDto quizSessionDto, Long userId) {
@@ -55,7 +53,8 @@ public class QuizResultService {
     }
 
     public List<QuizResultDto> getHistoryOfQuizzesByUser(Long userId) {
-        User user = userService.getUserById(userId);
+        if (userId == null) return Collections.emptyList();
+        User user = userRepository.getUserById(userId);
         List<QuizResultDto> result = new ArrayList<>();
         for (QuizSession quizSession : quizSessionRepository.getQuizSessionsByUserId(user)) {
             result.add(createQuizResultDto(quizSession));
