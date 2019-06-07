@@ -72,6 +72,12 @@ public class QuizController {
     @PutMapping("/quiz-answer")
     public void updateQuizSessionAndAnswers(@RequestBody QuizSessionDto quizSessionDto,
                                             @RequestHeader(value = "auth-token", required = false) String token) {
-        questionService.updateResultsOfPassedQuiz(quizSessionDto, token);
+
+
+        Long userId = null;
+        if (token != null) {
+            userId = jwtTokenProvider.getUserIdFromJWT(token);
+        }
+        questionService.updateResultsOfPassedQuiz(quizSessionDto, userId);
     }
 }
