@@ -13,10 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
@@ -81,7 +78,7 @@ public class QuestionService {
             return quizDto;
         }
 
-        return null;
+        return new QuizDto();
     }
 
     public void updateResultsOfPassedQuiz(QuizSessionDto quizSessionDto, Long userId) {
