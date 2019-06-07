@@ -9,7 +9,7 @@ import ResultBySubjects from "./components/result-by-subjects/ResultBySubjects";
 
 
 (function() {
-    const token = localStorage.getItem('auth-token');
+    const token = sessionStorage.getItem('auth-token');
     if (token) {
         axios.defaults.headers.common['auth-token'] = token;
     } else {
