@@ -6,6 +6,7 @@ import TestPassing from "./components/test-passing/TestPassing";
 import UserAccount from "./components/user-account/UserAccount";
 import axios from 'axios';
 import ResultBySubjects from "./components/result-by-subjects/ResultBySubjects";
+import StartTestsDialog from "./components/start-tests-dialog/StartTestsDialog";
 
 
 (function() {

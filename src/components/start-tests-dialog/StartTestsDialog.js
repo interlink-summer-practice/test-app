@@ -51,7 +51,7 @@ class StartTestsDialog extends React.Component {
             })
     };
     handleChange = (event) => {
-        this.setState({difficulty:event.target.value})
+        this.setState({difficulty: event.target.value})
     }
 
     render() {
