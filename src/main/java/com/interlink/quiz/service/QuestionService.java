@@ -50,7 +50,7 @@ public class QuestionService {
                                 String difficulty) {
 
         List<Topic> topics = Arrays.stream(topicsArray).collect(toList());
-        if (isPresentQuestionsWithThisDifficulty(topics, difficulty)) {
+        if (difficulty.equals("All") || isPresentQuestionsWithThisDifficulty(topics, difficulty)) {
             QuizDto quizDto = new QuizDto();
             List<QuizSession> quizSessions;
             if (userId == null) {
@@ -70,7 +70,7 @@ public class QuestionService {
                     } else {
                         quizDto.setQuizSession(quizSession);
                         quizDto.setQuestions(getNotPassedQuestionsByTopics(topics, quizSession));
-                        
+
                         return quizDto;
                     }
                 }

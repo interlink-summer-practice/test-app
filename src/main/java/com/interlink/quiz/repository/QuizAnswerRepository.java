@@ -70,12 +70,4 @@ public class QuizAnswerRepository {
                 .executeUpdate();
         transaction.commit();
     }
-
-    public Long getCountOfPassedQuestions(QuizSession quizSession) {
-        return (Long) sessionFactory.getCurrentSession()
-                .createQuery("select count(qa) from QuizAnswer qa " +
-                        "where quizSession.id = :quizSessionId")
-                .setParameter("quizSessionId", quizSession.getId())
-                .uniqueResult();
-    }
 }

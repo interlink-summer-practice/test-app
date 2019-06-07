@@ -80,16 +80,16 @@ public class QuestionRepository {
 
         return sessionFactory.getCurrentSession()
                 .createNativeQuery("" +
-                "SELECT q.* " +
-                "FROM questions q " +
-                "       LEFT JOIN topics t on q.topic_id = t.id " +
-                "WHERE t.id = :topic_id AND q.difficulty = :difficulty " +
-                "EXCEPT " +
-                "SELECT q.* " +
-                "FROM questions q " +
-                "       LEFT JOIN topics t on q.topic_id = t.id " +
-                "       LEFT JOIN quiz_answers qa on q.id = qa.question_id " +
-                "WHERE qa.quiz_session_id = :session_id", Question.class)
+                        "SELECT q.* " +
+                        "FROM questions q " +
+                        "       LEFT JOIN topics t on q.topic_id = t.id " +
+                        "WHERE t.id = :topic_id AND q.difficulty = :difficulty " +
+                        "EXCEPT " +
+                        "SELECT q.* " +
+                        "FROM questions q " +
+                        "       LEFT JOIN topics t on q.topic_id = t.id " +
+                        "       LEFT JOIN quiz_answers qa on q.id = qa.question_id " +
+                        "WHERE qa.quiz_session_id = :session_id", Question.class)
                 .setParameter("topic_id", topic.getId())
                 .setParameter("session_id", quizSession.getId())
                 .setParameter("difficulty", quizSession.getDifficulty())
