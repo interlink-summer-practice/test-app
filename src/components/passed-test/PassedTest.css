@@ -24,3 +24,11 @@
     align-items: center;
     margin-top: 10px;
 }
+
+@media screen and (min-width: 400px) {
+
+    .passedTest {
+        width: 400px;
+        margin-left: 15px;
+    }
+}
