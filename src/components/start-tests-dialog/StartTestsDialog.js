@@ -23,7 +23,7 @@ class StartTestsDialog extends React.Component {
     state = {
         topics: [],
         selectedTopics: [],
-        difficulty: '',
+        difficulty: 'All',
     };
 
     selectedTopics = (value) => {
@@ -75,8 +75,8 @@ class StartTestsDialog extends React.Component {
                                 id: 'difficulty',
                             }}
                         >
-                            <MenuItem value="">
-                                <em>None</em>
+                            <MenuItem value="All">
+                                <em>All</em>
                             </MenuItem>
                             <MenuItem value={"Просте"}>Просте</MenuItem>
                             <MenuItem value={"Середнє"}>Середнє</MenuItem>
