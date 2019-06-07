@@ -84,12 +84,12 @@ public class QuestionService {
         return null;
     }
 
-    public void updateResultsOfPassedQuiz(QuizSessionDto quizSessionDto, String token) {
+    public void updateResultsOfPassedQuiz(QuizSessionDto quizSessionDto, Long userId) {
         QuizSession quizSession = quizSessionRepository.getQuizSessionById(quizSessionDto.getId());
         quizSession.setDate(LocalDateTime.now().toString());
         quizSessionRepository.updateQuizSession(quizSession);
         quizAnswerRepository.deleteQuizAnswersByQuizSession(quizSession);
-        if (token == null) {
+        if (userId == null) {
             userResultRepository.deleteUserResult(quizSession);
         }
     }
