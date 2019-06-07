@@ -44,6 +44,7 @@ export default class Question extends Component {
         const {id, name, difficulty, topic, answers} = this.props.question;
         return (
             <div className="test">
+                <div className="numberOfCurrentQuestion">Question {this.props.currentNumberOfQuestion} of {this.props.numberOfQuestions}</div>
                 <FormControl component="fieldset">
                     <FormLabel component="legend">{name}</FormLabel>
                     <RadioGroup
@@ -53,7 +54,6 @@ export default class Question extends Component {
                         answers.map((element, i) => {
                             return <FormControlLabel value={`${element.name}`} control={<Radio/>} label={element.name} key={i}/>
                         })
-
                     }
                     </RadioGroup>
                 </FormControl>
