@@ -36,6 +36,14 @@ public class QuestionRepository {
     }
 
     public Long getCountByTopicAndDifficulty(String difficulty, Topic topic) {
+        if (difficulty.equals("All")) {
+            return (Long) sessionFactory.getCurrentSession()
+                    .createQuery("select count(q) from Question q " +
+                            "WHERE topic = :topic")
+                    .setParameter("topic", topic)
+                    .uniqueResult();
+        }
+
         return (Long) sessionFactory.getCurrentSession()
                 .createQuery("select count(q) from Question q " +
                         "WHERE topic = :topic and difficulty = :difficulty")
