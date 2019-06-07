@@ -49,6 +49,7 @@ public class QuestionService {
         List<Topic> topics = Arrays.stream(topicsArray).collect(toList());
         if (difficulty.equals("All") || isPresentQuestionsWithThisDifficulty(topics, difficulty)) {
             QuizDto quizDto = new QuizDto();
+            quizDto.setCountOfQuestionsInQuiz(getQuestionsByTopics(topics, difficulty).size());
             List<QuizSession> quizSessions;
             if (userId == null) {
                 quizSessions = quizSessionRepository.getQuizSessionBySessionId(httpSession.getId());
@@ -67,6 +68,7 @@ public class QuestionService {
                     } else {
                         quizDto.setQuizSession(quizSession);
                         quizDto.setQuestions(getNotPassedQuestionsByTopics(topics, quizSession));
+                        quizDto.setCountOfPassedQuestions(quizAnswerRepository.getCountOfPassedQuestions(quizSession));
 
                         return quizDto;
                     }
