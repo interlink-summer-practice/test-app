@@ -42,7 +42,7 @@ class LogInDialog extends React.Component {
         axios.post('/login', userCredentials)
             .then(res => {
                 const authToken = res.data.accessToken;
-                localStorage.setItem('auth-token', authToken);
+                sessionStorage.setItem('auth-token', authToken);
                 axios.defaults.headers.common['auth-token'] = authToken;
                 history.push('/account');
             })

@@ -13,7 +13,7 @@ export default class UserAccount extends React.Component {
 
     componentDidMount() {
 
-        if (localStorage.getItem('auth-token') !== null) {
+        if (sessionStorage.getItem('auth-token') !== null) {
             axios.get('/account')
                 .then(res => {
                     this.setState({
@@ -26,7 +26,7 @@ export default class UserAccount extends React.Component {
 
     render() {
 
-        if (localStorage.getItem('auth-token') === null) {
+        if (sessionStorage.getItem('auth-token') === null) {
             return <Redirect to='/'/>
         }
 
