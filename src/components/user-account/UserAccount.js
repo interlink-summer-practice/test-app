@@ -7,7 +7,7 @@ import {Redirect} from "react-router-dom";
 export default class UserAccount extends React.Component {
 
     state = {
-        userTests: []
+        account: null
     };
 
     componentDidMount() {
@@ -16,11 +16,12 @@ export default class UserAccount extends React.Component {
             axios.get('/account')
                 .then(res => {
                     this.setState({
-                        userTests: res.data
+                        account: res.data
+                    }, () => {
+                        sessionStorage.setItem('userFirstName', this.state.account.firstName);
+                        sessionStorage.setItem('userLastName', this.state.account.lastName);
                     });
 
-                    sessionStorage.setItem('userFirstName', this.state.userTests[0].firstName);
-                    sessionStorage.setItem('userLastName', this.state.userTests[0].lastNa);
                 });
         }
 
@@ -32,18 +33,19 @@ export default class UserAccount extends React.Component {
             return <Redirect to='/'/>
         }
 
-        if (this.state.userTests.length !== 0) {
+        if (this.state.account !== null) {
             return (
                 <div>
                     <div className="userPassedTests">
                         {
-                            this.state.userTests.map((passedTest, index) => {
+                            this.state.account.results.map((passedTest, index) => {
                                 return (
                                     <PassedTest key={index} testInformation={
                                         {
                                             date: passedTest.date,
                                             topics: passedTest.topics,
-                                            percentOfPassingQuiz: passedTest.percentOfPassingQuiz
+                                            percentOfPassingQuiz: passedTest.percentOfPassingQuiz,
+                                            difficulty: passedTest.difficulty
                                         }
 
                                     }/>
