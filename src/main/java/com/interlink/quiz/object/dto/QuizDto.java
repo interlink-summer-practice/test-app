@@ -8,9 +8,10 @@ public class QuizDto {
 
     private List<QuestionDto> questions;
     private QuizSession quizSession;
-    private boolean passed;
     private Long countOfPassedQuestions;
     private int countOfQuestionsInQuiz;
+    private boolean passed;
+    private boolean existNewQuestions;
 
     public int getCountOfQuestionsInQuiz() {
         return countOfQuestionsInQuiz;
@@ -50,5 +51,13 @@ public class QuizDto {
 
     public void setCountOfPassedQuestions(Long countOfPassedQuestions) {
         this.countOfPassedQuestions = countOfPassedQuestions;
+    }
+
+    public boolean isExistNewQuestions() {
+        return existNewQuestions;
+    }
+
+    public void setExistNewQuestions(boolean existNewQuestions) {
+        this.existNewQuestions = existNewQuestions;
     }
 }

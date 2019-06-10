@@ -78,4 +78,9 @@ public class QuizController {
 
         questionService.updateResultsOfPassedQuiz(quizSessionDto, userId);
     }
+
+    @PostMapping("/quiz-session")
+    public void addQuestionsInQuizSession(@RequestBody QuizSessionDto quizSessionDto) {
+        questionService.addQuestionsInQuizSession(quizSessionDto);
+    }
 }
