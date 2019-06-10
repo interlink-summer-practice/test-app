@@ -85,13 +85,11 @@ public class QuizResultService {
         return topicResultList;
     }
 
-    private Long getQuestionCount(String difficalty, List<Topic> topics){
-        Long questionByTopics = null;
-        for (Topic topic : topics) {
-            questionByTopics += questionRepository.getCountByTopicAndDifficulty(difficalty,topic);
-        }
+    private Long getQuestionCount(QuizSession quizSession){
 
-        return questionByTopics;
+        return quizSession.getTopics().stream()
+                .mapToLong(topic -> questionRepository.getCountByTopicAndDifficulty(quizSession.getDifficulty(), topic))
+                .sum();
     }
 
     private QuizResultDto createQuizResultDto(QuizSession quizSession) {
@@ -99,8 +97,9 @@ public class QuizResultService {
         quizResultDto.setQuizSessionId(quizSession.getId());
         quizResultDto.setDate(quizSession.getDate());
         quizResultDto.setTopics(quizSession.getTopics());
-        quizResultDto.setCountOfQuestions(getQuestionCount(quizSession.getDifficulty(),quizSession.getTopics()));
+        quizResultDto.setCountOfQuestions(getQuestionCount(quizSession));
         quizResultDto.setCountOfCorrectAnswers(quizAnswerRepository.getCountOfRightAnswerBySession(quizSession));
+        quizResultDto.setPassed(quizAnswerRepository.getAnswersByQuizSession(quizSession).size() == getQuestionCount(quizSession));
         quizResultDto.setPercentOfPassingQuiz(quizResultDto.getCountOfCorrectAnswers() * 100.0 / quizResultDto.getCountOfQuestions());
 
         return quizResultDto;

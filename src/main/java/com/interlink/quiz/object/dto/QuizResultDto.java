@@ -13,6 +13,7 @@ public class QuizResultDto {
     private Long countOfCorrectAnswers;
     private double percentOfPassingQuiz;
     private String difficulty;
+    private boolean isPassed;
 
     public int getQuizSessionId() {
         return quizSessionId;
@@ -68,5 +69,13 @@ public class QuizResultDto {
 
     public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
+    }
+
+    public boolean isPassed() {
+        return isPassed;
+    }
+
+    public void setPassed(boolean passed) {
+        isPassed = passed;
     }
 }
