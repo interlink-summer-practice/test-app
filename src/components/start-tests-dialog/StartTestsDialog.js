@@ -32,7 +32,7 @@ class StartTestsDialog extends React.Component {
         if (value !== null) {
 
             this.setState((state) => {
-                state.topicDisableButton = !state.topicDisableButton;
+                state.topicDisableButton = false;
                 state.selectedTopics = value.map((element) => {
                     return {
                         id: element.id
@@ -43,6 +43,13 @@ class StartTestsDialog extends React.Component {
                 console.log(this.state.selectedTopics)
             })
         }
+        else {
+            this.setState((state)=>{
+                state.topicDisableButton = true;
+            })
+
+        }
+
     };
 
     componentDidMount = () => {
