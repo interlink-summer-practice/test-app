@@ -6,8 +6,10 @@ export default class TestsDifficulty extends React.Component {
     difficulty;
 
     constructor(props) {
+
         super(props);
         this.difficulty = this.props.difficulty;
+        console.log(this.difficulty);
     }
 
     render() {

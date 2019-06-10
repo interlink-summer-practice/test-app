@@ -13,6 +13,10 @@ export default class PassedTest extends React.Component {
         return `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`;
     };
 
+    componentDidMount() {
+        console.log(this.props.testInformation);
+    }
+
     render() {
         return (
             <div className="passedTest">
