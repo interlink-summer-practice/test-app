@@ -61,6 +61,7 @@ public class ApplicationConfig {
                 "hibernate.ddl-auto", "create-drop");
         hibernateProperties.setProperty(
                 "hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
+
         return hibernateProperties;
     }
 }
