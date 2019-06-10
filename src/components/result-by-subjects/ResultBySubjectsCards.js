@@ -3,30 +3,17 @@ import './ResultBySubjects.css';
 import axios from 'axios';
 import Button from '@material-ui/core/Button';
 
-export default class ResultBySubjects extends Component {
+export default class ResultBySubjectsCards extends Component {
 
-    state = {
-        topicsResult: [],
-    }
 
-    componentDidMount() {
-        console.log(this.props.sessionId);
-        axios.post('/result', {id: this.props.sessionId})
-            .then((res) => {
-                this.setState((state) => {
-                    state.topicsResult = res.data.topicResults
-                    return state;
-                });
-            });
-    }
 
     render() {
-        console.log(this.state.topicsResult)
+        console.log(this.props.topicsResult)
         return (
             <div className="resultByTopics">
                 <div className="result">
                     {
-                        this.state.topicsResult.map((element) => {
+                        this.props.topicsResult.map((element) => {
                             console.log(element)
                             return <div className="topic">
                                 <ul>
