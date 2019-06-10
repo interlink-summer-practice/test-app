@@ -36,14 +36,6 @@ public class QuestionRepository {
     }
 
     public Long getCountByTopicAndDifficulty(String difficulty, Topic topic) {
-        if (difficulty.equals("All")) {
-            return (Long) sessionFactory.getCurrentSession()
-                    .createQuery("select count(q) from Question q " +
-                            "WHERE topic = :topic")
-                    .setParameter("topic", topic)
-                    .uniqueResult();
-        }
-
         return (Long) sessionFactory.getCurrentSession()
                 .createQuery("select count(q) from Question q " +
                         "WHERE topic = :topic and difficulty = :difficulty")
@@ -53,13 +45,6 @@ public class QuestionRepository {
     }
 
     public List<Question> getQuestionsByTopic(Topic topic, String difficulty) {
-        if (difficulty.equals("All")) {
-            return sessionFactory.getCurrentSession()
-                    .createQuery("FROM Question WHERE topic = :topic", Question.class)
-                    .setParameter("topic", topic)
-                    .list();
-        }
-
         return sessionFactory.getCurrentSession()
                 .createQuery("FROM Question WHERE topic = :topic AND difficulty = :difficulty", Question.class)
                 .setParameter("topic", topic)
@@ -68,23 +53,6 @@ public class QuestionRepository {
     }
 
     public List<Question> getNotPassedQuestionsByTopic(Topic topic, QuizSession quizSession) {
-        if (quizSession.getDifficulty().equals("All")) {
-            return sessionFactory.getCurrentSession()
-                    .createNativeQuery("" +
-                            "SELECT q.* " +
-                            "FROM questions q " +
-                            "       LEFT JOIN topics t on q.topic_id = t.id " +
-                            "WHERE t.id = :topic_id " +
-                            "EXCEPT " +
-                            "SELECT q.* " +
-                            "FROM questions q " +
-                            "       LEFT JOIN topics t on q.topic_id = t.id " +
-                            "       LEFT JOIN quiz_answers qa on q.id = qa.question_id " +
-                            "WHERE qa.quiz_session_id = :session_id", Question.class)
-                    .setParameter("topic_id", topic.getId())
-                    .setParameter("session_id", quizSession.getId())
-                    .list();
-        }
 
         return sessionFactory.getCurrentSession()
                 .createNativeQuery("" +

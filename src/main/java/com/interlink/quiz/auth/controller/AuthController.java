@@ -59,12 +59,15 @@ public class AuthController {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
 
-        User user = userService.register(signUpRequest);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentContextPath().path("/topics")
-                .buildAndExpand(user.getEmail()).toUri();
+        userService.register(signUpRequest);
 
-        return ResponseEntity.created(location).body(
-                new ApiResponse(true, "User registered successfully"));
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        signUpRequest.getEmail(),
+                        signUpRequest.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtTokenProvider.generateToken(authentication);
+
+        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
     }
 }
