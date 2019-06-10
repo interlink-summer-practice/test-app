@@ -16,7 +16,6 @@ public class QuizResultService {
 
     private final QuizSessionRepository quizSessionRepository;
     private final UserResultRepository userResultRepository;
-    private final QuestionRepository questionRepository;
     private final QuizAnswerRepository quizAnswerRepository;
     private final UserRepository userRepository;
 
@@ -24,13 +23,11 @@ public class QuizResultService {
     public QuizResultService(
             QuizSessionRepository quizSessionRepository,
             UserResultRepository userResultRepository,
-            QuestionRepository questionRepository,
             QuizAnswerRepository quizAnswerRepository,
             UserRepository userRepository) {
 
         this.quizSessionRepository = quizSessionRepository;
         this.userResultRepository = userResultRepository;
-        this.questionRepository = questionRepository;
         this.quizAnswerRepository = quizAnswerRepository;
         this.userRepository = userRepository;
     }
