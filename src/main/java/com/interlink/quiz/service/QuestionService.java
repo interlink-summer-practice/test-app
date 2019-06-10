@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
@@ -52,7 +53,8 @@ public class QuestionService {
 
         if (isPresentQuestionsWithThisDifficulty(topics, difficulty)) {
             QuizDto quizDto = new QuizDto();
-            quizDto.setCountOfQuestionsInQuiz(getQuestionsByTopics(topics, difficulty).size());
+            List<QuestionDto> questions = getQuestionsByTopics(topics, difficulty);
+            quizDto.setCountOfQuestionsInQuiz(questions.size());
             List<QuizSession> quizSessions;
             if (userId == null) {
                 quizSessions = quizSessionRepository.getQuizSessionBySessionId(httpSession.getId());
@@ -62,10 +64,10 @@ public class QuestionService {
             }
             for (QuizSession quizSession : quizSessions) {
                 if (isAlreadyPassedQuiz(topics, quizSession, difficulty)) {
-                    if (isDoneQuiz(topics, quizSession, difficulty)) {
+                    if (isDoneQuiz(quizSession)) {
                         quizDto.setPassed(true);
                         quizDto.setQuizSession(quizSession);
-                        quizDto.setQuestions(getQuestionsByTopics(topics, difficulty));
+                        quizDto.setQuestions(questions);
 
                         return quizDto;
                     } else {
@@ -78,8 +80,16 @@ public class QuestionService {
                 }
             }
 
-            quizDto.setQuizSession(createNewQuizSession(httpSession, userId, topics, difficulty));
-            quizDto.setQuestions(getQuestionsByTopics(topics, difficulty));
+            quizDto.setQuizSession(createNewQuizSession(
+                    httpSession,
+                    userId,
+                    topics,
+                    difficulty,
+                    questions.stream()
+                            .map(this::createQuestionFromQuestionDto)
+                            .collect(Collectors.toList()))
+            );
+            quizDto.setQuestions(questions);
 
             return quizDto;
         }
@@ -124,13 +134,15 @@ public class QuestionService {
     private QuizSession createNewQuizSession(HttpSession httpSession,
                                              Long userId,
                                              List<Topic> topics,
-                                             String difficulty) {
+                                             String difficulty,
+                                             List<Question> questions) {
 
         QuizSession newQuizSession = new QuizSession();
         newQuizSession.setSessionId(httpSession.getId());
         newQuizSession.setDate(LocalDateTime.now().toString());
         newQuizSession.setTopics(topics);
         newQuizSession.setDifficulty(difficulty);
+        newQuizSession.setQuestions(questions);
         if (userId != null) {
             newQuizSession.setUser(userRepository.getUserById(userId));
         }
@@ -162,12 +174,11 @@ public class QuestionService {
         return sum > 0;
     }
 
-    private boolean isDoneQuiz(List<Topic> topics, QuizSession quizSession, String difficulty) {
-        List<QuestionDto> questionsByTopics = getQuestionsByTopics(topics, difficulty);
+    private boolean isDoneQuiz(QuizSession quizSession) {
         List<QuizAnswer> answers = quizAnswerRepository.getAnswersByQuizSession(quizSession);
         Set<Question> questions = answers.stream().map(QuizAnswer::getQuestion).collect(toSet());
 
-        return questionsByTopics.size() == questions.size();
+        return quizSession.getQuestions().size() == questions.size();
     }
 
     private QuestionDto createQuestionDto(Question question) {
@@ -179,5 +190,16 @@ public class QuestionService {
         questionDto.setAnswers(question.getAnswers());
 
         return questionDto;
+    }
+
+    private Question createQuestionFromQuestionDto(QuestionDto questionDto) {
+        Question question = new Question();
+        question.setId(questionDto.getId());
+        question.setName(questionDto.getName());
+        question.setDifficulty(questionDto.getDifficulty());
+        question.setTopic(questionDto.getTopic());
+        question.setAnswers(questionDto.getAnswers());
+
+        return question;
     }
 }
