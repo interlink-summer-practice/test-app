@@ -23,8 +23,6 @@ import SignUpDialog from "./components/sign-up-dialog/SignUpDialog";
 import StartTestsDialog from "./components/start-tests-dialog/StartTestsDialog";
 import AppBarMenu from "./components/app-bar-menu/AppBarMenu";
 
-
-
 (function () {
     const token = sessionStorage.getItem('auth-token');
     if (token) {
@@ -56,6 +54,7 @@ export default class App extends Component {
             isDrawerOpen: false,
             isAuthenticated: false
         });
+        axios.defaults.headers.common['auth-token'] = '';
         sessionStorage.removeItem('auth-token');
         sessionStorage.removeItem('userFirstName');
         sessionStorage.removeItem('userLastName');
