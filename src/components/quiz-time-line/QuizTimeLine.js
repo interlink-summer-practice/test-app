@@ -1,15 +1,40 @@
-import React , { Component} from 'react';
+import React, {Component} from 'react';
+import './QuizTimeLine.css'
 
 export default class QuizTimeLine extends Component {
 
 
-    render()
-     {
-     console.log(this.props.currentNumberOfQuestion);
-     console.log(this.props.numberOfQuestions);
+    render() {
+        console.log(this.props.currentNumberOfQuestion);
+        console.log(this.props.numberOfQuestions);
 
-        return(
-        <div></div>
-        )
+        var quiz_timeline__number = [];
+        for(var i = 1; i < this.props.currentNumberOfQuestion; i++){
+            if(i % 15 == 0)
+                quiz_timeline__number.push(<br></br>);
+            quiz_timeline__number.push(<div className="num_for_timeline">{i}</div>);
+        }
+
+        quiz_timeline__number.push(<div className="quiz_timeline__number_current num_for_timeline_">{this.props.currentNumberOfQuestion}</div>);
+
+        for (var i = this.props.currentNumberOfQuestion + 1; i <= this.props.numberOfQuestions; i++) {
+            quiz_timeline__number.push(<div className="num_for_timeline_">{i}</div>);
+            if(i % 15 == 0)
+                quiz_timeline__number.push(<br></br>);
+        }
+        return <div className="quiz_timeline">{quiz_timeline__number}</div>;
+
     }
 }
+/*
+var quiz_timeline__number = [];
+        for (var i = 1; i <= this.props.numberOfQuestions; i++) {
+            if (i == this.props.currentNumberOfQuestion)
+                quiz_timeline__number.push(<div className="quiz_timeline__number_current num_for_timeline">{i}</div>);
+            else
+                quiz_timeline__number.push(<div className="num_for_timeline">{i}</div>);
+        }
+        return <div className="quiz_timeline">{quiz_timeline__number}</div>;
+ */
+//
+// }
