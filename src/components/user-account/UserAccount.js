@@ -17,11 +17,7 @@ export default class UserAccount extends React.Component {
                 .then(res => {
                     this.setState({
                         account: res.data
-                    }, () => {
-                        sessionStorage.setItem('userFirstName', this.state.account.firstName);
-                        sessionStorage.setItem('userLastName', this.state.account.lastName);
                     });
-
                 });
         }
 
