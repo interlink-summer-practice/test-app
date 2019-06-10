@@ -47,7 +47,10 @@ public class QuestionService {
                                 String difficulty) {
 
         List<Topic> topics = Arrays.stream(topicsArray).collect(toList());
-        if (difficulty.equals("All") || isPresentQuestionsWithThisDifficulty(topics, difficulty)) {
+
+        if (difficulty.equals("Середнє") || difficulty.equals("Складне")) return new QuizDto();
+
+        if (isPresentQuestionsWithThisDifficulty(topics, difficulty)) {
             QuizDto quizDto = new QuizDto();
             quizDto.setCountOfQuestionsInQuiz(getQuestionsByTopics(topics, difficulty).size());
             List<QuizSession> quizSessions;
@@ -77,6 +80,7 @@ public class QuestionService {
 
             quizDto.setQuizSession(createNewQuizSession(httpSession, userId, topics, difficulty));
             quizDto.setQuestions(getQuestionsByTopics(topics, difficulty));
+
             return quizDto;
         }
 
