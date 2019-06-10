@@ -59,19 +59,22 @@ public class QuizController {
     }
 
     @PostMapping("/quiz/{url}")
-    public CuratorQuiz getQuestionsToGroup(@RequestBody @PathVariable String url,
+    public ResponseEntity<?> getQuestionsToGroup(@RequestBody @PathVariable String url,
                                            @RequestHeader(value = "auth-token", required = false) String token,
                                            HttpSession httpSession) throws IOException {
 
         Long userId = null;
         if (!token.isEmpty()) {
             userId = jwtTokenProvider.getUserIdFromJWT(token);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         byte[] decode = Base64.getDecoder().decode(url);
         String test = new String(decode);
+        CuratorQuiz curatorQuiz = new ObjectMapper().readValue(test, CuratorQuiz.class);
 
-        return new ObjectMapper().readValue(test, CuratorQuiz.class);
+        return new ResponseEntity<>(questionService.getQuestionsToGroup(curatorQuiz), HttpStatus.OK);
     }
 
     @PostMapping("/quiz-answer")

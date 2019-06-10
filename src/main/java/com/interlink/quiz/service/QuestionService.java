@@ -1,9 +1,6 @@
 package com.interlink.quiz.service;
 
-import com.interlink.quiz.object.Question;
-import com.interlink.quiz.object.QuizAnswer;
-import com.interlink.quiz.object.QuizSession;
-import com.interlink.quiz.object.Topic;
+import com.interlink.quiz.object.*;
 import com.interlink.quiz.object.dto.QuestionDto;
 import com.interlink.quiz.object.dto.QuizDto;
 import com.interlink.quiz.object.dto.QuizSessionDto;
@@ -81,6 +78,10 @@ public class QuestionService {
         }
 
         return new QuizDto();
+    }
+
+    public List<Question> getQuestionsToGroup(CuratorQuiz curatorQuiz) {
+        return null;
     }
 
     public void updateResultsOfPassedQuiz(QuizSessionDto quizSessionDto, Long userId) {
