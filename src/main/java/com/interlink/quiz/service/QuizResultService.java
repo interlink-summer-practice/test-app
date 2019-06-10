@@ -85,12 +85,21 @@ public class QuizResultService {
         return topicResultList;
     }
 
+    private Long getQuestionCount(String difficalty, List<Topic> topics){
+        Long questionByTopics = null;
+        for (Topic topic : topics) {
+            questionByTopics += questionRepository.getCountByTopicAndDifficulty(difficalty,topic);
+        }
+
+        return questionByTopics;
+    }
+
     private QuizResultDto createQuizResultDto(QuizSession quizSession) {
         QuizResultDto quizResultDto = new QuizResultDto();
         quizResultDto.setQuizSessionId(quizSession.getId());
         quizResultDto.setDate(quizSession.getDate());
         quizResultDto.setTopics(quizSession.getTopics());
-        quizResultDto.setCountOfQuestions(quizAnswerRepository.getCountOfQuestionBySession(quizSession));
+        quizResultDto.setCountOfQuestions(getQuestionCount(quizSession.getDifficulty(),quizSession.getTopics()));
         quizResultDto.setCountOfCorrectAnswers(quizAnswerRepository.getCountOfRightAnswerBySession(quizSession));
         quizResultDto.setPercentOfPassingQuiz(quizResultDto.getCountOfCorrectAnswers() * 100.0 / quizResultDto.getCountOfQuestions());
 
