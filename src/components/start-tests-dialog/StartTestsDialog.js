@@ -27,18 +27,17 @@ class StartTestsDialog extends React.Component {
     };
 
     selectedTopics = (value) => {
+        if(value !== null){
         this.setState((state) => {
             state.selectedTopics = value.map((element) => {
                 return {
                     id: element.id
                 }
             });
-
-
             return state;
         }, () => {
             console.log(this.state.selectedTopics)
-        })
+        })}
     };
 
     componentDidMount = () => {
