@@ -244,6 +244,7 @@ function TestTopicsAutocomplete(props) {
   function handleChangeMulti(value) {
     setMulti(value);
     props.selectedTopics(value);
+    console.log(value);
   }
 
   const selectStyles = {
