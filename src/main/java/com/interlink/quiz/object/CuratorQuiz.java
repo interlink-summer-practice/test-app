@@ -3,7 +3,7 @@ package com.interlink.quiz.object;
 public class CuratorQuiz {
 
     private Topic[] topics;
-    private String[] difficulty;
+    private String[] difficulties;
     private String group;
 
     public Topic[] getTopics() {
@@ -14,12 +14,12 @@ public class CuratorQuiz {
         this.topics = topics;
     }
 
-    public String[] getDifficulty() {
-        return difficulty;
+    public String[] getDifficulties() {
+        return difficulties;
     }
 
-    public void setDifficulty(String[] difficulty) {
-        this.difficulty = difficulty;
+    public void setDifficulties(String[] difficulties) {
+        this.difficulties = difficulties;
     }
 
     public String getGroup() {
