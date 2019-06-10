@@ -57,7 +57,7 @@ public class QuizResultService {
         User user = userRepository.getUserById(userId);
         AccountDto accountDto = new AccountDto();
         accountDto.setFirstName(user.getFirstName());
-        accountDto.setLastName(user.getFirstName());
+        accountDto.setLastName(user.getLastName());
 
         List<QuizResultDto> results = new ArrayList<>();
         for (QuizSession quizSession : quizSessionRepository.getQuizSessionsByUserId(user)) {
