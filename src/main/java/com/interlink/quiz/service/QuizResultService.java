@@ -8,8 +8,7 @@ import com.interlink.quiz.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class QuizResultService {
@@ -69,6 +68,42 @@ public class QuizResultService {
         return accountDto;
     }
 
+    public List<TopicResult> getStatisticByTopics(Long userId) {
+        if (userId == null) return Collections.emptyList();
+        User user = userRepository.getUserById(userId);
+        Map<Topic, Long> resultByTopics = new HashMap<>();
+        List<QuizSession> quizSessions = quizSessionRepository.getQuizSessionsByUserId(user);
+        for (QuizSession quizSession : quizSessions) {
+            if (isDone(quizSession)) {
+                for (Topic topic : quizSession.getTopics()) {
+                    if (!resultByTopics.containsKey(topic)) {
+                        resultByTopics.put(
+                                topic,
+                                quizAnswerRepository.getCountOfRightAnswerBySessionAndTopic(quizSession, topic)
+                        );
+                    } else {
+                        Long currentResult = resultByTopics.get(topic);
+                        Long newResult = quizAnswerRepository.getCountOfRightAnswerBySessionAndTopic(quizSession, topic);
+                        if (newResult > currentResult) {
+                            resultByTopics.put(topic, newResult);
+                        }
+                    }
+                }
+            }
+        }
+
+        List<TopicResult> result = new ArrayList<>();
+        for (Topic topic : resultByTopics.keySet()) {
+            TopicResult topicResult = new TopicResult();
+            topicResult.setTopic(topic);
+            topicResult.setResult(resultByTopics.get(topic) * 100
+                    / questionRepository.getQuestionsByTopic(topic, "Просте").size());
+            result.add(topicResult);
+        }
+
+        return result;
+    }
+
     private void saveUserResult(QuizSession quizSession, int mark) {
         UserResult userResult = new UserResult();
         userResult.setQuizSession(quizSession);
@@ -107,5 +142,14 @@ public class QuizResultService {
         topicResult.setResult(topicResult.getNumberOfCorrectAnswers() * 100.0 / topicResult.getNumberOfQuestions());
 
         return topicResult;
+    }
+
+    private boolean isDone(QuizSession quizSession) {
+        List<Topic> topics = quizSession.getTopics();
+        long countOfQuestions = topics.stream()
+                .mapToLong(topic -> questionRepository.getCountByTopicAndDifficulty(quizSession.getDifficulty(), topic))
+                .sum();
+
+        return countOfQuestions == Math.toIntExact(quizAnswerRepository.getCountOfPassedQuestions(quizSession));
     }
 }

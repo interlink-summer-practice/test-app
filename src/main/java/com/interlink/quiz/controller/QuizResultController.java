@@ -2,6 +2,7 @@ package com.interlink.quiz.controller;
 
 import com.interlink.quiz.auth.security.JwtTokenProvider;
 import com.interlink.quiz.object.QuizResult;
+import com.interlink.quiz.object.TopicResult;
 import com.interlink.quiz.object.dto.AccountDto;
 import com.interlink.quiz.object.dto.QuizSessionDto;
 import com.interlink.quiz.service.QuizResultService;
@@ -36,8 +37,7 @@ public class QuizResultController {
     }
 
     @GetMapping("/account")
-    public AccountDto getTestHistory(
-            @RequestHeader(value = "auth-token", required = false) String token) {
+    public AccountDto getTestHistory(@RequestHeader(value = "auth-token", required = false) String token) {
 
         Long userId = null;
         if (!token.isEmpty()) {
@@ -45,5 +45,16 @@ public class QuizResultController {
         }
 
         return quizResultService.getHistoryOfQuizzesByUser(userId);
+    }
+
+    @GetMapping("/test")
+    public List<TopicResult> test(@RequestHeader(value = "auth-token", required = false) String token) {
+
+        Long userId = null;
+        if (!token.isEmpty()) {
+            userId = jwtTokenProvider.getUserIdFromJWT(token);
+        }
+
+        return quizResultService.getStatisticByTopics(userId);
     }
 }
