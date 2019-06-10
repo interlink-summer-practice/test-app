@@ -64,6 +64,7 @@ public class QuestionService {
             }
             for (QuizSession quizSession : quizSessions) {
                 if (isAlreadyPassedQuiz(topics, quizSession, difficulty)) {
+                    if (quizSession.getQuestions().size() != questions.size()) break;
                     if (isDoneQuiz(quizSession)) {
                         quizDto.setPassed(true);
                         quizDto.setQuizSession(quizSession);
