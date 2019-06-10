@@ -2,6 +2,7 @@ package com.interlink.quiz.controller;
 
 import com.interlink.quiz.auth.security.JwtTokenProvider;
 import com.interlink.quiz.csv.CsvParserService;
+import com.interlink.quiz.object.Topic;
 import com.interlink.quiz.object.dto.FilteredQuizDto;
 import com.interlink.quiz.object.dto.QuizAnswerDto;
 import com.interlink.quiz.object.dto.QuizDto;
@@ -37,7 +38,7 @@ public class QuizController {
     }
 
     @PostMapping("/questions")
-    public QuizDto getQuestions(@RequestBody FilteredQuizDto filteredQuizDto,
+    public QuizDto getQuestions(@RequestBody Topic[] topics,
                                 @RequestHeader(value = "auth-token", required = false) String token,
                                 HttpSession httpSession) {
 
@@ -47,10 +48,9 @@ public class QuizController {
         }
 
         return questionService.getQuestions(
-                filteredQuizDto.getTopics(),
+                topics,
                 userId,
-                httpSession,
-                filteredQuizDto.getDifficulty()
+                httpSession
         );
     }
 

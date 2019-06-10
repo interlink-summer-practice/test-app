@@ -13,7 +13,10 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
@@ -43,13 +46,13 @@ public class QuestionService {
 
     public QuizDto getQuestions(Topic[] topicsArray,
                                 Long userId,
-                                HttpSession httpSession,
-                                String difficulty) {
+                                HttpSession httpSession) {
 
         List<Topic> topics = Arrays.stream(topicsArray).collect(toList());
-        if (difficulty.equals("All") || isPresentQuestionsWithThisDifficulty(topics, difficulty)) {
+        if (isPresentQuestionsWithThisDifficulty(topics, "Просте")) {
             QuizDto quizDto = new QuizDto();
-            quizDto.setCountOfQuestionsInQuiz(getQuestionsByTopics(topics, difficulty).size());
+            List<QuestionDto> questions = getQuestionsByTopics(topics, "Просте");
+            quizDto.setCountOfQuestionsInQuiz(questions.size());
             List<QuizSession> quizSessions;
             if (userId == null) {
                 quizSessions = quizSessionRepository.getQuizSessionBySessionId(httpSession.getId());
@@ -58,11 +61,11 @@ public class QuestionService {
                         userRepository.getUserById(userId));
             }
             for (QuizSession quizSession : quizSessions) {
-                if (isAlreadyPassedQuiz(topics, quizSession, difficulty)) {
-                    if (isDoneQuiz(topics, quizSession, difficulty)) {
+                if (isAlreadyPassedQuiz(topics, quizSession)) {
+                    if (isDoneQuiz(topics, quizSession, "Просте")) {
                         quizDto.setPassed(true);
                         quizDto.setQuizSession(quizSession);
-                        quizDto.setQuestions(getQuestionsByTopics(topics, difficulty));
+                        quizDto.setQuestions(questions);
 
                         return quizDto;
                     } else {
@@ -75,8 +78,8 @@ public class QuestionService {
                 }
             }
 
-            quizDto.setQuizSession(createNewQuizSession(httpSession, userId, topics, difficulty));
-            quizDto.setQuestions(getQuestionsByTopics(topics, difficulty));
+            quizDto.setQuizSession(createNewQuizSession(httpSession, userId, topics));
+            quizDto.setQuestions(questions);
             return quizDto;
         }
 
@@ -119,14 +122,12 @@ public class QuestionService {
 
     private QuizSession createNewQuizSession(HttpSession httpSession,
                                              Long userId,
-                                             List<Topic> topics,
-                                             String difficulty) {
+                                             List<Topic> topics) {
 
         QuizSession newQuizSession = new QuizSession();
         newQuizSession.setSessionId(httpSession.getId());
         newQuizSession.setDate(LocalDateTime.now().toString());
         newQuizSession.setTopics(topics);
-        newQuizSession.setDifficulty(difficulty);
         if (userId != null) {
             newQuizSession.setUser(userRepository.getUserById(userId));
         }
@@ -136,11 +137,9 @@ public class QuestionService {
     }
 
     private boolean isAlreadyPassedQuiz(List<Topic> selectedTopics,
-                                        QuizSession quizSession,
-                                        String currentDifficulty) {
+                                        QuizSession quizSession) {
 
         if (quizSession == null) return false;
-        if (!quizSession.getDifficulty().equals(currentDifficulty)) return false;
         if (selectedTopics.size() != quizSession.getTopics().size()) return false;
         for (Topic sessionTopic : quizSession.getTopics()) {
             if (!selectedTopics.contains(sessionTopic)) {
