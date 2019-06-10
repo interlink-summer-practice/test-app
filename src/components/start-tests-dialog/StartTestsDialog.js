@@ -24,20 +24,25 @@ class StartTestsDialog extends React.Component {
         topics: [],
         selectedTopics: [],
         difficulty: '',
+        topicDisableButton: true,
+        difficultyDisableButton: true,
     };
 
     selectedTopics = (value) => {
-        if(value !== null){
-        this.setState((state) => {
-            state.selectedTopics = value.map((element) => {
-                return {
-                    id: element.id
-                }
-            });
-            return state;
-        }, () => {
-            console.log(this.state.selectedTopics)
-        })}
+        if (value !== null) {
+
+            this.setState((state) => {
+                state.topicDisableButton = !state.topicDisableButton;
+                state.selectedTopics = value.map((element) => {
+                    return {
+                        id: element.id
+                    }
+                });
+                return state;
+            }, () => {
+                console.log(this.state.selectedTopics)
+            })
+        }
     };
 
     componentDidMount = () => {
@@ -50,7 +55,15 @@ class StartTestsDialog extends React.Component {
             })
     };
     handleChange = (event) => {
-        this.setState({difficulty: event.target.value})
+        this.setState((state)=>{
+            state.difficulty = event.target.value;
+            state.difficultyDisableButton = !state.difficultyDisableButton;
+            return state;
+        })
+        // this.setState({
+        //     difficulty: event.target.value,
+        //     difficultyDisableButton: false
+        // })
     }
 
     render() {
@@ -86,12 +99,20 @@ class StartTestsDialog extends React.Component {
                         </Button>
 
                         <Route render={({history}) => (
-                            <Button color="primary" onClick={() => {
+                            <Button disabled={this.state.topicDisableButton || this.state.difficultyDisableButton}
+                                    color="primary" onClick={() => {
                                 this.props.startTestsDialogHandler();
                                 history.push('/quiz', {
                                     topics: this.state.selectedTopics,
                                     difficulty: this.state.difficulty,
                                 })
+                                this.setState((state) => {
+                                    state.selectedTopics = [];
+                                    state.difficulty = '';
+                                    state.topicDisableButton = true;
+                                    state.difficultyDisableButton = true;
+                                    return state;
+                                });
                             }}>
                                 Start Tests
                             </Button>

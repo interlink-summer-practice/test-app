@@ -26,12 +26,12 @@ export default class ResultBySubjects extends Component {
             <div className="resultByTopics">
                 <div className="result">
                     {
-                        this.state.topicsResult.map((element) => {
-                            console.log(element)
+                        this.state.topicsResult.map((element, i) => {
+                            console.log(element, i)
                             return <div className="topic">
                                 <ul>
-                                    <li>{element.topic.name}</li>
-                                    <li>{element.numberOfCorrectAnswers} of {element.numberOfQuestions}</li>
+                                    <li key={i}>{element.topic.name}</li>
+                                    <li key={i}>{element.numberOfCorrectAnswers} of {element.numberOfQuestions}</li>
                                     <li>{(element.result).toFixed(2)}%</li>
                                 </ul>
                             </div>
