@@ -99,7 +99,7 @@ public class QuizResultService {
         quizResultDto.setTopics(quizSession.getTopics());
         quizResultDto.setCountOfQuestions(getQuestionCount(quizSession));
         quizResultDto.setCountOfCorrectAnswers(quizAnswerRepository.getCountOfRightAnswerBySession(quizSession));
-        quizResultDto.setPassed(quizAnswerRepository.getAnswersByQuizSession(quizSession).size() == getQuestionCount(quizSession));
+        quizResultDto.setPassed(quizAnswerRepository.getAnswersByQuizSession(quizSession).size() == quizResultDto.getCountOfQuestions());
         quizResultDto.setPercentOfPassingQuiz(quizResultDto.getCountOfCorrectAnswers() * 100.0 / quizResultDto.getCountOfQuestions());
 
         return quizResultDto;
