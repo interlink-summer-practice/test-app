@@ -121,7 +121,12 @@ export default class App extends Component {
                                             secondButtonLabel={'Log In'}
                                         />
                                     )
-                                    : <AppBarMenu logoutHandler={this.logout}/>
+                                    : <AppBarMenu
+                                        isAuthenticated={this.state.isAuthenticated}
+                                        logoutHandler={this.logout}
+                                        startTestsDialogHandler={this.startTestsDialogHandler}
+                                        openUserAccount={this.openUserAccount}
+                                    />
                             }
 
                         </Toolbar>
@@ -136,7 +141,7 @@ export default class App extends Component {
                                     ? (
                                         <ListItem button onClick={this.signUpDialogHandler}>
                                             <ListItemIcon><AccountCircle/></ListItemIcon>
-                                            <ListItemText>Create account</ListItemText>
+                                            <ListItemText>Sign Up</ListItemText>
                                         </ListItem>
                                     )
                                     : (

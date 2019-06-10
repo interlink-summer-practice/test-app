@@ -48,6 +48,7 @@ class LogInDialog extends React.Component {
                 history.push('/account');
             })
             .catch(err => {
+                console.log(err);
                 if (err.response.status === 401) {
                     this.setState({
                         isCredentialsValid: false
