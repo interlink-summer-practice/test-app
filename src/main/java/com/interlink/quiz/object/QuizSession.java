@@ -28,8 +28,15 @@ public class QuizSession {
             joinColumns = {@JoinColumn(name = "quiz_session_id")},
             inverseJoinColumns = {@JoinColumn(name = "topic_id")}
     )
-
     private List<Topic> topics;
+
+    @ManyToMany
+    @JoinTable(
+            name = "question_in_quiz_session",
+            joinColumns = {@JoinColumn(name = "quiz_session_id")},
+            inverseJoinColumns = {@JoinColumn(name = "question_id")}
+    )
+    private List<Question> questions;
 
     public int getId() {
         return id;
@@ -77,5 +84,13 @@ public class QuizSession {
 
     public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
+    }
+
+    public List<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
     }
 }
