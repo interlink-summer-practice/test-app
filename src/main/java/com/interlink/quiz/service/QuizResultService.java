@@ -8,8 +8,7 @@ import com.interlink.quiz.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class QuizResultService {
@@ -18,18 +17,21 @@ public class QuizResultService {
     private final UserResultRepository userResultRepository;
     private final QuizAnswerRepository quizAnswerRepository;
     private final UserRepository userRepository;
+    private final QuestionRepository questionRepository;
 
     @Autowired
     public QuizResultService(
             QuizSessionRepository quizSessionRepository,
             UserResultRepository userResultRepository,
             QuizAnswerRepository quizAnswerRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository,
+            QuestionRepository questionRepository) {
 
         this.quizSessionRepository = quizSessionRepository;
         this.userResultRepository = userResultRepository;
         this.quizAnswerRepository = quizAnswerRepository;
         this.userRepository = userRepository;
+        this.questionRepository = questionRepository;
     }
 
     public QuizResult getQuizResult(QuizSessionDto quizSessionDto, Long userId) {
@@ -97,7 +99,7 @@ public class QuizResultService {
     private TopicResult createTopicResult(QuizSession quizSession, Topic topic) {
         TopicResult topicResult = new TopicResult();
         topicResult.setTopic(topic);
-        topicResult.setNumberOfQuestions(quizSession.getQuestions().size());
+        topicResult.setNumberOfQuestions(questionRepository.getCountByTopicAndDifficulty("Просте", topic));
         topicResult.setNumberOfCorrectAnswers(
                 quizAnswerRepository.getCountOfRightAnswerBySessionAndTopic(quizSession, topic));
         topicResult.setResult(topicResult.getNumberOfCorrectAnswers() * 100.0 / topicResult.getNumberOfQuestions());

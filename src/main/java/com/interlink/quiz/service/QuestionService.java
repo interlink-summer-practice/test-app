@@ -61,7 +61,10 @@ public class QuestionService {
                         userRepository.getUserById(userId));
             }
             for (QuizSession quizSession : quizSessions) {
-                if (isAlreadyPassedQuiz(topics, quizSession)) {
+                if (isAlreadyPassedQuiz(topics, quizSession, difficulty)) {
+                    if (quizSession.getQuestions().size() != questions.size()) {
+                        quizDto.setExistNewQuestions(true);
+                    }
                     if (isDoneQuiz(quizSession)) {
                         quizDto.setPassed(true);
                         quizDto.setQuizSession(quizSession);
@@ -141,6 +144,16 @@ public class QuestionService {
         return quizDto;
     }
 
+    public void addQuestionsInQuizSession(QuizSessionDto quizSessionDto) {
+        QuizSession quizSession = quizSessionRepository.getQuizSessionById(quizSessionDto.getId());
+        quizSession.setQuestions(
+                getQuestionsByTopics(quizSession.getTopics(), "Просте").stream()
+                .map(this::createQuestionFromQuestionDto)
+                .collect(Collectors.toList())
+        );
+        quizSessionRepository.updateQuizSession(quizSession);
+    }
+
     public void updateResultsOfPassedQuiz(QuizSessionDto quizSessionDto, Long userId) {
         QuizSession quizSession = quizSessionRepository.getQuizSessionById(quizSessionDto.getId());
         quizSession.setDate(LocalDateTime.now().toString());
@@ -189,17 +202,17 @@ public class QuestionService {
     }
 
     private boolean isAlreadyPassedQuiz(List<Topic> selectedTopics,
-                                        QuizSession quizSession) {
+                                        QuizSession quizSession,
+                                        String currentDifficulty) {
 
         if (quizSession == null) return false;
+        if (!quizSession.getDifficulty().equals(currentDifficulty)) return false;
         if (selectedTopics.size() != quizSession.getTopics().size()) return false;
-
         for (Topic sessionTopic : quizSession.getTopics()) {
             if (!selectedTopics.contains(sessionTopic)) {
                 return false;
             }
         }
-
         return true;
     }
 
