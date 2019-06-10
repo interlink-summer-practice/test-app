@@ -4,7 +4,7 @@ import TotalResultTesting from '../total-result-testing/TotalResultTesting';
 import axios from 'axios';
 import UpdateResultAlertDialog from '../update-result-alert-dialog/UpdateResultAlertDialog';
 import ResultBySubjects from "../result-by-subjects/ResultBySubjects";
-import Button from "@material-ui/core/Button";
+import DifficultyDialog from '../difficulty-dialog/DifficultyDialog'
 import {withRouter, Route, Redirect} from 'react-router-dom';
 
 
@@ -79,12 +79,7 @@ export default class TestPassing extends Component {
             return (
 
                 <React.Fragment>
-                    <Route>
-                        <Redirect to="/"/>
-                    </Route>
-                    {
-                        (alert("Запитань з такою складністю не існує"))
-                    }
+                    <DifficultyDialog />
                 </React.Fragment>
             );
         } else {
