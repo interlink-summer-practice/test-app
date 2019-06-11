@@ -46,4 +46,15 @@ public class QuizResultController {
 
         return quizResultService.getHistoryOfQuizzesByUser(userId);
     }
+
+    @GetMapping("/account/statistic")
+    public List<TopicResult> getStatisticByTopics(@RequestHeader(value = "auth-token", required = false) String token) {
+
+        Long userId = null;
+        if (!token.isEmpty()) {
+            userId = jwtTokenProvider.getUserIdFromJWT(token);
+        }
+
+        return quizResultService.getTopicsResultByUser(userId);
+    }
 }

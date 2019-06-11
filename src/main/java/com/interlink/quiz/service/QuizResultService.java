@@ -67,12 +67,15 @@ public class QuizResultService {
             results.add(createQuizResultDto(quizSession));
         }
         accountDto.setResults(results);
-        accountDto.setStatisticByTopicResults(getTopicsResultByUser(user));
 
         return accountDto;
     }
 
-    private List<TopicResult> getTopicsResultByUser(User user){
+    public List<TopicResult> getTopicsResultByUser(Long userId){
+        if (userId == null) return new ArrayList<>();
+
+        User user = userRepository.getUserById(userId);
+
         Map<Topic, TopicResult> topicResults = new HashMap<>();
         List<QuizSession> quizSessions = quizSessionRepository.getQuizSessionsByUser(user);
         for (QuizSession quizSession : quizSessions) {
