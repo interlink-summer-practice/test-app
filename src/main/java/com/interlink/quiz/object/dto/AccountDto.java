@@ -9,7 +9,6 @@ public class AccountDto {
     private String firstName;
     private String lastName;
     private List<QuizResultDto> results;
-    private List<TopicResult> statisticByTopicResults;
 
     public String getFirstName() {
         return firstName;
@@ -33,13 +32,5 @@ public class AccountDto {
 
     public void setResults(List<QuizResultDto> results) {
         this.results = results;
-    }
-
-    public List<TopicResult> getStatisticByTopicResults() {
-        return statisticByTopicResults;
-    }
-
-    public void setStatisticByTopicResults(List<TopicResult> statisticByTopicResults) {
-        this.statisticByTopicResults = statisticByTopicResults;
     }
 }
