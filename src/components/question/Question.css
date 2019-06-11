@@ -6,8 +6,7 @@
     align-items: center;
 }
 fieldset{
-    width: 400px;
-    margin-top: 50px!important;
+    width: 450px;
 }
 .MuiFormLabel-root {
     width: 400px;
@@ -17,4 +16,15 @@ fieldset{
 .numberOfCurrentQuestion{
     font-size: 70px;
     margin-left: -50px;
+}
+
+.form {
+    border: 2px solid rgb(148, 148, 148);
+    border-radius: 20px;
+    margin-top: 25px;
+    padding: 5px;
+}
+
+.button {
+    padding-top: 20px;
 }
