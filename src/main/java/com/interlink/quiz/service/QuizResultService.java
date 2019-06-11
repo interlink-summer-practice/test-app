@@ -60,7 +60,7 @@ public class QuizResultService {
         accountDto.setLastName(user.getLastName());
 
         List<QuizResultDto> results = new ArrayList<>();
-        for (QuizSession quizSession : quizSessionRepository.getQuizSessionsByUserId(user)) {
+        for (QuizSession quizSession : quizSessionRepository.getQuizSessionsByUser(user)) {
             results.add(createQuizResultDto(quizSession));
         }
         accountDto.setResults(results);

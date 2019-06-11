@@ -56,7 +56,7 @@ public class QuestionService {
             if (userId == null) {
                 quizSessions = quizSessionRepository.getQuizSessionBySessionId(httpSession.getId());
             } else {
-                quizSessions = quizSessionRepository.getQuizSessionsByUserId(
+                quizSessions = quizSessionRepository.getQuizSessionsByUser(
                         userRepository.getUserById(userId));
             }
             for (QuizSession quizSession : quizSessions) {
@@ -107,7 +107,7 @@ public class QuestionService {
         QuizDto quizDto = new QuizDto();
         List<QuestionDto> questions = getQuestionsByTopicsAndDifficulties(topics, difficulties);
         quizDto.setCountOfQuestionsInQuiz(questions.size());
-        List<QuizSession> quizSessions = quizSessionRepository.getQuizSessionsByUserId(userRepository.getUserById(userId));
+        List<QuizSession> quizSessions = quizSessionRepository.getQuizSessionsByUser(userRepository.getUserById(userId));
         for (QuizSession quizSession : quizSessions) {
             if (isAlreadyPassedQuiz(topics, quizSession, difficulties)) {
                 if (isDoneQuiz(quizSession)) {
