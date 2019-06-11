@@ -1,11 +1,9 @@
 package com.interlink.quiz.auth.controller;
 
-import com.interlink.quiz.auth.payload.ApiResponse;
 import com.interlink.quiz.auth.payload.JwtAuthenticationResponse;
 import com.interlink.quiz.auth.payload.LoginRequest;
 import com.interlink.quiz.auth.security.JwtTokenProvider;
 import com.interlink.quiz.auth.security.SignUpRequest;
-import com.interlink.quiz.object.User;
 import com.interlink.quiz.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +14,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.net.URI;
 
 @RestController
 public class AuthController {
@@ -53,13 +50,14 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
-        if(userService.getUserByEmail(signUpRequest.getEmail()) != null) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest,
+                                          HttpSession httpSession) {
+        if (userService.getUserByEmail(signUpRequest.getEmail()) != null) {
 
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
 
-        userService.register(signUpRequest);
+        userService.register(signUpRequest, httpSession);
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

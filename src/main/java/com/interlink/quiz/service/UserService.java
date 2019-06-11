@@ -1,14 +1,18 @@
 package com.interlink.quiz.service;
 
 import com.interlink.quiz.auth.security.SignUpRequest;
+import com.interlink.quiz.object.QuizSession;
 import com.interlink.quiz.object.User;
+import com.interlink.quiz.repository.QuizSessionRepository;
 import com.interlink.quiz.repository.RoleRepository;
 import com.interlink.quiz.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.util.Collections;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -16,19 +20,25 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final QuizSessionRepository quizSessionRepository;
 
     @Autowired
     public UserService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
-                       RoleRepository roleRepository) {
+                       RoleRepository roleRepository,
+                       QuizSessionRepository quizSessionRepository) {
 
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
+        this.quizSessionRepository = quizSessionRepository;
     }
 
-    public User register(SignUpRequest signUpRequest) {
-        return userRepository.saveUser(createUser(signUpRequest));
+    public User register(SignUpRequest signUpRequest, HttpSession httpSession) {
+        User user = userRepository.saveUser(createUser(signUpRequest));
+        saveGuestResults(user, httpSession);
+
+        return user;
     }
 
     public User getUserByEmail(String email) {
@@ -44,5 +54,13 @@ public class UserService {
         user.setRoles(Collections.singletonList(roleRepository.getRoleByName("STUDENT")));
 
         return user;
+    }
+
+    private void saveGuestResults(User user, HttpSession httpSession) {
+        List<QuizSession> quizSessions = quizSessionRepository.getQuizSessionBySessionId(httpSession.getId());
+        for (QuizSession quizSession : quizSessions) {
+            quizSession.setUser(user);
+            quizSessionRepository.updateQuizSession(quizSession);
+        }
     }
 }
