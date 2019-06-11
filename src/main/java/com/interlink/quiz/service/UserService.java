@@ -7,10 +7,13 @@ import com.interlink.quiz.repository.QuizSessionRepository;
 import com.interlink.quiz.repository.RoleRepository;
 import com.interlink.quiz.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -41,6 +44,17 @@ public class UserService {
 
     public User getUserByEmail(String email) {
         return userRepository.getUserByEmail(email);
+    }
+
+    public boolean isCurator(Authentication authentication) {
+        String curatorRole = "CURATOR";
+        for (GrantedAuthority grantedAuthority : authentication.getAuthorities()) {
+            if (curatorRole.equals(grantedAuthority.getAuthority())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private User createUser(SignUpRequest signUpRequest) {
