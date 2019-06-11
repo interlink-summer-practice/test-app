@@ -10,7 +10,7 @@ export default class ResultBySubjectsContainer extends Component {
     state = {
         sessionId: 0,
         topicsResult: [],
-        IsCarards: false,
+        IsCards: false,
     }
 
     componentDidMount() {
@@ -34,31 +34,18 @@ export default class ResultBySubjectsContainer extends Component {
 
     render() {
 
-        // if (this.state.isCards === true){
-        //
-        //     return (
-        //         <ResultBySubjectsCards topicsResult={this.state.topicsResult}/>
-        //     )
-        //
-        // }
-        // else {
-        //     return (
-        //         <ResultBySubjectsGraph topicsResult={this.state.topicsResult}/>
-        //     );
-        // }
-
         return (
             <div>
                 <Switch
                     checked={this.state.isCards}
-                    onChange={this.switchHandleChange('IsCarards')}
-                    value="IsCarards"
+                    onChange={this.switchHandleChange('IsCards')}
+                    value="IsCards"
                     inputProps={{ 'aria-label': 'secondary checkbox' }}
                 />
 
             {
 
-                this.state.IsCarards
+                this.state.IsCards
                     ? (
                         <ResultBySubjectsCards topicsResult={this.state.topicsResult}/>
                     )

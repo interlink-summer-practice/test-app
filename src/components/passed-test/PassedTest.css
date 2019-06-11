@@ -24,3 +24,13 @@
     align-items: center;
     margin-top: 10px;
 }
+.MuiCard-root {
+    height: 179px;
+}
+@media screen and (min-width: 400px) {
+
+    .passedTest {
+        width: 400px;
+        margin-left: 15px;
+    }
+}
