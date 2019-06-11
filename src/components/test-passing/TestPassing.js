@@ -24,8 +24,8 @@ export default class TestPassing extends Component {
         continueTestButton: false,
 
 
-    };
-    postQuestion = () =>{
+    }
+    postQuestion = () => {
         axios.post('/questions', this.props.topics)
             .then(res => {
                 if (res.data.quizSession === null) {
@@ -74,6 +74,7 @@ export default class TestPassing extends Component {
     continueTest = () => {
         axios.post('/quiz-session', {id: this.state.sessionId})
             .then(res => this.postQuestion());
+    }
 
     componentDidMount() {
         console.log(this.props.topics.countOfQuestionsInQuiz);
@@ -87,8 +88,7 @@ export default class TestPassing extends Component {
                 state.isDataLoaded = true;
                 return state;
             });
-        }
-        else {
+        } else {
 
             axios.post('/questions', this.props.topics)
                 .then(res => {
@@ -125,12 +125,13 @@ export default class TestPassing extends Component {
                 if (this.state.showResultBySubjects === true) {
                     console.log(this.state.showResultBySubjects);
                     return (<ResultBySubjectsContainer sessionId={this.state.sessionId}
-                                              showResultBySubjects={this.showResultBySubjects}/>)
+                                                       showResultBySubjects={this.showResultBySubjects}/>)
                 } else if (this.state.questions[this.state.i] !== undefined) {
                     return (<React.Fragment>
                         <Question currentNumberOfQuestion={this.state.currentNumberOfQuestion}
                                   numberOfQuestions={this.state.numberOfQuestions}
-                                  question={this.state.questions[0 + this.state.i]} nextQuestion={this.nextQuestion}/>
+                                  question={this.state.questions[0 + this.state.i]}
+                                  nextQuestion={this.nextQuestion}/>
                         <UpdateResultAlertDialog continueTest={this.continueTest}
                                                  continueTestButton={this.state.continueTestButton}
                                                  showResultBySubjects={this.showResultBySubjects}
@@ -147,3 +148,4 @@ export default class TestPassing extends Component {
 
     }
 }
+
