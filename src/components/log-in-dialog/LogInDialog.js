@@ -33,6 +33,12 @@ class LogInDialog extends React.Component {
     };
 
     logIn = (history) => {
+        if (this.state.passwordInput.length === 0 || this.state.loginInput.length === 0) {
+            this.setState({
+                isCredentialsValid: false
+            });
+            return
+        }
 
         const userCredentials = {
             email: this.state.loginInput,
@@ -44,6 +50,8 @@ class LogInDialog extends React.Component {
                 const authToken = res.data.accessToken;
                 sessionStorage.setItem('auth-token', authToken);
                 axios.defaults.headers.common['auth-token'] = authToken;
+                this.props.handleAuthentication();
+                this.props.loginDialogHandler();
                 history.push('/account');
             })
             .catch(err => {
@@ -52,7 +60,7 @@ class LogInDialog extends React.Component {
                         isCredentialsValid: false
                     })
                 }
-            })
+            });
 
     };
 

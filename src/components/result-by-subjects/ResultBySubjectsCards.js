@@ -17,8 +17,8 @@ export default class ResultBySubjectsCards extends Component {
                             console.log(element)
                             return <div className="topic">
                                 <ul>
-                                    <li>{element.topic.name}</li>
-                                    <li>{element.numberOfCorrectAnswers} of {element.numberOfQuestions}</li>
+                                    <li >{element.topic.name}</li>
+                                    <li >{element.numberOfCorrectAnswers} of {element.numberOfQuestions}</li>
                                     <li>{(element.result).toFixed(2)}%</li>
                                 </ul>
                             </div>
