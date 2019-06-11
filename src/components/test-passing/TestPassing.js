@@ -3,7 +3,7 @@ import Question from '../question/Question';
 import TotalResultTesting from '../total-result-testing/TotalResultTesting';
 import axios from 'axios';
 import UpdateResultAlertDialog from '../update-result-alert-dialog/UpdateResultAlertDialog';
-import ResultBySubjects from "../result-by-subjects/ResultBySubjects";
+import ResultBySubjectsContainer from "../result-by-subjects/ResultBySubjectsContainer";
 import DifficultyDialog from '../difficulty-dialog/DifficultyDialog'
 import {withRouter, Route, Redirect} from 'react-router-dom';
 
@@ -95,7 +95,7 @@ export default class TestPassing extends Component {
             if (this.state.isDataLoaded === true) {
                 if (this.state.showResultBySubjects === true) {
                     console.log(this.state.showResultBySubjects);
-                    return (<ResultBySubjects sessionId={this.state.sessionId}
+                    return (<ResultBySubjectsContainer sessionId={this.state.sessionId}
                                               showResultBySubjects={this.showResultBySubjects}/>)
                 } else if (this.state.questions[this.state.i] !== undefined) {
                     return (<React.Fragment>
