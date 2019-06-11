@@ -30,9 +30,7 @@ public class QuestionRepository {
 
     public Question getQuestionById(int id) {
         return sessionFactory.getCurrentSession()
-                .createQuery("from Question where id = :id", Question.class)
-                .setParameter("id", id)
-                .uniqueResult();
+                .get(Question.class, id);
     }
 
     public Long getCountByTopicAndDifficulty(String difficulty, Topic topic) {

@@ -12,6 +12,19 @@ public class QuizResultDto {
     private Long countOfQuestions;
     private Long countOfCorrectAnswers;
     private double percentOfPassingQuiz;
+    private boolean passed;
+
+    public QuizResultDto() {
+        passed = true;
+    }
+
+    public boolean isPassed() {
+        return passed;
+    }
+
+    public void setPassed(boolean passed) {
+        this.passed = passed;
+    }
 
     public int getQuizSessionId() {
         return quizSessionId;

@@ -37,9 +37,7 @@ public class QuizSessionRepository {
 
     public QuizSession getQuizSessionById(int id) {
         return sessionFactory.getCurrentSession()
-                .createQuery("from QuizSession where id = :id", QuizSession.class)
-                .setParameter("id", id)
-                .uniqueResult();
+                .get(QuizSession.class, id);
     }
 
     public List<QuizSession> getQuizSessionBySessionId(String sessionId) {
@@ -49,7 +47,7 @@ public class QuizSessionRepository {
                 .list();
     }
 
-    public List<QuizSession> getQuizSessionsByUserId(User user) {
+    public List<QuizSession> getQuizSessionsByUser(User user) {
         return sessionFactory.getCurrentSession()
                 .createQuery("from QuizSession qs where qs.user.id = :userId", QuizSession.class)
                 .setParameter("userId", user.getId())
