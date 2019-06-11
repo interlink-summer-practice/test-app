@@ -14,9 +14,6 @@ public class Topic {
     @Column
     private String name;
 
-    @Column
-    private String url;
-
     public int getId() {
         return id;
     }
@@ -33,22 +30,13 @@ public class Topic {
         this.name = name;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Topic topic = (Topic) o;
         return id == topic.id &&
-                Objects.equals(name, topic.name) &&
-                Objects.equals(url, topic.url);
+                Objects.equals(name, topic.name);
     }
 
     @Override
