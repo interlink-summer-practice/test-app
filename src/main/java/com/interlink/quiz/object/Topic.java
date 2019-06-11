@@ -46,7 +46,9 @@ public class Topic {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Topic topic = (Topic) o;
-        return id == topic.id;
+        return id == topic.id &&
+                Objects.equals(name, topic.name) &&
+                Objects.equals(url, topic.url);
     }
 
     @Override
