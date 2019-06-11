@@ -6,22 +6,23 @@ import Button from '@material-ui/core/Button';
 export default class ResultBySubjectsCards extends Component {
 
 
-
     render() {
-        console.log(this.props.topicsResult)
+
+        console.log(this.props.topicsResult.result);
         return (
             <div className="resultByTopics">
                 <div className="result">
                     {
                         this.props.topicsResult.map((element) => {
-                            console.log(element)
-                            return <div className="topic">
+
+                            return (element.numberOfQuestions !== 0) ? <div className="topic">
                                 <ul>
-                                    <li >{element.topic.name}</li>
-                                    <li >{element.numberOfCorrectAnswers} of {element.numberOfQuestions}</li>
+                                    <li>{element.topic.name}</li>
+                                    <li>{element.numberOfCorrectAnswers} of {element.numberOfQuestions}</li>
                                     <li>{(element.result).toFixed(2)}%</li>
                                 </ul>
-                            </div>
+                            </div> : null
+
                         })
                     }
 

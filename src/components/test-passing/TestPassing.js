@@ -77,7 +77,7 @@ export default class TestPassing extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props.topics.countOfQuestionsInQuiz);
+        console.log(this.props.topics);
 
         if (this.props.topics.questionsFromLink) {
             this.setState((state) => {
@@ -86,6 +86,7 @@ export default class TestPassing extends Component {
                 state.questions = this.props.topics.questionsFromLink;
                 state.sessionId = this.props.topics.sessionId;
                 state.isDataLoaded = true;
+                state.isAlreadyPassed = this.props.topics.passed;
                 return state;
             });
         } else {

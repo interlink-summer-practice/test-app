@@ -12,7 +12,8 @@ export default class TestsLinkResolver extends React.Component {
                         questionsFromLink: res.data.questions,
                         sessionId: res.data.quizSession.id,
                         countOfPassedQuestions: res.data.countOfPassedQuestions,
-                        countOfQuestionsInQuiz: res.data.countOfQuestionsInQuiz
+                        countOfQuestionsInQuiz: res.data.countOfQuestionsInQuiz,
+                        passed: res.data.passed,
                     })
                 });
         }
