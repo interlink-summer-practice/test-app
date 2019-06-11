@@ -18,6 +18,7 @@ export default class UserAccount extends React.Component {
                     this.setState({
                         account: res.data
                     });
+
                 });
         }
 

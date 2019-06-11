@@ -24,6 +24,7 @@ import StartTestsDialog from "./components/start-tests-dialog/StartTestsDialog";
 import AppBarMenu from "./components/app-bar-menu/AppBarMenu";
 import TestsLinkDialog from "./components/tests-link-dialog/TestsLinkDialog";
 import TestsLinkResolver from "./components/tests-link-resolver/TestsLinkResolver";
+import UserAccountStatistic from "./components/user-account-statistic/UserAccountStatistic";
 
 (function () {
     const token = sessionStorage.getItem('auth-token');
@@ -43,15 +44,9 @@ export default class App extends Component {
         isStartTestsDialogOpen: false,
         isTestsLinkDialogOpen: false,
         isAuthenticated: sessionStorage.getItem('auth-token'),
-        isAdmin: true,
-        lastTestsLink: ''
-    };
-
-    handleAuthentication = () => {
-        this.setState((state) => {
-            state.isAuthenticated = !state.isAuthenticated;
-            return state;
-        })
+        isAdmin: false,
+        lastTestsLink: '',
+        userStatistic: []
     };
 
     logout = (history) => {
@@ -81,10 +76,12 @@ export default class App extends Component {
         this.setState({isDrawerOpen: !this.state.isDrawerOpen});
     }
 
-    loginDialogHandler = () => {
+    loginDialogHandler = (isAdmin = false, isAuthenticated = false) => {
         this.setState({
             isDrawerOpen: false,
-            isLoginDialogOpen: !this.state.isLoginDialogOpen
+            isLoginDialogOpen: !this.state.isLoginDialogOpen,
+            isAuthenticated: isAuthenticated,
+            isAdmin: isAdmin
         });
     };
 
@@ -225,7 +222,6 @@ export default class App extends Component {
                     <LogInDialog
                         open={this.state.isLoginDialogOpen}
                         loginDialogHandler={this.loginDialogHandler}
-                        handleAuthentication={this.handleAuthentication}
                     />
                     <SignUpDialog open={this.state.isSignUpDialogOpen} signUpDialogHandler={this.signUpDialogHandler}/>
                     <StartTestsDialog open={this.state.isStartTestsDialogOpen}
@@ -243,8 +239,9 @@ export default class App extends Component {
                     <Route path="/" exact
                            render={() => (<StartPage startTestsDialogHandler={this.startTestsDialogHandler}/>)}/>
                     <Route path="/quiz" exact render={(props) => (<TestPassing topics={props.location.state}/>)}/>
-                    <Route path="/questions/:id" component={TestsLinkResolver} />
+                    <Route path="/questions/:id" component={TestsLinkResolver}/>
                     <Route path="/account" component={UserAccount}/>
+                    <Route path="/user-statistic" component={UserAccountStatistic}/>
 
                     <Route path="/detailed-result"
                            render={(props) => (<ResultBySubjectsContainer sessionId={props.location.state}/>)}/>

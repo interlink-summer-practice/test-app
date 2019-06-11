@@ -4,7 +4,6 @@ import Button from '@material-ui/core/Button';
 import { Route } from "react-router-dom";
 import ListItem from "@material-ui/core/ListItem";
 import Typography from "@material-ui/core/Typography";
-import ListItemText from "@material-ui/core/ListItemText";
 import axios from "axios";
 
 export default class AppBarMenu extends React.Component {
