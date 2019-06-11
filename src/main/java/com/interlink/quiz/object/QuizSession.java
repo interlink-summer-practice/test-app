@@ -20,7 +20,11 @@ public class QuizSession {
 
     @Column
     private String date;
-    private String difficulty;
+
+    @ElementCollection
+    @CollectionTable(name = "difficulty_in_quiz_session", joinColumns = @JoinColumn(name = "quiz_session_id"))
+    @Column(name = "difficulty")
+    private List<String> difficulties;
 
     @ManyToMany
     @JoinTable(
@@ -78,12 +82,12 @@ public class QuizSession {
         this.topics = topics;
     }
 
-    public String getDifficulty() {
-        return difficulty;
+    public List<String> getDifficulties() {
+        return difficulties;
     }
 
-    public void setDifficulty(String difficulty) {
-        this.difficulty = difficulty;
+    public void setDifficulties(List<String> difficulties) {
+        this.difficulties = difficulties;
     }
 
     public List<Question> getQuestions() {

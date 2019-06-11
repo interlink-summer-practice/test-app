@@ -35,12 +35,15 @@ public class Topic {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Topic topic = (Topic) o;
-        return id == topic.id &&
-                Objects.equals(name, topic.name);
+
+        return id == topic.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        int result = id;
+        result = 31 * result + name.hashCode();
+
+        return result;
     }
 }

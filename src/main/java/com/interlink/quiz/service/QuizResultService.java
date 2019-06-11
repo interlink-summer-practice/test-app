@@ -99,7 +99,11 @@ public class QuizResultService {
     private TopicResult createTopicResult(QuizSession quizSession, Topic topic) {
         TopicResult topicResult = new TopicResult();
         topicResult.setTopic(topic);
-        topicResult.setNumberOfQuestions(quizSession.getQuestions().stream().filter(question -> question.getTopic() == topic).count());
+        topicResult.setNumberOfQuestions(
+                quizSession.getQuestions()
+                        .stream()
+                        .filter(question -> question.getTopic() == topic)
+                        .count());
         topicResult.setNumberOfCorrectAnswers(
                 quizAnswerRepository.getCountOfRightAnswerBySessionAndTopic(quizSession, topic));
         topicResult.setResult(topicResult.getNumberOfCorrectAnswers() * 100.0 / topicResult.getNumberOfQuestions());

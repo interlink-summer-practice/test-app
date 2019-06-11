@@ -52,7 +52,7 @@ public class QuestionRepository {
                 .list();
     }
 
-    public List<Question> getNotPassedQuestionsByTopic(Topic topic, QuizSession quizSession) {
+    public List<Question> getNotPassedQuestionsByTopic(Topic topic, QuizSession quizSession, String difficulty) {
 
         return sessionFactory.getCurrentSession()
                 .createNativeQuery("" +
@@ -68,7 +68,7 @@ public class QuestionRepository {
                         "WHERE qa.quiz_session_id = :session_id", Question.class)
                 .setParameter("topic_id", topic.getId())
                 .setParameter("session_id", quizSession.getId())
-                .setParameter("difficulty", quizSession.getDifficulty())
+                .setParameter("difficulty", difficulty)
                 .list();
     }
 }
