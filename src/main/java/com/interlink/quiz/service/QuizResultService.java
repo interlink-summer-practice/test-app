@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class QuizResultService {
@@ -18,6 +19,7 @@ public class QuizResultService {
     private final QuizAnswerRepository quizAnswerRepository;
     private final UserRepository userRepository;
     private final QuestionService questionService;
+    private final QuestionRepository questionRepository;
 
     @Autowired
     public QuizResultService(
@@ -25,13 +27,15 @@ public class QuizResultService {
             UserResultRepository userResultRepository,
             QuizAnswerRepository quizAnswerRepository,
             UserRepository userRepository,
-            QuestionService questionService) {
+            QuestionService questionService,
+            QuestionRepository questionRepository) {
 
         this.quizSessionRepository = quizSessionRepository;
         this.userResultRepository = userResultRepository;
         this.quizAnswerRepository = quizAnswerRepository;
         this.userRepository = userRepository;
         this.questionService = questionService;
+        this.questionRepository = questionRepository;
     }
 
     public QuizResult getQuizResult(QuizSessionDto quizSessionDto, Long userId) {
@@ -64,8 +68,31 @@ public class QuizResultService {
             results.add(createQuizResultDto(quizSession));
         }
         accountDto.setResults(results);
+        accountDto.setStatisticBytopicResults(getTopicsResultByUser(user));
 
         return accountDto;
+    }
+
+    private List<TopicResult> getTopicsResultByUser(User user){
+        Map<Topic, TopicResult> topicResults = new HashMap<>();
+        List<QuizSession> quizSessions = quizSessionRepository.getQuizSessionsByUser(user);
+        for (QuizSession quizSession : quizSessions) {
+            for (Topic topic : quizSession.getTopics()) {
+                if (!topicResults.containsKey(topic)) {
+                    TopicResult topicResult = new TopicResult();
+                    topicResult.setTopic(topic);
+                    int countOfQuestionByTopic = questionRepository.getCountOfQuestionByTopic(user, topic);
+                    int countOfRightAnswerByTopic = quizAnswerRepository.getCountOfRightAnswerByTopic(user, topic);
+                    double resultByTopic = countOfRightAnswerByTopic * 100.0 / countOfQuestionByTopic;
+                    topicResult.setNumberOfCorrectAnswers(countOfRightAnswerByTopic);
+                    topicResult.setNumberOfQuestions(countOfQuestionByTopic);
+                    topicResult.setResult(resultByTopic);
+                    topicResults.put(topic, topicResult);
+                }
+            }
+        }
+
+        return new ArrayList<>(topicResults.values());
     }
 
     private void saveUserResult(QuizSession quizSession, int mark) {
