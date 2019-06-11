@@ -4,7 +4,6 @@ import Typography from "@material-ui/core/Typography";
 import Chip from "@material-ui/core/Chip";
 import {CardContent} from "@material-ui/core";
 import Card from "@material-ui/core/Card";
-import TestsDifficulty from "../tests-difficulty/TestsDifficulty";
 
 export default class PassedTest extends React.Component {
 
@@ -25,7 +24,6 @@ export default class PassedTest extends React.Component {
                         <Typography className="date" variant="subtitle1" color="inherit">
                             {this.formatDate()}
                         </Typography>
-                        <TestsDifficulty difficulty={this.props.testInformation.difficulty} />
                         <div className="topics">
                             {
                                 this.props.testInformation.topics.map((topic) => {
