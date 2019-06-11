@@ -19,7 +19,7 @@ public class GroupRepository {
 
     public Group getGroupById(Long id) {
         return sessionFactory.getCurrentSession()
-                .get(Group.class, id);
+                .get(Group.class, id.intValue());
     }
 
     public Group saveGroup(Group group) {
