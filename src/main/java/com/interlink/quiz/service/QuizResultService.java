@@ -17,7 +17,7 @@ public class QuizResultService {
     private final UserResultRepository userResultRepository;
     private final QuizAnswerRepository quizAnswerRepository;
     private final UserRepository userRepository;
-    private final QuestionRepository questionRepository;
+    private final QuestionService questionService;
 
     @Autowired
     public QuizResultService(
@@ -25,13 +25,13 @@ public class QuizResultService {
             UserResultRepository userResultRepository,
             QuizAnswerRepository quizAnswerRepository,
             UserRepository userRepository,
-            QuestionRepository questionRepository) {
+            QuestionService questionService) {
 
         this.quizSessionRepository = quizSessionRepository;
         this.userResultRepository = userResultRepository;
         this.quizAnswerRepository = quizAnswerRepository;
         this.userRepository = userRepository;
-        this.questionRepository = questionRepository;
+        this.questionService = questionService;
     }
 
     public QuizResult getQuizResult(QuizSessionDto quizSessionDto, Long userId) {
@@ -60,7 +60,7 @@ public class QuizResultService {
         accountDto.setLastName(user.getLastName());
 
         List<QuizResultDto> results = new ArrayList<>();
-        for (QuizSession quizSession : quizSessionRepository.getQuizSessionsByUserId(user)) {
+        for (QuizSession quizSession : quizSessionRepository.getQuizSessionsByUser(user)) {
             results.add(createQuizResultDto(quizSession));
         }
         accountDto.setResults(results);
@@ -111,6 +111,10 @@ public class QuizResultService {
         quizResultDto.setCountOfQuestions(Integer.toUnsignedLong(quizSession.getQuestions().size()));
         quizResultDto.setCountOfCorrectAnswers(quizAnswerRepository.getCountOfRightAnswerBySession(quizSession));
         quizResultDto.setPercentOfPassingQuiz(quizResultDto.getCountOfCorrectAnswers() * 100.0 / quizResultDto.getCountOfQuestions());
+
+        if (!questionService.isDoneQuiz(quizSession)) {
+            quizResultDto.setPassed(false);
+        }
 
         return quizResultDto;
     }

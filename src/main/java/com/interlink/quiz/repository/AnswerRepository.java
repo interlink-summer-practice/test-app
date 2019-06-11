@@ -33,8 +33,6 @@ public class AnswerRepository {
 
     public Answer getAnswerById(int id) {
         return sessionFactory.getCurrentSession()
-                .createQuery("from Answer where id = :id", Answer.class)
-                .setParameter("id", id)
-                .uniqueResult();
+                .get(Answer.class, id);
     }
 }
