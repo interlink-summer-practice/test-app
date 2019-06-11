@@ -4,20 +4,21 @@ import axios from "axios";
 
 export default class TestsLinkResolver extends React.Component {
 
-    getQuestions = () => {
-        axios.get('/questions/' + this.props.match.params.id)
-            .then(res => console.log(res));
-    };
-
     componentDidMount() {
         if (sessionStorage.getItem('auth-token') !== null) {
-            this.getQuestions();
+            axios.get('/questions/' + this.props.match.params.id)
+                .then(res => {
+                    this.props.history.push('/quiz', {
+                        questionsFromLink: res.data.questions,
+                        sessionId: res.data.quizSession.id,
+                        countOfPassedQuestions: res.data.countOfPassedQuestions,
+                        countOfQuestionsInQuiz: res.data.countOfQuestionsInQuiz
+                    })
+                });
         }
     }
 
     render() {
-        console.log(this.props.match.params.id);
-
         if (sessionStorage.getItem('auth-token') === null) {
             return (
                 <Redirect to="/"/>
