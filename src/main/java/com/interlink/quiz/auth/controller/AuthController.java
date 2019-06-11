@@ -28,6 +28,7 @@ public class AuthController {
     public AuthController(AuthenticationManager authenticationManager,
                           UserService userService,
                           JwtTokenProvider jwtTokenProvider) {
+
         this.authenticationManager = authenticationManager;
         this.userService = userService;
         this.jwtTokenProvider = jwtTokenProvider;
@@ -44,9 +45,9 @@ public class AuthController {
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
         String jwt = jwtTokenProvider.generateToken(authentication);
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+
+        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, userService.isCurator(authentication)));
     }
 
     @PostMapping("/registration")
@@ -66,6 +67,6 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtTokenProvider.generateToken(authentication);
 
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, false));
     }
 }
