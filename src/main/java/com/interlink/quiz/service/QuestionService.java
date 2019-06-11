@@ -24,19 +24,29 @@ public class QuestionService {
     private final QuizSessionRepository quizSessionRepository;
     private final QuizAnswerRepository quizAnswerRepository;
     private final UserResultRepository userResultRepository;
+    private final TopicRepository topicRepository;
 
     @Autowired
     public QuestionService(QuestionRepository questionRepository,
                            UserRepository userRepository,
                            QuizSessionRepository quizSessionRepository,
                            QuizAnswerRepository quizAnswerRepository,
-                           UserResultRepository userResultRepository) {
+                           UserResultRepository userResultRepository,
+                           TopicRepository topicRepository) {
 
         this.questionRepository = questionRepository;
         this.userRepository = userRepository;
         this.quizSessionRepository = quizSessionRepository;
         this.quizAnswerRepository = quizAnswerRepository;
         this.userResultRepository = userResultRepository;
+        this.topicRepository = topicRepository;
+    }
+
+    public QuizDto getQuestionsByUrl(String url, Long userId, HttpSession httpSession) {
+        String[] topicNames = url.replaceAll("%20%", " ").split("\\+");
+        Topic[] topics = Arrays.stream(topicNames).map(topicRepository::getTopicByName).toArray(Topic[]::new);
+
+        return getQuestions(topics, userId, httpSession, "Просте");
     }
 
     public QuizDto getQuestions(Topic[] topicsArray,

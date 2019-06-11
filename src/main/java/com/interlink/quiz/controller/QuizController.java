@@ -83,6 +83,19 @@ public class QuizController {
         return new ResponseEntity<>(quizDto, HttpStatus.OK);
     }
 
+    @GetMapping("/questions/{topicUrl}")
+    public QuizDto getQuestionsByUrl(@PathVariable String topicUrl,
+                                     @RequestHeader(value = "auth-token", required = false) String token,
+                                     HttpSession httpSession) {
+
+        Long userId = null;
+        if (!token.isEmpty()) {
+            userId = jwtTokenProvider.getUserIdFromJWT(token);
+        }
+
+        return questionService.getQuestionsByUrl(topicUrl, userId, httpSession);
+    }
+
     @PostMapping("/quiz-answer")
     public ResponseEntity saveQuizAnswer(@RequestBody QuizAnswerDto quizAnswerDto) {
         quizAnswerService.saveQuizAnswer(quizAnswerDto);
