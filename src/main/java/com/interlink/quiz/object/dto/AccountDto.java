@@ -9,7 +9,7 @@ public class AccountDto {
     private String firstName;
     private String lastName;
     private List<QuizResultDto> results;
-    private List<TopicResult> statisticBytopicResults;
+    private List<TopicResult> statisticByTopicResults;
 
     public String getFirstName() {
         return firstName;
@@ -35,11 +35,11 @@ public class AccountDto {
         this.results = results;
     }
 
-    public List<TopicResult> getStatisticBytopicResults() {
-        return statisticBytopicResults;
+    public List<TopicResult> getStatisticByTopicResults() {
+        return statisticByTopicResults;
     }
 
-    public void setStatisticBytopicResults(List<TopicResult> statisticBytopicResults) {
-        this.statisticBytopicResults = statisticBytopicResults;
+    public void setStatisticByTopicResults(List<TopicResult> statisticByTopicResults) {
+        this.statisticByTopicResults = statisticByTopicResults;
     }
 }

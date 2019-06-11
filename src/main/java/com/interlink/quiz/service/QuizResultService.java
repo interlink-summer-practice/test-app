@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class QuizResultService {
@@ -68,7 +67,7 @@ public class QuizResultService {
             results.add(createQuizResultDto(quizSession));
         }
         accountDto.setResults(results);
-        accountDto.setStatisticBytopicResults(getTopicsResultByUser(user));
+        accountDto.setStatisticByTopicResults(getTopicsResultByUser(user));
 
         return accountDto;
     }
@@ -111,7 +110,7 @@ public class QuizResultService {
         return topicResultList;
     }
 
-    private QuizResultDto createQuizResultDto(QuizSession quizSession) {
+    public QuizResultDto createQuizResultDto(QuizSession quizSession) {
         QuizResultDto quizResultDto = new QuizResultDto();
         quizResultDto.setQuizSessionId(quizSession.getId());
         quizResultDto.setDate(quizSession.getDate());

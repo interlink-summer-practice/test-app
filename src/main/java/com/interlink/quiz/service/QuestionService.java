@@ -201,7 +201,7 @@ public class QuestionService {
                 .collect(toList());
     }
 
-    private boolean isAlreadyPassedQuiz(List<Topic> selectedTopics,
+    public boolean isAlreadyPassedQuiz(List<Topic> selectedTopics,
                                         QuizSession quizSession,
                                         List<String> difficulty) {
 
