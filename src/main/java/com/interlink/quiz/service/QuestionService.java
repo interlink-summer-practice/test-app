@@ -224,7 +224,7 @@ public class QuestionService {
         return sum > 0;
     }
 
-    private boolean isDoneQuiz(QuizSession quizSession) {
+    public boolean isDoneQuiz(QuizSession quizSession) {
         List<QuizAnswer> answers = quizAnswerRepository.getAnswersByQuizSession(quizSession);
         Set<Question> questions = answers.stream().map(QuizAnswer::getQuestion).collect(toSet());
 
