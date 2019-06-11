@@ -17,6 +17,7 @@ public class QuizResultService {
     private final UserResultRepository userResultRepository;
     private final QuizAnswerRepository quizAnswerRepository;
     private final UserRepository userRepository;
+    private final QuestionRepository questionRepository;
     private final QuestionService questionService;
 
     @Autowired
@@ -25,12 +26,14 @@ public class QuizResultService {
             UserResultRepository userResultRepository,
             QuizAnswerRepository quizAnswerRepository,
             UserRepository userRepository,
+            QuestionRepository questionRepository,
             QuestionService questionService) {
 
         this.quizSessionRepository = quizSessionRepository;
         this.userResultRepository = userResultRepository;
         this.quizAnswerRepository = quizAnswerRepository;
         this.userRepository = userRepository;
+        this.questionRepository = questionRepository;
         this.questionService = questionService;
     }
 
@@ -68,9 +71,13 @@ public class QuizResultService {
         return accountDto;
     }
 
-    public List<TopicResult> getTopicsResultByUser(User user){
+    public List<TopicResult> getTopicsResultByUser(Long userId){
+        if (userId == null) return new ArrayList<>();
+
+        User user = userRepository.getUserById(userId);
+
         List<TopicResult> topicResults = new ArrayList<>();
-        List<QuizSession> quizSessions = quizSessionRepository.getQuizSessionsByUserId(user);
+        List<QuizSession> quizSessions = quizSessionRepository.getQuizSessionsByUser(user);
         for (QuizSession quizSession : quizSessions) {
             for (Topic topic : quizSession.getTopics()) {
                 int countOfQuestionByTopic = questionRepository.getCountOfQuestionByTopic(user, topic);
