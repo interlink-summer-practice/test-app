@@ -24,15 +24,13 @@ class StartTestsDialog extends React.Component {
         topics: [],
         selectedTopics: [],
         difficulty: '',
-        topicDisableButton: true,
-        difficultyDisableButton: true,
     };
 
     selectedTopics = (value) => {
-        if (value !== null) {
+        if (value !== null ) {
 
             this.setState((state) => {
-                state.topicDisableButton = !state.topicDisableButton;
+                state.topicDisableButton = false;
                 state.selectedTopics = value.map((element) => {
                     return {
                         id: element.id
@@ -43,6 +41,7 @@ class StartTestsDialog extends React.Component {
                 console.log(this.state.selectedTopics)
             })
         }
+
     };
 
     componentDidMount = () => {
@@ -99,7 +98,7 @@ class StartTestsDialog extends React.Component {
                         </Button>
 
                         <Route render={({history}) => (
-                            <Button disabled={this.state.topicDisableButton || this.state.difficultyDisableButton}
+                            <Button
                                     color="primary" onClick={() => {
                                 this.props.startTestsDialogHandler();
                                 history.push('/quiz', {
@@ -109,8 +108,6 @@ class StartTestsDialog extends React.Component {
                                 this.setState((state) => {
                                     state.selectedTopics = [];
                                     state.difficulty = '';
-                                    state.topicDisableButton = true;
-                                    state.difficultyDisableButton = true;
                                     return state;
                                 });
                             }}>
