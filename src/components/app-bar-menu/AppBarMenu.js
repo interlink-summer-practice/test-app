@@ -17,7 +17,6 @@ export default class AppBarMenu extends React.Component {
     componentDidMount() {
         axios.get('/account')
             .then(res => {
-                console.log(res);
                 this.setState({
                     userFirstName: res.data.firstName,
                     userLastName: res.data.lastName
