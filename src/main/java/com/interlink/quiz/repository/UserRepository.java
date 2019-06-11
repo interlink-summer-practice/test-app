@@ -25,7 +25,7 @@ public class UserRepository {
         } catch (HibernateException e) {
             session = sessionFactory.openSession();
         }
-        return session.get(User.class, id);
+        return session.get(User.class, id.intValue());
     }
 
     public User getUserByEmail(String email) {

@@ -61,7 +61,7 @@ public class QuizController {
         );
     }
 
-    @PostMapping("/quiz/{url}")
+    @GetMapping("/questions/{url}")
     public ResponseEntity<?> getQuestionsToGroup(@PathVariable String url,
                                                  @RequestHeader(value = "auth-token", required = false) String token,
                                                  HttpSession httpSession) throws IOException {
