@@ -10,7 +10,7 @@ export default class ResultBySubjectsContainer extends Component {
     state = {
         sessionId: 0,
         topicsResult: [],
-        IsCards: false,
+        isCards: true,
     }
 
     componentDidMount() {
@@ -28,24 +28,27 @@ export default class ResultBySubjectsContainer extends Component {
                 });
         });
     }
-    switchHandleChange = name => event => {
-        this.setState({ ...this.state, [name]: event.target.checked });
+    switchHandleChange = () => {
+        this.setState( (state)=>{
+            state.isCards = !state.isCards;
+            return state
+        });
     };
 
     render() {
-
+        console.log(this.state.isCards)
         return (
             <div>
                 <Switch
                     checked={this.state.isCards}
-                    onChange={this.switchHandleChange('IsCards')}
-                    value="IsCards"
+                    onChange={this.switchHandleChange}
+                    value={this.state.isCards}
                     inputProps={{ 'aria-label': 'secondary checkbox' }}
                 />
 
             {
 
-                this.state.IsCards
+                this.state.isCards
                     ? (
                         <ResultBySubjectsCards topicsResult={this.state.topicsResult}/>
                     )

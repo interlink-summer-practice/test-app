@@ -5,3 +5,6 @@
     align-items: center;
     justify-content: center;
 }
+.canvasjs-chart-credit{
+    display: none!important;
+}

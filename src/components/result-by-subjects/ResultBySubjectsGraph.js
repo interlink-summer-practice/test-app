@@ -7,7 +7,7 @@ var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 export default class ResultBySubjectsGraph extends Component {
     state = {
-        theme: "dark1",
+        theme: "white",
         title: {
             text: "Result by topics"
         },
