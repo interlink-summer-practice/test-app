@@ -104,40 +104,44 @@ public class QuestionService {
         List<Topic> topics = Arrays.stream(curatorQuiz.getTopics()).collect(toList());
         List<String> difficulties = Arrays.stream(curatorQuiz.getDifficulties()).collect(toList());
 
-        QuizDto quizDto = new QuizDto();
-        List<QuestionDto> questions = getQuestionsByTopicsAndDifficulties(topics, difficulties);
-        quizDto.setCountOfQuestionsInQuiz(questions.size());
-        List<QuizSession> quizSessions = quizSessionRepository.getQuizSessionsByUser(userRepository.getUserById(userId));
-        for (QuizSession quizSession : quizSessions) {
-            if (isAlreadyPassedQuiz(topics, quizSession, difficulties)) {
-                if (isDoneQuiz(quizSession)) {
-                    quizDto.setPassed(true);
-                    quizDto.setQuizSession(quizSession);
-                    quizDto.setQuestions(questions);
+        if (isPresentQuestionsWithThisDifficulty(topics, difficulties)) {
+            QuizDto quizDto = new QuizDto();
+            List<QuestionDto> questions = getQuestionsByTopicsAndDifficulties(topics, difficulties);
+            quizDto.setCountOfQuestionsInQuiz(questions.size());
+            List<QuizSession> quizSessions = quizSessionRepository.getQuizSessionsByUser(userRepository.getUserById(userId));
+            for (QuizSession quizSession : quizSessions) {
+                if (isAlreadyPassedQuiz(topics, quizSession, difficulties)) {
+                    if (isDoneQuiz(quizSession)) {
+                        quizDto.setPassed(true);
+                        quizDto.setQuizSession(quizSession);
+                        quizDto.setQuestions(questions);
 
-                    return quizDto;
-                } else {
-                    quizDto.setQuizSession(quizSession);
-                    quizDto.setQuestions(getNotPassedQuestionsByTopics(topics, quizSession));
-                    quizDto.setCountOfPassedQuestions(quizAnswerRepository.getCountOfPassedQuestions(quizSession));
+                        return quizDto;
+                    } else {
+                        quizDto.setQuizSession(quizSession);
+                        quizDto.setQuestions(getNotPassedQuestionsByTopics(topics, quizSession));
+                        quizDto.setCountOfPassedQuestions(quizAnswerRepository.getCountOfPassedQuestions(quizSession));
 
-                    return quizDto;
+                        return quizDto;
+                    }
                 }
             }
+
+            quizDto.setQuizSession(createNewQuizSession(
+                    httpSession,
+                    userId,
+                    topics,
+                    difficulties,
+                    questions.stream()
+                            .map(this::createQuestionFromQuestionDto)
+                            .collect(Collectors.toList()))
+            );
+            quizDto.setQuestions(questions);
+
+            return quizDto;
         }
 
-        quizDto.setQuizSession(createNewQuizSession(
-                httpSession,
-                userId,
-                topics,
-                difficulties,
-                questions.stream()
-                        .map(this::createQuestionFromQuestionDto)
-                        .collect(Collectors.toList()))
-        );
-        quizDto.setQuestions(questions);
-
-        return quizDto;
+        return new QuizDto();
     }
 
     public void addQuestionsInQuizSession(QuizSessionDto quizSessionDto) {

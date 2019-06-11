@@ -64,18 +64,16 @@ public class GroupService {
         GroupResultDto groupResultDto = new GroupResultDto();
         groupResultDto.setGroupName(group.getName());
 
-        QuizSession groupQuizSession = new QuizSession();
         List<MemberResultDto> results = new ArrayList<>();
         for (User member : group.getMembers()) {
             for (QuizSession quizSession : quizSessionRepository.getQuizSessionsByUser(member)) {
                 if (questionService.isAlreadyPassedQuiz(topics, quizSession, difficulties)
                         && questionService.isDoneQuiz(quizSession)) {
 
-                    groupQuizSession = quizSession;
+                    results.add(createMemberResultDto(quizSession));
                     break;
                 }
             }
-            results.add(createMemberResultDto(groupQuizSession));
         }
 
         groupResultDto.setResults(results);
@@ -96,7 +94,6 @@ public class GroupService {
         memberResultDto.setFirstName(quizSession.getUser().getFirstName());
         memberResultDto.setLastName(quizSession.getUser().getLastName());
         memberResultDto.setEmail(quizSession.getUser().getEmail());
-        memberResultDto.setDate(quizSession.getDate());
         memberResultDto.setQuizResultDto(quizResultService.createQuizResultDto(quizSession));
 
         return memberResultDto;

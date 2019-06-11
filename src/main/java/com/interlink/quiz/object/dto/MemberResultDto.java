@@ -5,7 +5,6 @@ public class MemberResultDto {
     private String firstName;
     private String lastName;
     private String email;
-    private String date;
     private QuizResultDto quizResultDto;
 
     public String getFirstName() {
@@ -30,14 +29,6 @@ public class MemberResultDto {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
     }
 
     public QuizResultDto getQuizResultDto() {
