@@ -18,6 +18,7 @@ public class QuizResultService {
     private final QuizAnswerRepository quizAnswerRepository;
     private final UserRepository userRepository;
     private final QuestionService questionService;
+    private final QuestionRepository questionRepository;
 
     @Autowired
     public QuizResultService(
@@ -25,13 +26,15 @@ public class QuizResultService {
             UserResultRepository userResultRepository,
             QuizAnswerRepository quizAnswerRepository,
             UserRepository userRepository,
-            QuestionService questionService) {
+            QuestionService questionService,
+            QuestionRepository questionRepository) {
 
         this.quizSessionRepository = quizSessionRepository;
         this.userResultRepository = userResultRepository;
         this.quizAnswerRepository = quizAnswerRepository;
         this.userRepository = userRepository;
         this.questionService = questionService;
+        this.questionRepository = questionRepository;
     }
 
     public QuizResult getQuizResult(QuizSessionDto quizSessionDto, Long userId) {
@@ -66,6 +69,29 @@ public class QuizResultService {
         accountDto.setResults(results);
 
         return accountDto;
+    }
+
+    public List<TopicResult> getTopicsResultByUser(Long userId){
+        if (userId == null) return new ArrayList<>();
+
+        User user = userRepository.getUserById(userId);
+
+        List<TopicResult> topicResults = new ArrayList<>();
+        List<QuizSession> quizSessions = quizSessionRepository.getQuizSessionsByUser(user);
+        for (QuizSession quizSession : quizSessions) {
+            for (Topic topic : quizSession.getTopics()) {
+                int countOfQuestionByTopic = questionRepository.getCountOfQuestionByTopic(user, topic);
+                int countOfRightAnswerByTopic = quizAnswerRepository.getCountOfRightAnswerByTopic(user, topic);
+                double resultByTopic = countOfQuestionByTopic * 100.0 / countOfRightAnswerByTopic;
+                TopicResult topicResult = new TopicResult();
+                topicResult.setNumberOfCorrectAnswers(countOfRightAnswerByTopic);
+                topicResult.setNumberOfQuestions(countOfQuestionByTopic);
+                topicResult.setResult(resultByTopic);
+                topicResults.add(topicResult);
+            }
+        }
+
+        return topicResults;
     }
 
     private void saveUserResult(QuizSession quizSession, int mark) {
