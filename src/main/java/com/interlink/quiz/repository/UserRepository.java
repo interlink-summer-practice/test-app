@@ -40,10 +40,12 @@ public class UserRepository {
                 .setParameter("email", email).uniqueResult();
     }
 
-    public void saveUser(User user) {
+    public User saveUser(User user) {
         Session session = sessionFactory.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         session.save(user);
         transaction.commit();
+
+        return user;
     }
 }
