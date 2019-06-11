@@ -41,7 +41,9 @@ export default class UserAccount extends React.Component {
                                             date: passedTest.date,
                                             topics: passedTest.topics,
                                             percentOfPassingQuiz: passedTest.percentOfPassingQuiz,
-                                            difficulty: passedTest.difficulty
+                                            difficulty: passedTest.difficulty,
+                                            passed : passedTest.passed
+
                                         }
 
                                     }/>
