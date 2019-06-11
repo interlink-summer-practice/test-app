@@ -1,8 +1,6 @@
 package com.interlink.quiz.repository;
 
-import com.interlink.quiz.object.QuizAnswer;
-import com.interlink.quiz.object.QuizSession;
-import com.interlink.quiz.object.Topic;
+import com.interlink.quiz.object.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -78,4 +76,20 @@ public class QuizAnswerRepository {
                 .setParameter("quizSessionId", quizSession.getId())
                 .uniqueResult();
     }
+
+    public int getCountOfRightAnswerByTopic(User user, Topic topic) {
+        return sessionFactory.getCurrentSession()
+                .createNativeQuery("select distinct on (qa.question_id) qa " +
+                        "from quiz_answers qa " +
+                        "         left join questions q on qa.question_id = q.id " +
+                        "         left join quiz_session qs on qa.quiz_session_id = qs.id " +
+                        "         left join users u on qs.user_id = u.id " +
+                        "where u.id = :userId " +
+                        "  and q.topic_id = :topicId and qa.answer_id = q.answer_id " +
+                        "group by qs.id, qa.id", QuizAnswer.class)
+                .setParameter("user", user)
+                .setParameter("topic", topic)
+                .list().size();
+    }
+
 }

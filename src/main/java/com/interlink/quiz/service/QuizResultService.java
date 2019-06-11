@@ -68,6 +68,25 @@ public class QuizResultService {
         return accountDto;
     }
 
+    public List<TopicResult> getTopicsResultByUser(User user){
+        List<TopicResult> topicResults = new ArrayList<>();
+        List<QuizSession> quizSessions = quizSessionRepository.getQuizSessionsByUserId(user);
+        for (QuizSession quizSession : quizSessions) {
+            for (Topic topic : quizSession.getTopics()) {
+                int countOfQuestionByTopic = questionRepository.getCountOfQuestionByTopic(user, topic);
+                int countOfRightAnswerByTopic = quizAnswerRepository.getCountOfRightAnswerByTopic(user, topic);
+                double resultByTopic = countOfQuestionByTopic * 100.0 / countOfRightAnswerByTopic;
+                TopicResult topicResult = new TopicResult();
+                topicResult.setNumberOfCorrectAnswers(countOfRightAnswerByTopic);
+                topicResult.setNumberOfQuestions(countOfQuestionByTopic);
+                topicResult.setResult(resultByTopic);
+                topicResults.add(topicResult);
+            }
+        }
+
+        return topicResults;
+    }
+
     private void saveUserResult(QuizSession quizSession, int mark) {
         UserResult userResult = new UserResult();
         userResult.setQuizSession(quizSession);
