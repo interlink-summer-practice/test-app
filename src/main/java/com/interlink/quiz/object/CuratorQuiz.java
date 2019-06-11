@@ -4,7 +4,7 @@ public class CuratorQuiz {
 
     private Topic[] topics;
     private String[] difficulties;
-    private String group;
+    private Long groupId;
 
     public Topic[] getTopics() {
         return topics;
@@ -22,11 +22,11 @@ public class CuratorQuiz {
         this.difficulties = difficulties;
     }
 
-    public String getGroup() {
-        return group;
+    public Long getGroupId() {
+        return groupId;
     }
 
-    public void setGroup(String group) {
-        this.group = group;
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
     }
 }

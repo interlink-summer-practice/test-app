@@ -27,8 +27,8 @@ public class UserService {
         this.roleRepository = roleRepository;
     }
 
-    public User register(SignUpRequest signUpRequest) {
-        return userRepository.saveUser(createUser(signUpRequest));
+    public void register(SignUpRequest signUpRequest) {
+        userRepository.saveUser(createUser(signUpRequest));
     }
 
     public User getUserByEmail(String email) {
