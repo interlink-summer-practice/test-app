@@ -70,17 +70,18 @@ public class QuestionRepository {
 
     public int getCountOfQuestionByTopic(User user, Topic topic) {
 
-        return sessionFactory.getCurrentSession()
-                .createNativeQuery("select distinct on(qa.question_id) qa " +
-                        "from quiz_answers qa" +
+        List<QuizAnswer> list = sessionFactory.getCurrentSession()
+                .createNativeQuery("select distinct on(qa.question_id) qa.* " +
+                        "from quiz_answers qa " +
                         "         left join questions q on qa.question_id = q.id " +
                         "         left join quiz_session qs on qa.quiz_session_id = qs.id " +
                         "         left join users u on qs.user_id = u.id " +
-                        "where u.id = :userId " +
-                        "and q.topic_id = :topicId " +
-                        "group by qs.id, qa.id", QuizAnswer.class)
-                .setParameter("user", user)
-                .setParameter("topic", topic)
-                .list().size();
+                        "where u.id = :user_id " +
+                        "  and q.topic_id = :topic_id " +
+                        "group by qs.id, qa.id;", QuizAnswer.class)
+                .setParameter("user_id", user.getId())
+                .setParameter("topic_id", topic.getId()).list();
+
+        return list.size();
     }
 }

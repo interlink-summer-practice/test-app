@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class QuizResultService {
@@ -67,31 +68,31 @@ public class QuizResultService {
             results.add(createQuizResultDto(quizSession));
         }
         accountDto.setResults(results);
+        accountDto.setStatisticBytopicResults(getTopicsResultByUser(user));
 
         return accountDto;
     }
 
-    public List<TopicResult> getTopicsResultByUser(Long userId){
-        if (userId == null) return new ArrayList<>();
-
-        User user = userRepository.getUserById(userId);
-
-        List<TopicResult> topicResults = new ArrayList<>();
+    private List<TopicResult> getTopicsResultByUser(User user){
+        Map<Topic, TopicResult> topicResults = new HashMap<>();
         List<QuizSession> quizSessions = quizSessionRepository.getQuizSessionsByUser(user);
         for (QuizSession quizSession : quizSessions) {
             for (Topic topic : quizSession.getTopics()) {
-                int countOfQuestionByTopic = questionRepository.getCountOfQuestionByTopic(user, topic);
-                int countOfRightAnswerByTopic = quizAnswerRepository.getCountOfRightAnswerByTopic(user, topic);
-                double resultByTopic = countOfQuestionByTopic * 100.0 / countOfRightAnswerByTopic;
-                TopicResult topicResult = new TopicResult();
-                topicResult.setNumberOfCorrectAnswers(countOfRightAnswerByTopic);
-                topicResult.setNumberOfQuestions(countOfQuestionByTopic);
-                topicResult.setResult(resultByTopic);
-                topicResults.add(topicResult);
+                if (!topicResults.containsKey(topic)) {
+                    TopicResult topicResult = new TopicResult();
+                    topicResult.setTopic(topic);
+                    int countOfQuestionByTopic = questionRepository.getCountOfQuestionByTopic(user, topic);
+                    int countOfRightAnswerByTopic = quizAnswerRepository.getCountOfRightAnswerByTopic(user, topic);
+                    double resultByTopic = countOfRightAnswerByTopic * 100.0 / countOfQuestionByTopic;
+                    topicResult.setNumberOfCorrectAnswers(countOfRightAnswerByTopic);
+                    topicResult.setNumberOfQuestions(countOfQuestionByTopic);
+                    topicResult.setResult(resultByTopic);
+                    topicResults.put(topic, topicResult);
+                }
             }
         }
 
-        return topicResults;
+        return new ArrayList<>(topicResults.values());
     }
 
     private void saveUserResult(QuizSession quizSession, int mark) {
