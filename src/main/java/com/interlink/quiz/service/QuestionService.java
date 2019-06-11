@@ -12,7 +12,6 @@ import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
@@ -49,9 +48,9 @@ public class QuestionService {
 
         if (difficulty.equals("Середнє") || difficulty.equals("Складне")) return new QuizDto();
 
-        if (isPresentQuestionsWithThisDifficulty(topics, difficulty)) {
+        if (isPresentQuestionsWithThisDifficulty(topics, Collections.singletonList(difficulty))) {
             QuizDto quizDto = new QuizDto();
-            List<QuestionDto> questions = getQuestionsByTopics(topics, difficulty);
+            List<QuestionDto> questions = getQuestionsByTopics(topics, Collections.singletonList(difficulty));
             quizDto.setCountOfQuestionsInQuiz(questions.size());
             List<QuizSession> quizSessions;
             if (userId == null) {
@@ -61,7 +60,7 @@ public class QuestionService {
                         userRepository.getUserById(userId));
             }
             for (QuizSession quizSession : quizSessions) {
-                if (isAlreadyPassedQuiz(topics, quizSession, difficulty)) {
+                if (isAlreadyPassedQuiz(topics, quizSession, Collections.singletonList(difficulty))) {
                     if (quizSession.getQuestions().size() != questions.size()) {
                         quizDto.setExistNewQuestions(true);
                     }
@@ -85,7 +84,7 @@ public class QuestionService {
                     httpSession,
                     userId,
                     topics,
-                    difficulty,
+                    Collections.singletonList(difficulty),
                     questions.stream()
                             .map(this::createQuestionFromQuestionDto)
                             .collect(Collectors.toList()))
@@ -103,17 +102,14 @@ public class QuestionService {
                                        HttpSession httpSession) {
 
         List<Topic> topics = Arrays.stream(curatorQuiz.getTopics()).collect(toList());
-        String difficulty = Stream.of(curatorQuiz.getDifficulties())
-                .sorted()
-                .reduce((x, y) -> x + "+" + y)
-                .orElse("");
+        List<String> difficulties = Arrays.stream(curatorQuiz.getDifficulties()).collect(toList());
 
         QuizDto quizDto = new QuizDto();
-        List<QuestionDto> questions = getQuestionsByTopicsAndDifficulties(topics, curatorQuiz.getDifficulties());
+        List<QuestionDto> questions = getQuestionsByTopicsAndDifficulties(topics, difficulties);
         quizDto.setCountOfQuestionsInQuiz(questions.size());
         List<QuizSession> quizSessions = quizSessionRepository.getQuizSessionsByUserId(userRepository.getUserById(userId));
         for (QuizSession quizSession : quizSessions) {
-            if (isAlreadyPassedGroupTest(topics, difficulty, quizSession)) {
+            if (isAlreadyPassedQuiz(topics, quizSession, difficulties)) {
                 if (isDoneQuiz(quizSession)) {
                     quizDto.setPassed(true);
                     quizDto.setQuizSession(quizSession);
@@ -134,7 +130,7 @@ public class QuestionService {
                 httpSession,
                 userId,
                 topics,
-                difficulty,
+                difficulties,
                 questions.stream()
                         .map(this::createQuestionFromQuestionDto)
                         .collect(Collectors.toList()))
@@ -147,9 +143,9 @@ public class QuestionService {
     public void addQuestionsInQuizSession(QuizSessionDto quizSessionDto) {
         QuizSession quizSession = quizSessionRepository.getQuizSessionById(quizSessionDto.getId());
         quizSession.setQuestions(
-                getQuestionsByTopics(quizSession.getTopics(), "Просте").stream()
-                .map(this::createQuestionFromQuestionDto)
-                .collect(Collectors.toList())
+                getQuestionsByTopics(quizSession.getTopics(), quizSession.getDifficulties()).stream()
+                        .map(this::createQuestionFromQuestionDto)
+                        .collect(Collectors.toList())
         );
         quizSessionRepository.updateQuizSession(quizSession);
     }
@@ -164,10 +160,12 @@ public class QuestionService {
         }
     }
 
-    private List<QuestionDto> getQuestionsByTopics(List<Topic> topics, String difficulty) {
+    private List<QuestionDto> getQuestionsByTopics(List<Topic> topics, List<String> difficulties) {
         List<Question> questions = new ArrayList<>();
         for (Topic topic : topics) {
-            questions.addAll(questionRepository.getQuestionsByTopic(topic, difficulty));
+            for (String difficulty : difficulties) {
+                questions.addAll(questionRepository.getQuestionsByTopic(topic, difficulty));
+            }
         }
 
         return questions.stream()
@@ -175,7 +173,7 @@ public class QuestionService {
                 .collect(toList());
     }
 
-    private List<QuestionDto> getQuestionsByTopicsAndDifficulties(List<Topic> topics, String[] difficulties) {
+    private List<QuestionDto> getQuestionsByTopicsAndDifficulties(List<Topic> topics, List<String> difficulties) {
         List<Question> questions = new ArrayList<>();
         for (Topic topic : topics) {
             for (String difficulty : difficulties) {
@@ -193,7 +191,9 @@ public class QuestionService {
 
         List<Question> questions = new ArrayList<>();
         for (Topic topic : topics) {
-            questions.addAll(questionRepository.getNotPassedQuestionsByTopic(topic, quizSession));
+            for (String difficulty : quizSession.getDifficulties()) {
+                questions.addAll(questionRepository.getNotPassedQuestionsByTopic(topic, quizSession, difficulty));
+            }
         }
 
         return questions.stream()
@@ -203,39 +203,23 @@ public class QuestionService {
 
     private boolean isAlreadyPassedQuiz(List<Topic> selectedTopics,
                                         QuizSession quizSession,
-                                        String currentDifficulty) {
+                                        List<String> difficulty) {
 
         if (quizSession == null) return false;
-        if (!quizSession.getDifficulty().equals(currentDifficulty)) return false;
+        if (quizSession.getDifficulties().size() != difficulty.size()) return false;
+        if (!quizSession.getDifficulties().containsAll(difficulty)) return false;
         if (selectedTopics.size() != quizSession.getTopics().size()) return false;
-        for (Topic sessionTopic : quizSession.getTopics()) {
-            if (!selectedTopics.contains(sessionTopic)) {
-                return false;
+
+        return quizSession.getTopics().containsAll(selectedTopics);
+    }
+
+    private boolean isPresentQuestionsWithThisDifficulty(List<Topic> topics, List<String> difficulties) {
+        long sum = 0;
+        for (Topic topic : topics) {
+            for (String difficulty : difficulties) {
+                sum += questionRepository.getCountByTopicAndDifficulty(difficulty, topic);
             }
         }
-        return true;
-    }
-
-    private boolean isAlreadyPassedGroupTest(List<Topic> topics,
-                                             String difficulties,
-                                             QuizSession quizSession) {
-
-        if (quizSession == null) return false;
-        if (topics.size() != quizSession.getTopics().size()) return false;
-        if (!difficulties.equals(quizSession.getDifficulty())) return false;
-
-//        for (Topic sessionTopic : quizSession.getTopics()) {
-//            if (!selectedTopics.contains(sessionTopic)) {
-//                return false;
-//            }
-//        }
-        return true;
-    }
-
-    private boolean isPresentQuestionsWithThisDifficulty(List<Topic> topics, String difficulty) {
-        long sum = topics.stream()
-                .mapToLong(topic -> questionRepository.getCountByTopicAndDifficulty(difficulty, topic))
-                .sum();
 
         return sum > 0;
     }
@@ -250,14 +234,14 @@ public class QuestionService {
     private QuizSession createNewQuizSession(HttpSession httpSession,
                                              Long userId,
                                              List<Topic> topics,
-                                             String difficulty,
+                                             List<String> difficulties,
                                              List<Question> questions) {
 
         QuizSession newQuizSession = new QuizSession();
         newQuizSession.setSessionId(httpSession.getId());
         newQuizSession.setDate(LocalDateTime.now().toString());
         newQuizSession.setTopics(topics);
-        newQuizSession.setDifficulty(difficulty);
+        newQuizSession.setDifficulties(difficulties);
         newQuizSession.setQuestions(questions);
         if (userId != null) {
             newQuizSession.setUser(userRepository.getUserById(userId));

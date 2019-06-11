@@ -36,7 +36,7 @@ public class Topic {
         if (o == null || getClass() != o.getClass()) return false;
         Topic topic = (Topic) o;
 
-        return id == topic.id && Objects.equals(name, topic.name);
+        return id == topic.id;
     }
 
     @Override
