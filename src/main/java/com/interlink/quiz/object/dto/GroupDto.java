@@ -4,7 +4,6 @@ public class GroupDto {
 
     private Long id;
     private String name;
-    private String quizUrl;
     private Long curatorId;
 
     public Long getId() {
@@ -21,14 +20,6 @@ public class GroupDto {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getQuizUrl() {
-        return quizUrl;
-    }
-
-    public void setQuizUrl(String quizUrl) {
-        this.quizUrl = quizUrl;
     }
 
     public Long getCuratorId() {

@@ -19,7 +19,7 @@ public class Group {
 
     @ManyToOne
     @JoinColumn(name = "curator_id")
-    private User user;
+    private User curator;
 
     @ManyToMany
     @JoinTable(
@@ -53,12 +53,12 @@ public class Group {
         this.quizUrl = quizUrl;
     }
 
-    public User getUser() {
-        return user;
+    public User getCurator() {
+        return curator;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setCurator(User curator) {
+        this.curator = curator;
     }
 
     public List<User> getMembers() {

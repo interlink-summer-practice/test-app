@@ -25,17 +25,17 @@ public class GroupService {
         return groupRepository.saveGroup(createGroup(groupDto));
     }
 
-    public void addMemberToGroup(Long groupId, Long userId) {
+    public void addMemberToGroup(Long groupId, Long userId, String quizUrl) {
         Group group = groupRepository.getGroupById(groupId);
         group.getMembers().add(userRepository.getUserById(userId));
+        group.setQuizUrl(quizUrl);
         groupRepository.addMemberToGroup(group);
     }
 
     private Group createGroup(GroupDto groupDto) {
         Group group = new Group();
         group.setName(groupDto.getName());
-        group.setQuizUrl(groupDto.getQuizUrl());
-        group.setUser(userRepository.getUserById(groupDto.getCuratorId()));
+        group.setCurator(userRepository.getUserById(groupDto.getCuratorId()));
 
         return group;
     }
