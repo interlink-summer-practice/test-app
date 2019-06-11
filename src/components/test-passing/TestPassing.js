@@ -3,7 +3,7 @@ import Question from '../question/Question';
 import TotalResultTesting from '../total-result-testing/TotalResultTesting';
 import axios from 'axios';
 import UpdateResultAlertDialog from '../update-result-alert-dialog/UpdateResultAlertDialog';
-import ResultBySubjects from "../result-by-subjects/ResultBySubjects";
+import ResultBySubjectsContainer from "../result-by-subjects/ResultBySubjectsContainer";
 import DifficultyDialog from '../difficulty-dialog/DifficultyDialog'
 import {withRouter, Route, Redirect} from 'react-router-dom';
 
@@ -21,9 +21,30 @@ export default class TestPassing extends Component {
         showResultBySubjects: false,
         currentNumberOfQuestion: 1,
         numberOfQuestions: 0,
+        continueTestButton: false,
 
 
     };
+    postQuestion = () =>{
+        axios.post('/questions', this.props.topics)
+            .then(res => {
+                if (res.data.quizSession === null) {
+                    this.setState({sessionId: undefined});
+                } else {
+                    console.log(res.data.sessionId === null);
+                    this.setState((state) => {
+                        state.currentNumberOfQuestion = res.data.countOfPassedQuestions + 1 || 1;
+                        state.numberOfQuestions = res.data.countOfQuestionsInQuiz;
+                        state.sessionId = res.data.quizSession.id;
+                        state.isDataLoaded = true;
+                        state.questions = res.data.questions;
+                        state.isAlreadyPassed = res.data.passed;
+                        state.continueTestButton = res.data.existNewQuestions;
+                        return state;
+                    });
+                }
+            });
+    }
     nextQuestion = (questionId, answerId) => {
         axios.post('/quiz-answer', {quizSessionId: this.state.sessionId, answerId: answerId, questionId: questionId})
             .then(res => {
@@ -50,6 +71,9 @@ export default class TestPassing extends Component {
             .then(res => console.log(res)));
 
     }
+    continueTest = () => {
+        axios.post('/quiz-session', {id: this.state.sessionId})
+            .then(res => this.postQuestion());
 
     componentDidMount() {
         console.log(this.props.topics.countOfQuestionsInQuiz);
@@ -100,14 +124,16 @@ export default class TestPassing extends Component {
             if (this.state.isDataLoaded === true) {
                 if (this.state.showResultBySubjects === true) {
                     console.log(this.state.showResultBySubjects);
-                    return (<ResultBySubjects sessionId={this.state.sessionId}
+                    return (<ResultBySubjectsContainer sessionId={this.state.sessionId}
                                               showResultBySubjects={this.showResultBySubjects}/>)
                 } else if (this.state.questions[this.state.i] !== undefined) {
                     return (<React.Fragment>
                         <Question currentNumberOfQuestion={this.state.currentNumberOfQuestion}
                                   numberOfQuestions={this.state.numberOfQuestions}
                                   question={this.state.questions[0 + this.state.i]} nextQuestion={this.nextQuestion}/>
-                        <UpdateResultAlertDialog showResultBySubjects={this.showResultBySubjects}
+                        <UpdateResultAlertDialog continueTest={this.continueTest}
+                                                 continueTestButton={this.state.continueTestButton}
+                                                 showResultBySubjects={this.showResultBySubjects}
                                                  restartTest={this.restartTest} open={this.state.isAlreadyPassed}/>
                     </React.Fragment>)
                 } else {
