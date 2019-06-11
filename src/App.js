@@ -5,7 +5,7 @@ import {BrowserRouter as Router, Route} from "react-router-dom";
 import TestPassing from "./components/test-passing/TestPassing";
 import UserAccount from "./components/user-account/UserAccount";
 import axios from 'axios';
-import ResultBySubjects from "./components/result-by-subjects/ResultBySubjects";
+import ResultBySubjectsContainer from "./components/result-by-subjects/ResultBySubjectsContainer";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -220,8 +220,9 @@ export default class App extends Component {
                            render={() => (<StartPage startTestsDialogHandler={this.startTestsDialogHandler}/>)}/>
                     <Route path="/quiz" render={(props) => (<TestPassing topics={props.location.state}/>)}/>
                     <Route path="/account" component={UserAccount}/>
+
                     <Route path="/detailed-result"
-                           render={(props) => (<ResultBySubjects sessionId={props.location.state}/>)}/>
+                           render={(props) => (<ResultBySubjectsContainer sessionId={props.location.state}/>)}/>
                 </div>
             </Router>
         )
