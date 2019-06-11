@@ -75,12 +75,41 @@ export default class TestPassing extends Component {
         axios.post('/quiz-session', {id: this.state.sessionId})
             .then(res => this.postQuestion());
 
-    }
-
-
     componentDidMount() {
+        console.log(this.props.topics.countOfQuestionsInQuiz);
 
-        this.postQuestion();
+        if (this.props.topics.questionsFromLink) {
+            this.setState((state) => {
+                state.currentNumberOfQuestion = this.props.topics.countOfPassedQuestions + 1 || 1;
+                state.numberOfQuestions = this.props.topics.countOfQuestionsInQuiz;
+                state.questions = this.props.topics.questionsFromLink;
+                state.sessionId = this.props.topics.sessionId;
+                state.isDataLoaded = true;
+                return state;
+            });
+        }
+        else {
+
+            axios.post('/questions', this.props.topics)
+                .then(res => {
+                    console.log(res.data);
+                    if (res.data.quizSession === null) {
+                        this.setState({sessionId: undefined});
+                    } else {
+                        console.log(res.data.sessionId === null);
+                        this.setState((state) => {
+                            state.currentNumberOfQuestion = res.data.countOfPassedQuestions + 1 || 1;
+                            state.numberOfQuestions = res.data.countOfQuestionsInQuiz;
+                            state.sessionId = res.data.quizSession.id;
+                            state.isDataLoaded = true;
+                            state.questions = res.data.questions;
+                            state.isAlreadyPassed = res.data.passed;
+                            return state;
+                        });
+
+                    }
+                })
+        }
     }
 
     render() {

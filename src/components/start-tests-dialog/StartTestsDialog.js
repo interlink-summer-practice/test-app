@@ -7,16 +7,11 @@ import Button from "@material-ui/core/Button";
 import {Typography} from "@material-ui/core";
 import axios from 'axios';
 import TestTopicsAutocomplete from "../test-topics-autocomplete/TestTopicsAutocomplete";
-import {withRouter, Route} from 'react-router-dom';
-import Input from '@material-ui/core/Input';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import FilledInput from '@material-ui/core/FilledInput';
+import {Route} from 'react-router-dom';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-
+import TextField from "@material-ui/core/TextField";
 
 class StartTestsDialog extends React.Component {
 
@@ -24,10 +19,11 @@ class StartTestsDialog extends React.Component {
         topics: [],
         selectedTopics: [],
         difficulty: '',
+        groupName: ''
     };
 
     selectedTopics = (value) => {
-        if (value !== null ) {
+        if (value !== null) {
 
             this.setState((state) => {
                 state.topicDisableButton = false;
@@ -54,7 +50,7 @@ class StartTestsDialog extends React.Component {
             })
     };
     handleChange = (event) => {
-        this.setState((state)=>{
+        this.setState((state) => {
             state.difficulty = event.target.value;
             state.difficultyDisableButton = !state.difficultyDisableButton;
             return state;
@@ -63,7 +59,37 @@ class StartTestsDialog extends React.Component {
         //     difficulty: event.target.value,
         //     difficultyDisableButton: false
         // })
-    }
+    };
+
+    handleGroupNameChange = (event) => {
+        this.setState({
+            groupName: event.target.value
+        })
+    };
+
+    /**
+     * Admin only
+     */
+    createTests = () => {
+        const baseUrl = 'http://localhost:3000/questions/';
+
+        axios.post('/group', {
+            name: this.state.groupName
+        }).then(res => {
+            const group = {
+                groupId: res.data.id,
+                topics: this.state.selectedTopics,
+                difficulties: [this.state.difficulty]
+            };
+
+            let groupStr = JSON.stringify(group);
+            let groupBase64 = Buffer.from(groupStr).toString("base64");
+
+            this.props.testsLinkDialogHandler(baseUrl + groupBase64);
+            this.props.startTestsDialogHandler();
+        });
+
+    };
 
     render() {
         return (
@@ -71,8 +97,25 @@ class StartTestsDialog extends React.Component {
                 <Dialog open={this.props.open} className="startTestsDialog">
                     <DialogTitle id="form-dialog-title">Start tests</DialogTitle>
                     <DialogContent>
+                        {
+                            this.props.isAdmin
+                                ? (
+                                    <TextField
+                                        onChange={(e) => {
+                                            this.handleGroupNameChange(e)
+                                        }}
+                                        autoFocus
+                                        margin="dense"
+                                        id="groupName"
+                                        label="Group name"
+                                        type="text"
+                                        fullWidth
+                                    />
+                                )
+                                : null
+                        }
                         <Typography variant="h6">
-                            Choose what skills you want to prove
+                            Choose what skills you want to check
                         </Typography>
                         <TestTopicsAutocomplete suggestions={this.state.topics} selectedTopics={this.selectedTopics}/>
                         <InputLabel htmlFor="age-difficulty">Difficulty</InputLabel>
@@ -97,23 +140,33 @@ class StartTestsDialog extends React.Component {
                             Cancel
                         </Button>
 
-                        <Route render={({history}) => (
-                            <Button
-                                    color="primary" onClick={() => {
-                                this.props.startTestsDialogHandler();
-                                history.push('/quiz', {
-                                    topics: this.state.selectedTopics,
-                                    difficulty: this.state.difficulty,
-                                })
-                                this.setState((state) => {
-                                    state.selectedTopics = [];
-                                    state.difficulty = '';
-                                    return state;
-                                });
-                            }}>
-                                Start Tests
-                            </Button>
-                        )}/>
+                        {
+                            this.props.isAdmin
+                                ? (
+                                    <Button color="primary" onClick={this.createTests}>
+                                        Create tests
+                                    </Button>
+                                )
+                                : (
+                                    <Route render={({history}) => (
+                                        <Button
+                                            color="primary" onClick={() => {
+                                            this.props.startTestsDialogHandler();
+                                            history.push('/quiz', {
+                                                topics: this.state.selectedTopics,
+                                                difficulty: this.state.difficulty,
+                                            });
+                                            this.setState((state) => {
+                                                state.selectedTopics = [];
+                                                state.difficulty = '';
+                                                return state;
+                                            });
+                                        }}>
+                                            Start Tests
+                                        </Button>
+                                    )}/>
+                                )
+                        }
 
                     </DialogActions>
                 </Dialog>
