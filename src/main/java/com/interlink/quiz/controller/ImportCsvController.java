@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class InportCsvController {
+public class ImportCsvController {
 
     private final CsvParserService csvParserService;
 
     @Autowired
-    public InportCsvController(CsvParserService csvParserService) {
+    public ImportCsvController(CsvParserService csvParserService) {
         this.csvParserService = csvParserService;
     }
 
