@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -42,11 +45,15 @@ public class QuestionService {
         this.topicRepository = topicRepository;
     }
 
-    public QuizDto getQuestionsByUrl(String url, Long userId, HttpSession httpSession) {
-        String[] topicNames = url.replaceAll("%20%", " ").split("\\+");
+    public QuizDto getQuestionsByUrl(String topicUrl,
+                                     String difficultyUrl,
+                                     Long userId,
+                                     HttpSession httpSession) throws UnsupportedEncodingException {
+
+        String[] topicNames = URLDecoder.decode(topicUrl, StandardCharsets.UTF_8.name()).split("\\+");
         Topic[] topics = Arrays.stream(topicNames).map(topicRepository::getTopicByName).toArray(Topic[]::new);
 
-        return getQuestions(topics, userId, httpSession, "Просте");
+        return getQuestions(topics, userId, httpSession, difficultyUrl);
     }
 
     public QuizDto getQuestions(Topic[] topicsArray,

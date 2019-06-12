@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 
 @RestController
@@ -83,17 +84,18 @@ public class QuizController {
         return new ResponseEntity<>(quizDto, HttpStatus.OK);
     }
 
-    @GetMapping("/questions/{topicUrl}")
+    @GetMapping("/questions/{topicUrl}/{difficultyUrl}")
     public QuizDto getQuestionsByUrl(@PathVariable String topicUrl,
+                                     @PathVariable String difficultyUrl,
                                      @RequestHeader(value = "auth-token", required = false) String token,
-                                     HttpSession httpSession) {
+                                     HttpSession httpSession) throws UnsupportedEncodingException {
 
         Long userId = null;
         if (!token.isEmpty()) {
             userId = jwtTokenProvider.getUserIdFromJWT(token);
         }
 
-        return questionService.getQuestionsByUrl(topicUrl, userId, httpSession);
+        return questionService.getQuestionsByUrl(topicUrl, difficultyUrl, userId, httpSession);
     }
 
     @PostMapping("/quiz-answer")
