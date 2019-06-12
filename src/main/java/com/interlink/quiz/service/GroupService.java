@@ -65,9 +65,8 @@ public class GroupService {
     }
 
     private GroupResultDto getResultByGroup(Group group) throws IOException {
-        if (group.getQuizUrl() == null) {
-            return null;
-        }
+        if (group.getQuizUrl() == null) return null;
+
         byte[] decode = Base64.getDecoder().decode(group.getQuizUrl());
         String test = new String(decode);
         CuratorQuiz curatorQuiz = new ObjectMapper().readValue(test, CuratorQuiz.class);
@@ -101,16 +100,6 @@ public class GroupService {
         group.setCurator(userRepository.getUserById((long) groupDto.getCuratorId()));
 
         return group;
-    }
-
-    private GroupDto createGroupDto(Group group) {
-        GroupDto groupDto = new GroupDto();
-        groupDto.setId(group.getId());
-        groupDto.setName(group.getName());
-        groupDto.setQuizUrl(group.getQuizUrl());
-        groupDto.setCuratorId(group.getCurator().getId());
-
-        return groupDto;
     }
 
     private MemberResultDto createMemberResultDto(QuizSession quizSession) {
