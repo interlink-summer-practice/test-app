@@ -1,7 +1,6 @@
 package com.interlink.quiz.controller;
 
 import com.interlink.quiz.auth.security.JwtTokenProvider;
-import com.interlink.quiz.csv.CsvParserService;
 import com.interlink.quiz.object.CuratorQuiz;
 import com.interlink.quiz.object.dto.FilteredQuizDto;
 import com.interlink.quiz.object.dto.QuizDto;
@@ -22,18 +21,15 @@ public class QuizController {
 
     private final QuestionService questionService;
     private final GroupService groupService;
-    private final CsvParserService csvParserService;
     private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
     public QuizController(QuestionService questionService,
                           GroupService groupService,
-                          CsvParserService csvParserService,
                           JwtTokenProvider jwtTokenProvider) {
 
         this.questionService = questionService;
         this.groupService = groupService;
-        this.csvParserService = csvParserService;
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
