@@ -26,15 +26,3 @@ export default class QuizTimeLine extends Component {
 
     }
 }
-/*
-var quiz_timeline__number = [];
-        for (var i = 1; i <= this.props.numberOfQuestions; i++) {
-            if (i == this.props.currentNumberOfQuestion)
-                quiz_timeline__number.push(<div className="quiz_timeline__number_current num_for_timeline">{i}</div>);
-            else
-                quiz_timeline__number.push(<div className="num_for_timeline">{i}</div>);
-        }
-        return <div className="quiz_timeline">{quiz_timeline__number}</div>;
- */
-//
-// }
