@@ -17,16 +17,16 @@ import java.io.IOException;
 import java.util.Base64;
 
 @RestController
-public class QuizController {
+public class QuestionController {
 
     private final QuestionService questionService;
     private final GroupService groupService;
     private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    public QuizController(QuestionService questionService,
-                          GroupService groupService,
-                          JwtTokenProvider jwtTokenProvider) {
+    public QuestionController(QuestionService questionService,
+                              GroupService groupService,
+                              JwtTokenProvider jwtTokenProvider) {
 
         this.questionService = questionService;
         this.groupService = groupService;
