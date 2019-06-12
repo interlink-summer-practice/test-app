@@ -34,14 +34,14 @@ public class AccountController {
     @GetMapping("/account/groups")
     public ResponseEntity<?> getGroupsForCurator(@RequestHeader(value = "auth-token", required = false) String token) {
         Long userId = null;
-        if (token.isEmpty()) {
+        if (!token.isEmpty()) {
             userId = jwtTokenProvider.getUserIdFromJWT(token);
         }
         if (userId == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(groupService.getGroupsByCurator(userId), HttpStatus.OK);
+        return new ResponseEntity<>(groupService.getGroupsByCurator(userId.intValue()), HttpStatus.OK);
     }
 
     @GetMapping("/account")
@@ -56,7 +56,6 @@ public class AccountController {
 
     @GetMapping("/account/statistic")
     public List<TopicResult> getStatisticByTopics(@RequestHeader(value = "auth-token", required = false) String token) {
-
         Long userId = null;
         if (!token.isEmpty()) {
             userId = jwtTokenProvider.getUserIdFromJWT(token);

@@ -40,9 +40,10 @@ public class GroupRepository {
         transaction.commit();
     }
 
-    public List<Group> getGroupsByCurator(Long userId) {
+    public List<Group> getGroupsByCurator(int userId) {
         return sessionFactory.getCurrentSession()
                 .createQuery("from Group g where g.curator.id = :userId", Group.class)
+                .setParameter("userId", userId)
                 .list();
     }
 }

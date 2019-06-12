@@ -54,7 +54,7 @@ public class GroupService {
         groupRepository.addMemberToGroup(group);
     }
 
-    public List<GroupDto> getGroupsByCurator(Long userId) {
+    public List<GroupDto> getGroupsByCurator(int userId) {
         return groupRepository.getGroupsByCurator(userId)
                 .stream()
                 .map(this::createGroupDto)
