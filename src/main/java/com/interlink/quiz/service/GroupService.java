@@ -61,8 +61,17 @@ public class GroupService {
                 .collect(toList());
     }
 
-    public GroupResultDto getResultByGroup(Long id) throws IOException {
-        Group group = groupRepository.getGroupById(id);
+    public List<GroupResultDto> getResultsByGroups(Long userId) throws IOException {
+        List<Group> groups = groupRepository.getGroupsByCurator(userId.intValue());
+        List<GroupResultDto> result = new ArrayList<>();
+        for (Group group : groups) {
+            result.add(getResultByGroup(group));
+        }
+
+        return result;
+    }
+
+    private GroupResultDto getResultByGroup(Group group) throws IOException {
         byte[] decode = Base64.getDecoder().decode(group.getQuizUrl());
         String test = new String(decode);
         CuratorQuiz curatorQuiz = new ObjectMapper().readValue(test, CuratorQuiz.class);
@@ -71,6 +80,7 @@ public class GroupService {
 
         GroupResultDto groupResultDto = new GroupResultDto();
         groupResultDto.setGroupName(group.getName());
+        groupResultDto.setQuizUrl(group.getQuizUrl());
 
         List<MemberResultDto> results = new ArrayList<>();
         for (User member : group.getMembers()) {
