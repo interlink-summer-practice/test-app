@@ -49,6 +49,7 @@ export default class AppBarMenu extends React.Component {
                         : null
                 }
                 <div className="Appbar">
+                    <Button href='/user-statistic'>Statiscs</Button>
                     <Button onClick={this.props.startTestsDialogHandler}>Start New Test</Button>
                     <Route render={({ history }) => (
                         <Button onClick={() => {

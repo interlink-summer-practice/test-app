@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './App.css';
 import StartPage from './components/start-page/StartPage';
-import {BrowserRouter as Router, Route} from "react-router-dom";
+import {BrowserRouter as Router, Redirect, Route} from "react-router-dom";
 import TestPassing from "./components/test-passing/TestPassing";
 import UserAccount from "./components/user-account/UserAccount";
 import axios from 'axios';
@@ -56,7 +56,8 @@ export default class App extends Component {
     logout = (history) => {
         this.setState({
             isDrawerOpen: false,
-            isAuthenticated: false
+            isAuthenticated: false,
+            isAdmin: false
         });
         axios.defaults.headers.common['auth-token'] = '';
         localStorage.removeItem('auth-token');
@@ -124,9 +125,13 @@ export default class App extends Component {
                     <AppBar position="static" color="default">
                         <Toolbar>
                             <Menu onClick={(e) => this.toggleDrawer(e)} className="menuIcon"/>
-                            <Typography className="appBarTitle" variant="h6" color="inherit">
-                                Tests App
-                            </Typography>
+
+                            <Route render={({history}) => (
+                                <Typography className="appBarTitle" variant="h6" color="inherit"
+                                            onClick={() => history.push('/')}>
+                                    Tests App
+                                </Typography>
+                            )}/>
 
                             {
                                 !this.state.isAuthenticated
@@ -245,9 +250,8 @@ export default class App extends Component {
                            render={() => (<StartPage startTestsDialogHandler={this.startTestsDialogHandler}/>)}/>
                     <Route path="/quiz" exact render={(props) => (<TestPassing topics={props.location.state}/>)}/>
                     <Route path="/questions/:id" component={TestsLinkResolver}/>
-                    <Route path="/account" component={UserAccount}/>
+                    <Route path="/account" render={() => (<UserAccount isAdmin={this.state.isAdmin}/>)}/>
                     <Route path="/user-statistic" component={UserAccountStatistic}/>
-
                     <Route path="/detailed-result"
                            render={(props) => (<ResultBySubjectsContainer sessionId={props.location.state}/>)}/>
                 </div>

@@ -18,6 +18,7 @@ export default class ResultBySubjectsGraph extends Component {
     }
     componentWillMount() {
 
+        console.log(this.props);
         this.props.topicsResult.forEach((element) => {
             this.setState((state)=>{
                 state.data[0].dataPoints.push({
