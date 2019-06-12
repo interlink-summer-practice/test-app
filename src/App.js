@@ -27,7 +27,7 @@ import TestsLinkResolver from "./components/tests-link-resolver/TestsLinkResolve
 import UserAccountStatistic from "./components/user-account-statistic/UserAccountStatistic";
 
 (function () {
-    const token = sessionStorage.getItem('auth-token');
+    const token = localStorage.getItem('auth-token');
     if (token) {
         axios.defaults.headers.common['auth-token'] = token;
     } else {
@@ -43,7 +43,7 @@ export default class App extends Component {
         isSignUpDialogOpen: false,
         isStartTestsDialogOpen: false,
         isTestsLinkDialogOpen: false,
-        isAuthenticated: sessionStorage.getItem('auth-token'),
+        isAuthenticated: localStorage.getItem('auth-token'),
         isAdmin: false,
         lastTestsLink: '',
         userStatistic: []
@@ -55,9 +55,9 @@ export default class App extends Component {
             isAuthenticated: false
         });
         axios.defaults.headers.common['auth-token'] = '';
-        sessionStorage.removeItem('auth-token');
-        sessionStorage.removeItem('userFirstName');
-        sessionStorage.removeItem('userLastName');
+        localStorage.removeItem('auth-token');
+        localStorage.removeItem('userFirstName');
+        localStorage.removeItem('userLastName');
         history.push('/');
     };
 
@@ -149,7 +149,7 @@ export default class App extends Component {
                         <List>
 
                             {
-                                sessionStorage.getItem('auth-token') === null
+                                localStorage.getItem('auth-token') === null
                                     ? (
                                         <ListItem button onClick={this.signUpDialogHandler}>
                                             <ListItemIcon><AccountCircle/></ListItemIcon>
@@ -162,10 +162,10 @@ export default class App extends Component {
                                                 this.openUserAccount(history)
                                             }}>
                                                 <Typography className="userLogo" variant="subtitle1" color="inherit">
-                                                    {sessionStorage.getItem('userFirstName')[0] + sessionStorage.getItem('userLastName')[0]}
+                                                    {localStorage.getItem('userFirstName')[0] + localStorage.getItem('userLastName')[0]}
                                                 </Typography>
                                                 <ListItemText className="userName">
-                                                    {sessionStorage.getItem('userFirstName') + ' ' + sessionStorage.getItem('userLastName')}
+                                                    {localStorage.getItem('userFirstName') + ' ' + localStorage.getItem('userLastName')}
                                                 </ListItemText>
                                             </ListItem>
                                         )}/>
@@ -173,7 +173,7 @@ export default class App extends Component {
                             }
 
                             {
-                                sessionStorage.getItem('auth-token') !== null
+                                localStorage.getItem('auth-token') !== null
                                     ? (
                                         <ListItem button onClick={this.startTestsDialogHandler}>
                                             <ListItemIcon>
@@ -189,7 +189,7 @@ export default class App extends Component {
                             }
 
                             {
-                                sessionStorage.getItem('auth-token') === null
+                                localStorage.getItem('auth-token') === null
                                     ? (
                                         <ListItem button onClick={this.loginDialogHandler}>
                                             <ListItemIcon>

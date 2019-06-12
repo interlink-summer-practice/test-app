@@ -21,8 +21,8 @@ export default class AppBarMenu extends React.Component {
                     userLastName: res.data.lastName
                 });
 
-                sessionStorage.setItem('userFirstName', res.data.firstName);
-                sessionStorage.setItem('userLastName', res.data.lastName);
+                localStorage.setItem('userFirstName', res.data.firstName);
+                localStorage.setItem('userLastName', res.data.lastName);
             });
     }
 

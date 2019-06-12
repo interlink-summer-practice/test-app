@@ -5,7 +5,8 @@ import axios from "axios";
 export default class TestsLinkResolver extends React.Component {
 
     componentDidMount() {
-        if (sessionStorage.getItem('auth-token') !== null) {
+        console.log(this.props);
+        if (localStorage.getItem('auth-token') !== null) {
             axios.get('/questions/' + this.props.match.params.id)
                 .then(res => {
                     this.props.history.push('/quiz', {
@@ -22,7 +23,7 @@ export default class TestsLinkResolver extends React.Component {
     }
 
     render() {
-        if (sessionStorage.getItem('auth-token') === null) {
+        if (localStorage.getItem('auth-token') === null) {
             return (
                 <Redirect to="/"/>
             );
