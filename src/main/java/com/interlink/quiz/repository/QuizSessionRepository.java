@@ -54,6 +54,13 @@ public class QuizSessionRepository {
                 .list();
     }
 
+    public List<QuizSession> getQuizSessionsByGroupMember(User user) {
+        return sessionFactory.getCurrentSession()
+                .createQuery("from QuizSession qs where qs.user.id = :userId", QuizSession.class)
+                .setParameter("userId", user.getId())
+                .list();
+    }
+
     public int getMarkByQuizSession(QuizSession quizSession) {
         try {
             BigInteger mark = (BigInteger) sessionFactory.getCurrentSession()

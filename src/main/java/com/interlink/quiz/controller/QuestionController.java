@@ -68,7 +68,7 @@ public class QuestionController {
         String test = new String(decode);
         CuratorQuiz curatorQuiz = new ObjectMapper().readValue(test, CuratorQuiz.class);
         QuizDto quizDto = questionService.getQuestionsToGroup(curatorQuiz, userId, httpSession);
-        groupService.addMemberToGroup(curatorQuiz.getGroupId(), userId, url);
+        groupService.addMemberToGroup(curatorQuiz.getGroupId(), userId, url, quizDto.getQuizSession());
 
         return new ResponseEntity<>(quizDto, HttpStatus.OK);
     }
