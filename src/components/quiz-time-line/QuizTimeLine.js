@@ -21,4 +21,5 @@ export default class QuizTimeLine extends Component {
         return <div className="quiz_timeline">{quiz_timeline__number}</div>;
 
     }
+                                       
 }
