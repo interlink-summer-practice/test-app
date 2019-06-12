@@ -24,19 +24,22 @@ public class QuestionService {
     private final QuizSessionRepository quizSessionRepository;
     private final QuizAnswerRepository quizAnswerRepository;
     private final UserResultRepository userResultRepository;
+    private final GroupRepository groupRepository;
 
     @Autowired
     public QuestionService(QuestionRepository questionRepository,
                            UserRepository userRepository,
                            QuizSessionRepository quizSessionRepository,
                            QuizAnswerRepository quizAnswerRepository,
-                           UserResultRepository userResultRepository) {
+                           UserResultRepository userResultRepository,
+                           GroupRepository groupRepository) {
 
         this.questionRepository = questionRepository;
         this.userRepository = userRepository;
         this.quizSessionRepository = quizSessionRepository;
         this.quizAnswerRepository = quizAnswerRepository;
         this.userResultRepository = userResultRepository;
+        this.groupRepository = groupRepository;
     }
 
     public QuizDto getQuestions(Topic[] topicsArray,
@@ -99,16 +102,18 @@ public class QuestionService {
 
     public QuizDto getQuestionsToGroup(CuratorQuiz curatorQuiz,
                                        Long userId,
-                                       HttpSession httpSession) {
+                                       HttpSession httpSession,
+                                       Long groupId,
+                                       String quizUrl) {
 
         List<Topic> topics = Arrays.stream(curatorQuiz.getTopics()).collect(toList());
         List<String> difficulties = Arrays.stream(curatorQuiz.getDifficulties()).collect(toList());
-
+        User user = userRepository.getUserById(userId);
         QuizDto quizDto = new QuizDto();
         if (isPresentQuestionsWithThisDifficulty(topics, difficulties)) {
             List<QuestionDto> questions = getQuestionsByTopicsAndDifficulties(topics, difficulties);
             quizDto.setCountOfQuestionsInQuiz(questions.size());
-            List<QuizSession> quizSessions = quizSessionRepository.getQuizSessionsByGroupMember(userRepository.getUserById(userId));
+            List<QuizSession> quizSessions = quizSessionRepository.getQuizSessionsByGroupMember(user);
             for (QuizSession quizSession : quizSessions) {
                 if (isAlreadyPassedQuiz(topics, quizSession, difficulties)) {
                     if (isDoneQuiz(quizSession)) {
@@ -127,23 +132,29 @@ public class QuestionService {
                 }
             }
 
-            quizDto.setQuizSession(createQuizSessionDto(
-                    createNewQuizSession(
-                            httpSession,
-                            userId,
-                            topics,
-                            difficulties,
-                            questions.stream()
-                                    .map(this::createQuestionFromQuestionDto)
-                                    .collect(Collectors.toList()))
-                    )
-            );
+            QuizSession newQuizSession = createNewQuizSession(
+                    httpSession,
+                    userId,
+                    topics,
+                    difficulties,
+                    questions.stream()
+                            .map(this::createQuestionFromQuestionDto)
+                            .collect(toList()));
+
+            quizDto.setQuizSession(createQuizSessionDto(newQuizSession));
             quizDto.setQuestions(questions);
+
+            Group group = groupRepository.getGroupById(groupId);
+            group.getMembers().add(user);
+            group.setQuizUrl(quizUrl);
+            groupRepository.addMemberToGroup(group);
+            groupRepository.setQuizSessionForMember(group, user, newQuizSession);
 
             return quizDto;
         }
 
         quizDto.setQuizSession(new QuizSessionDto());
+
         return quizDto;
     }
 

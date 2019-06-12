@@ -83,7 +83,7 @@ public class GroupService {
 
         List<MemberResultDto> results = new ArrayList<>();
         for (User member : group.getMembers()) {
-            for (QuizSession quizSession : quizSessionRepository.getQuizSessionsByUser(member)) {
+            for (QuizSession quizSession : quizSessionRepository.getQuizSessionsByGroupMember(member)) {
                 if (questionService.isAlreadyPassedQuiz(topics, quizSession, difficulties)
                         && questionService.isDoneQuiz(quizSession)) {
 
