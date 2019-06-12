@@ -45,11 +45,9 @@ public class QuestionService {
         this.topicRepository = topicRepository;
     }
 
-    public QuizDto getQuestionsByUrl(String[] topicNames,
+    public QuizDto getQuestionsByUrl(Topic[] topics,
                                      Long userId,
                                      HttpSession httpSession) {
-
-        Topic[] topics = Arrays.stream(topicNames).map(topicRepository::getTopicByName).toArray(Topic[]::new);
 
         return getQuestions(topics, userId, httpSession, "Просте");
     }

@@ -3,6 +3,7 @@ package com.interlink.quiz.controller;
 import com.interlink.quiz.auth.security.JwtTokenProvider;
 import com.interlink.quiz.csv.CsvParserService;
 import com.interlink.quiz.object.CuratorQuiz;
+import com.interlink.quiz.object.Topic;
 import com.interlink.quiz.object.dto.FilteredQuizDto;
 import com.interlink.quiz.object.dto.QuizAnswerDto;
 import com.interlink.quiz.object.dto.QuizDto;
@@ -21,7 +22,7 @@ import java.io.IOException;
 import java.util.Base64;
 
 @RestController
-public class QuizController {
+public class QuestionController {
 
     private final QuestionService questionService;
     private final QuizAnswerService quizAnswerService;
@@ -30,11 +31,11 @@ public class QuizController {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    public QuizController(QuestionService questionService,
-                          QuizAnswerService quizAnswerService,
-                          GroupService groupService,
-                          CsvParserService csvParserService,
-                          JwtTokenProvider jwtTokenProvider) {
+    public QuestionController(QuestionService questionService,
+                              QuizAnswerService quizAnswerService,
+                              GroupService groupService,
+                              CsvParserService csvParserService,
+                              JwtTokenProvider jwtTokenProvider) {
 
         this.questionService = questionService;
         this.quizAnswerService = quizAnswerService;
@@ -82,6 +83,23 @@ public class QuizController {
 
         return new ResponseEntity<>(quizDto, HttpStatus.OK);
     }
+
+    @GetMapping("/quiz/{topicUrl}")
+    public ResponseEntity<?> getQuestionsByGuestUrl(@PathVariable String topicUrl,
+                                                    @RequestHeader(value = "auth-token", required = false) String token,
+                                                    HttpSession httpSession) throws IOException {
+
+        Long userId = null;
+        if (!token.isEmpty()) {
+            userId = jwtTokenProvider.getUserIdFromJWT(token);
+        }
+
+        byte[] decode = Base64.getDecoder().decode(topicUrl);
+        String topics = new String(decode);
+        Topic[] topicArray = new ObjectMapper().readValue(topics, Topic[].class);
+        return new ResponseEntity<>(questionService.getQuestionsByUrl(topicArray, userId, httpSession), HttpStatus.OK);
+    }
+
 
     @PostMapping("/quiz-answer")
     public ResponseEntity saveQuizAnswer(@RequestBody QuizAnswerDto quizAnswerDto) {
