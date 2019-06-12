@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 
 @RestController
@@ -82,23 +81,6 @@ public class QuizController {
         groupService.addMemberToGroup(curatorQuiz.getGroupId(), userId, url);
 
         return new ResponseEntity<>(quizDto, HttpStatus.OK);
-    }
-
-    @GetMapping("/quiz/{topicUrl}")
-    public QuizDto getQuestionsByUrl(@PathVariable String topicUrl,
-                                     @RequestHeader(value = "auth-token", required = false) String token,
-                                     HttpSession httpSession) {
-
-        Long userId = null;
-        if (!token.isEmpty()) {
-            userId = jwtTokenProvider.getUserIdFromJWT(token);
-        }
-
-        byte[] decodeTopics = Base64.getDecoder().decode(topicUrl);
-        String strTopicUrl = new String(decodeTopics);
-        String[] topicNames = strTopicUrl.split("\\+");
-
-        return questionService.getQuestionsByUrl(topicNames, userId, httpSession);
     }
 
     @PostMapping("/quiz-answer")

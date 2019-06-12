@@ -62,9 +62,8 @@ public class QuestionService {
         List<Topic> topics = Arrays.stream(topicsArray).collect(toList());
 
         if (difficulty.equals("Середнє") || difficulty.equals("Складне")) return new QuizDto();
-
+        QuizDto quizDto = new QuizDto();
         if (isPresentQuestionsWithThisDifficulty(topics, Collections.singletonList(difficulty))) {
-            QuizDto quizDto = new QuizDto();
             List<QuestionDto> questions = getQuestionsByTopics(topics, Collections.singletonList(difficulty));
             quizDto.setCountOfQuestionsInQuiz(questions.size());
             List<QuizSession> quizSessions;
@@ -107,11 +106,10 @@ public class QuestionService {
                     )
             );
             quizDto.setQuestions(questions);
-
             return quizDto;
         }
-
-        return new QuizDto();
+        quizDto.setQuizSession(new QuizSessionDto());
+        return quizDto;
     }
 
     public QuizDto getQuestionsToGroup(CuratorQuiz curatorQuiz,
@@ -121,8 +119,8 @@ public class QuestionService {
         List<Topic> topics = Arrays.stream(curatorQuiz.getTopics()).collect(toList());
         List<String> difficulties = Arrays.stream(curatorQuiz.getDifficulties()).collect(toList());
 
+        QuizDto quizDto = new QuizDto();
         if (isPresentQuestionsWithThisDifficulty(topics, difficulties)) {
-            QuizDto quizDto = new QuizDto();
             List<QuestionDto> questions = getQuestionsByTopicsAndDifficulties(topics, difficulties);
             quizDto.setCountOfQuestionsInQuiz(questions.size());
             List<QuizSession> quizSessions = quizSessionRepository.getQuizSessionsByUser(userRepository.getUserById(userId));
@@ -160,7 +158,8 @@ public class QuestionService {
             return quizDto;
         }
 
-        return new QuizDto();
+        quizDto.setQuizSession(new QuizSessionDto());
+        return quizDto;
     }
 
     public void addQuestionsInQuizSession(QuizSessionDto quizSessionDto) {

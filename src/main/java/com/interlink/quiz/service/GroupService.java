@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 
@@ -53,8 +54,19 @@ public class GroupService {
         groupRepository.addMemberToGroup(group);
     }
 
-    public GroupResultDto getResultByGroup(Long id) throws IOException {
-        Group group = groupRepository.getGroupById(id);
+    public List<GroupResultDto> getResultsByGroups(Long userId) throws IOException {
+        List<Group> groups = groupRepository.getGroupsByCurator(userId.intValue());
+        List<GroupResultDto> result = new ArrayList<>();
+        for (Group group : groups) {
+            result.add(getResultByGroup(group));
+        }
+
+        return result;
+    }
+
+    private GroupResultDto getResultByGroup(Group group) throws IOException {
+        if (group.getQuizUrl() == null) return null;
+
         byte[] decode = Base64.getDecoder().decode(group.getQuizUrl());
         String test = new String(decode);
         CuratorQuiz curatorQuiz = new ObjectMapper().readValue(test, CuratorQuiz.class);
@@ -63,6 +75,7 @@ public class GroupService {
 
         GroupResultDto groupResultDto = new GroupResultDto();
         groupResultDto.setGroupName(group.getName());
+        groupResultDto.setQuizUrl(group.getQuizUrl());
 
         List<MemberResultDto> results = new ArrayList<>();
         for (User member : group.getMembers()) {
@@ -84,7 +97,7 @@ public class GroupService {
     private Group createGroup(GroupDto groupDto) {
         Group group = new Group();
         group.setName(groupDto.getName());
-        group.setCurator(userRepository.getUserById(groupDto.getCuratorId()));
+        group.setCurator(userRepository.getUserById((long) groupDto.getCuratorId()));
 
         return group;
     }
