@@ -24,8 +24,6 @@ export default class TestPassing extends Component {
         numberOfQuestions: 0,
         continueTestButton: false,
         isLinkTestAlreadyPassed: false,
-
-
     }
     postQuestion = () => {
         axios.post('/questions', this.props.topics)
@@ -116,7 +114,7 @@ export default class TestPassing extends Component {
     }
 
     render() {
-
+        console.log(this.state.isLinkTestAlreadyPassed);
         if (this.state.sessionId === undefined || this.state.questions === null) {
             return (
 
@@ -144,7 +142,7 @@ export default class TestPassing extends Component {
                         </React.Fragment>)
                 } else {
                     return (
-                        (this.state.isLinkTestAlreadyPassed) ? <Redirect to="/"/> :
+                        (this.props.topics.questionsFromLink) ? <Redirect to="/"/> :
                             <TotalResultTesting sessionId={this.state.sessionId}/>
                     );
                 }
