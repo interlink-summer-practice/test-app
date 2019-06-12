@@ -44,9 +44,9 @@ export default class Question extends Component {
         const {id, name, difficulty, topic, answers} = this.props.question;
         return (
             <div className="test">
-                < QuizTimeLine currentNumberOfQuestion={this.props.currentNumberOfQuestion} numberOfQuestions={this.props.numberOfQuestions} />
+                <QuizTimeLine currentNumberOfQuestion={this.props.currentNumberOfQuestion} numberOfQuestions={this.props.numberOfQuestions} />
                 <FormControl component="fieldset">
-                    <FormLabel component="legend">{name}</FormLabel>
+                    <FormLabel component="legend" className="question-name form">{name}</FormLabel>
                     <RadioGroup
                         value={this.state.value}
                         onChange={this.handleChange}
@@ -57,7 +57,7 @@ export default class Question extends Component {
                     }
                     </RadioGroup>
                 </FormControl>
-                <Button variant="contained" color="primary" onClick={this.nextQuestion}>
+                <Button variant="contained" color="primary" className="submit-ansver-button" onClick={this.nextQuestion}>
                     ANSWER
                 </Button>
             </div>

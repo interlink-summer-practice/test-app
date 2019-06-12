@@ -6,6 +6,7 @@ import UpdateResultAlertDialog from '../update-result-alert-dialog/UpdateResultA
 import ResultBySubjectsContainer from "../result-by-subjects/ResultBySubjectsContainer";
 import DifficultyDialog from '../difficulty-dialog/DifficultyDialog'
 import {withRouter, Route, Redirect} from 'react-router-dom';
+import LinkAlreadyUsedDialog from "../link-already-used-dialog/LinkAlreadyUsedDialog";
 
 
 export default class TestPassing extends Component {
@@ -22,6 +23,7 @@ export default class TestPassing extends Component {
         currentNumberOfQuestion: 1,
         numberOfQuestions: 0,
         continueTestButton: false,
+        isLinkTestAlreadyPassed: false,
 
 
     }
@@ -86,7 +88,7 @@ export default class TestPassing extends Component {
                 state.questions = this.props.topics.questionsFromLink;
                 state.sessionId = this.props.topics.sessionId;
                 state.isDataLoaded = true;
-                state.isAlreadyPassed = this.props.topics.passed;
+                state.isLinkTestAlreadyPassed = this.props.topics.passed;
                 return state;
             });
         } else {
@@ -114,6 +116,7 @@ export default class TestPassing extends Component {
     }
 
     render() {
+
         if (this.state.sessionId === undefined) {
             return (
 
@@ -128,18 +131,22 @@ export default class TestPassing extends Component {
                     return (<ResultBySubjectsContainer sessionId={this.state.sessionId}
                                                        showResultBySubjects={this.showResultBySubjects}/>)
                 } else if (this.state.questions[this.state.i] !== undefined) {
-                    return (<React.Fragment>
-                        <Question currentNumberOfQuestion={this.state.currentNumberOfQuestion}
-                                  numberOfQuestions={this.state.numberOfQuestions}
-                                  question={this.state.questions[0 + this.state.i]}
-                                  nextQuestion={this.nextQuestion}/>
-                        <UpdateResultAlertDialog continueTest={this.continueTest}
-                                                 continueTestButton={this.state.continueTestButton}
-                                                 showResultBySubjects={this.showResultBySubjects}
-                                                 restartTest={this.restartTest} open={this.state.isAlreadyPassed}/>
-                    </React.Fragment>)
+                    return (
+                        (this.state.isLinkTestAlreadyPassed) ? <LinkAlreadyUsedDialog open={true}/> : <React.Fragment>
+                            <Question currentNumberOfQuestion={this.state.currentNumberOfQuestion}
+                                      numberOfQuestions={this.state.numberOfQuestions}
+                                      question={this.state.questions[0 + this.state.i]}
+                                      nextQuestion={this.nextQuestion}/>
+                            <UpdateResultAlertDialog continueTest={this.continueTest}
+                                                     continueTestButton={this.state.continueTestButton}
+                                                     showResultBySubjects={this.showResultBySubjects}
+                                                     restartTest={this.restartTest} open={this.state.isAlreadyPassed}/>
+                        </React.Fragment>)
                 } else {
-                    return (<TotalResultTesting sessionId={this.state.sessionId}/>)
+                    return (
+                        (this.state.isLinkTestAlreadyPassed) ? <Redirect to="/"/> :
+                            <TotalResultTesting sessionId={this.state.sessionId}/>
+                    );
                 }
 
             } else {
