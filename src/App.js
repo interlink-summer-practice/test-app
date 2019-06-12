@@ -242,7 +242,6 @@ export default class App extends Component {
                     <Route path="/questions/:id" component={TestsLinkResolver}/>
                     <Route path="/account" component={UserAccount}/>
                     <Route path="/user-statistic" component={UserAccountStatistic}/>
-
                     <Route path="/detailed-result"
                            render={(props) => (<ResultBySubjectsContainer sessionId={props.location.state}/>)}/>
                 </div>
