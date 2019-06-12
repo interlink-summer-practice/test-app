@@ -2,15 +2,16 @@ package com.interlink.quiz.object.dto;
 
 public class GroupDto {
 
-    private Long id;
+    private int id;
     private String name;
-    private Long curatorId;
+    private int curatorId;
+    private String quizUrl;
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -22,11 +23,19 @@ public class GroupDto {
         this.name = name;
     }
 
-    public Long getCuratorId() {
+    public int getCuratorId() {
         return curatorId;
     }
 
-    public void setCuratorId(Long curatorId) {
+    public void setCuratorId(int curatorId) {
         this.curatorId = curatorId;
+    }
+
+    public String getQuizUrl() {
+        return quizUrl;
+    }
+
+    public void setQuizUrl(String quizUrl) {
+        this.quizUrl = quizUrl;
     }
 }

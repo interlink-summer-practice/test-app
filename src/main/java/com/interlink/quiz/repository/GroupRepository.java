@@ -7,6 +7,8 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class GroupRepository {
 
@@ -36,5 +38,11 @@ public class GroupRepository {
         Transaction transaction = session.beginTransaction();
         session.update(group);
         transaction.commit();
+    }
+
+    public List<Group> getGroupsByCurator(Long userId) {
+        return sessionFactory.getCurrentSession()
+                .createQuery("from Group g where g.curator.id = :userId", Group.class)
+                .list();
     }
 }

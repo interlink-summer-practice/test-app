@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 
@@ -53,6 +54,13 @@ public class GroupService {
         groupRepository.addMemberToGroup(group);
     }
 
+    public List<GroupDto> getGroupsByCurator(Long userId) {
+        return groupRepository.getGroupsByCurator(userId)
+                .stream()
+                .map(this::createGroupDto)
+                .collect(toList());
+    }
+
     public GroupResultDto getResultByGroup(Long id) throws IOException {
         Group group = groupRepository.getGroupById(id);
         byte[] decode = Base64.getDecoder().decode(group.getQuizUrl());
@@ -84,9 +92,19 @@ public class GroupService {
     private Group createGroup(GroupDto groupDto) {
         Group group = new Group();
         group.setName(groupDto.getName());
-        group.setCurator(userRepository.getUserById(groupDto.getCuratorId()));
+        group.setCurator(userRepository.getUserById((long) groupDto.getCuratorId()));
 
         return group;
+    }
+
+    private GroupDto createGroupDto(Group group) {
+        GroupDto groupDto = new GroupDto();
+        groupDto.setId(group.getId());
+        groupDto.setName(group.getName());
+        groupDto.setQuizUrl(group.getQuizUrl());
+        groupDto.setCuratorId(group.getCurator().getId());
+
+        return groupDto;
     }
 
     private MemberResultDto createMemberResultDto(QuizSession quizSession) {
