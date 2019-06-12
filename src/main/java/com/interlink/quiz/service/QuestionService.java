@@ -66,12 +66,12 @@ public class QuestionService {
                     }
                     if (isDoneQuiz(quizSession)) {
                         quizDto.setPassed(true);
-                        quizDto.setQuizSession(quizSession);
+                        quizDto.setQuizSession(createQuizSessionDto(quizSession));
                         quizDto.setQuestions(questions);
 
                         return quizDto;
                     } else {
-                        quizDto.setQuizSession(quizSession);
+                        quizDto.setQuizSession(createQuizSessionDto(quizSession));
                         quizDto.setQuestions(getNotPassedQuestionsByTopics(topics, quizSession));
                         quizDto.setCountOfPassedQuestions(quizAnswerRepository.getCountOfPassedQuestions(quizSession));
 
@@ -80,14 +80,16 @@ public class QuestionService {
                 }
             }
 
-            quizDto.setQuizSession(createNewQuizSession(
-                    httpSession,
-                    userId,
-                    topics,
-                    Collections.singletonList(difficulty),
-                    questions.stream()
-                            .map(this::createQuestionFromQuestionDto)
-                            .collect(Collectors.toList()))
+            quizDto.setQuizSession(createQuizSessionDto(
+                    createNewQuizSession(
+                            httpSession,
+                            userId,
+                            topics,
+                            Collections.singletonList(difficulty),
+                            questions.stream()
+                                    .map(this::createQuestionFromQuestionDto)
+                                    .collect(toList()))
+                    )
             );
             quizDto.setQuestions(questions);
 
@@ -113,12 +115,12 @@ public class QuestionService {
                 if (isAlreadyPassedQuiz(topics, quizSession, difficulties)) {
                     if (isDoneQuiz(quizSession)) {
                         quizDto.setPassed(true);
-                        quizDto.setQuizSession(quizSession);
+                        quizDto.setQuizSession(createQuizSessionDto(quizSession));
                         quizDto.setQuestions(questions);
 
                         return quizDto;
                     } else {
-                        quizDto.setQuizSession(quizSession);
+                        quizDto.setQuizSession(createQuizSessionDto(quizSession));
                         quizDto.setQuestions(getNotPassedQuestionsByTopics(topics, quizSession));
                         quizDto.setCountOfPassedQuestions(quizAnswerRepository.getCountOfPassedQuestions(quizSession));
 
@@ -127,14 +129,16 @@ public class QuestionService {
                 }
             }
 
-            quizDto.setQuizSession(createNewQuizSession(
-                    httpSession,
-                    userId,
-                    topics,
-                    difficulties,
-                    questions.stream()
-                            .map(this::createQuestionFromQuestionDto)
-                            .collect(Collectors.toList()))
+            quizDto.setQuizSession(createQuizSessionDto(
+                    createNewQuizSession(
+                            httpSession,
+                            userId,
+                            topics,
+                            difficulties,
+                            questions.stream()
+                                    .map(this::createQuestionFromQuestionDto)
+                                    .collect(Collectors.toList()))
+                    )
             );
             quizDto.setQuestions(questions);
 
@@ -206,8 +210,8 @@ public class QuestionService {
     }
 
     public boolean isAlreadyPassedQuiz(List<Topic> selectedTopics,
-                                        QuizSession quizSession,
-                                        List<String> difficulty) {
+                                       QuizSession quizSession,
+                                       List<String> difficulty) {
 
         if (quizSession == null) return false;
         if (quizSession.getDifficulties().size() != difficulty.size()) return false;
@@ -275,5 +279,12 @@ public class QuestionService {
         question.setAnswers(questionDto.getAnswers());
 
         return question;
+    }
+
+    private QuizSessionDto createQuizSessionDto(QuizSession quizSession) {
+        QuizSessionDto quizSessionDto = new QuizSessionDto();
+        quizSessionDto.setId(quizSession.getId());
+
+        return quizSessionDto;
     }
 }
