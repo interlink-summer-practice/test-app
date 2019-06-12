@@ -66,9 +66,13 @@ export default class UserAccount extends React.Component {
                 <div className="userPassedTests">
                     {
                         this.state.account.map((group, index) => {
-                            return (
-                               <GroupItem group={group} key={index}/>
-                            )
+                            if (group !== null) {
+                                return (
+                                    <GroupItem group={group} key={index}/>
+                                )
+                            } else {
+                                return null;
+                            }
                         })
                     }
                 </div>
