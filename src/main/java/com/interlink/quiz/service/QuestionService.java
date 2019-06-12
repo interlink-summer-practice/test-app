@@ -45,15 +45,13 @@ public class QuestionService {
         this.topicRepository = topicRepository;
     }
 
-    public QuizDto getQuestionsByUrl(String topicUrl,
-                                     String difficultyUrl,
+    public QuizDto getQuestionsByUrl(String[] topicNames,
                                      Long userId,
-                                     HttpSession httpSession) throws UnsupportedEncodingException {
+                                     HttpSession httpSession) {
 
-        String[] topicNames = URLDecoder.decode(topicUrl, StandardCharsets.UTF_8.name()).split("\\+");
         Topic[] topics = Arrays.stream(topicNames).map(topicRepository::getTopicByName).toArray(Topic[]::new);
 
-        return getQuestions(topics, userId, httpSession, difficultyUrl);
+        return getQuestions(topics, userId, httpSession, "Просте");
     }
 
     public QuizDto getQuestions(Topic[] topicsArray,
