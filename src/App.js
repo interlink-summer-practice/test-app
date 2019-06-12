@@ -57,7 +57,8 @@ export default class App extends Component {
         this.setState({
             isDrawerOpen: false,
             isAuthenticated: false,
-            isAdmin: false
+            isAdmin: false,
+            isCurator: false
         });
         axios.defaults.headers.common['auth-token'] = '';
         localStorage.removeItem('auth-token');
@@ -82,12 +83,12 @@ export default class App extends Component {
         this.setState({isDrawerOpen: !this.state.isDrawerOpen});
     }
 
-    loginDialogHandler = (isAdmin = false, isAuthenticated = false) => {
+    loginDialogHandler = (isCurator = false, isAuthenticated = false) => {
         this.setState({
             isDrawerOpen: false,
             isLoginDialogOpen: !this.state.isLoginDialogOpen,
             isAuthenticated: isAuthenticated,
-            isCurator: isAdmin
+            isCurator: isCurator
         });
     };
 
@@ -236,7 +237,7 @@ export default class App extends Component {
                     <SignUpDialog open={this.state.isSignUpDialogOpen} signUpDialogHandler={this.signUpDialogHandler}/>
                     <StartTestsDialog open={this.state.isStartTestsDialogOpen}
                                       startTestsDialogHandler={this.startTestsDialogHandler}
-                                      isAdmin={this.state.isCurator}
+                                      isCurator={this.state.isCurator}
                                       testsLinkDialogHandler={this.testsLinkDialogHandler}
 
                     />
@@ -250,7 +251,7 @@ export default class App extends Component {
                            render={() => (<StartPage startTestsDialogHandler={this.startTestsDialogHandler}/>)}/>
                     <Route path="/quiz" exact render={(props) => (<TestPassing topics={props.location.state}/>)}/>
                     <Route path="/questions/:id" component={TestsLinkResolver}/>
-                    <Route path="/account" render={() => (<UserAccount isAdmin={this.state.isAdmin}/>)}/>
+                    <Route path="/account" render={() => (<UserAccount isCurator={this.state.isCurator}/>)}/>
                     <Route path="/user-statistic" component={UserAccountStatistic}/>
                     <Route path="/detailed-result"
                            render={(props) => (<ResultBySubjectsContainer sessionId={props.location.state}/>)}/>
