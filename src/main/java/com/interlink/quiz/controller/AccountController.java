@@ -50,7 +50,7 @@ public class AccountController {
         return quizResultService.getTopicsResultByUser(userId);
     }
 
-    @PostMapping("/account/groups")
+    @GetMapping("/account/groups")
     public ResponseEntity<?> getResultToGroup(@RequestHeader(value = "auth-token", required = false) String token)
             throws IOException {
 
