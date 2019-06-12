@@ -108,7 +108,7 @@ public class QuestionService {
         if (isPresentQuestionsWithThisDifficulty(topics, difficulties)) {
             List<QuestionDto> questions = getQuestionsByTopicsAndDifficulties(topics, difficulties);
             quizDto.setCountOfQuestionsInQuiz(questions.size());
-            List<QuizSession> quizSessions = quizSessionRepository.getQuizSessionsByUser(userRepository.getUserById(userId));
+            List<QuizSession> quizSessions = quizSessionRepository.getQuizSessionsByGroupMember(userRepository.getUserById(userId));
             for (QuizSession quizSession : quizSessions) {
                 if (isAlreadyPassedQuiz(topics, quizSession, difficulties)) {
                     if (isDoneQuiz(quizSession)) {
