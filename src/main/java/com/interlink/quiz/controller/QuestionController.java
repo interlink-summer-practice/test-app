@@ -96,6 +96,7 @@ public class QuestionController {
         byte[] decode = Base64.getDecoder().decode(topicUrl);
         String topics = new String(decode);
         Topic[] topicArray = new ObjectMapper().readValue(topics, Topic[].class);
+
         return new ResponseEntity<>(questionService.getQuestionsByUrl(topicArray, userId, httpSession), HttpStatus.OK);
     }
 

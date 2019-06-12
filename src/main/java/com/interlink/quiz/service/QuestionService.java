@@ -24,7 +24,6 @@ public class QuestionService {
     private final QuizSessionRepository quizSessionRepository;
     private final QuizAnswerRepository quizAnswerRepository;
     private final UserResultRepository userResultRepository;
-    private final TopicRepository topicRepository;
     private final GroupRepository groupRepository;
 
     @Autowired
@@ -33,7 +32,6 @@ public class QuestionService {
                            QuizSessionRepository quizSessionRepository,
                            QuizAnswerRepository quizAnswerRepository,
                            UserResultRepository userResultRepository,
-                           TopicRepository topicRepository,
                            GroupRepository groupRepository) {
 
         this.questionRepository = questionRepository;
@@ -41,7 +39,6 @@ public class QuestionService {
         this.quizSessionRepository = quizSessionRepository;
         this.quizAnswerRepository = quizAnswerRepository;
         this.userResultRepository = userResultRepository;
-        this.topicRepository = topicRepository;
         this.groupRepository = groupRepository;
     }
 
