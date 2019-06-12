@@ -1,17 +1,24 @@
 package com.interlink.quiz.object.dto;
 
-import com.interlink.quiz.object.QuizSession;
-
 import java.util.List;
 
 public class QuizDto {
 
     private List<QuestionDto> questions;
-    private QuizSession quizSession;
+    private QuizSessionDto quizSession;
     private Long countOfPassedQuestions;
     private int countOfQuestionsInQuiz;
     private boolean passed;
+
     private boolean existNewQuestions;
+
+    public QuizSessionDto getQuizSession() {
+        return quizSession;
+    }
+
+    public void setQuizSession(QuizSessionDto quizSession) {
+        this.quizSession = quizSession;
+    }
 
     public int getCountOfQuestionsInQuiz() {
         return countOfQuestionsInQuiz;
@@ -27,14 +34,6 @@ public class QuizDto {
 
     public void setQuestions(List<QuestionDto> questions) {
         this.questions = questions;
-    }
-
-    public QuizSession getQuizSession() {
-        return quizSession;
-    }
-
-    public void setQuizSession(QuizSession quizSession) {
-        this.quizSession = quizSession;
     }
 
     public boolean isPassed() {
