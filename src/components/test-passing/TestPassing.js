@@ -81,7 +81,7 @@ export default class TestPassing extends Component {
     componentDidMount() {
         console.log(this.props.topics.countOfQuestionsInQuiz);
 
-        if (this.props.topics.questionsFromLink) {
+        if (this.props.topics.questionsFromLink || this.props.topics.questionsFromLink === null ) {
             this.setState((state) => {
                 state.currentNumberOfQuestion = this.props.topics.countOfPassedQuestions + 1 || 1;
                 state.numberOfQuestions = this.props.topics.countOfQuestionsInQuiz;
@@ -117,7 +117,7 @@ export default class TestPassing extends Component {
 
     render() {
 
-        if (this.state.sessionId === undefined) {
+        if (this.state.sessionId === undefined || this.state.questions === null) {
             return (
 
                 <React.Fragment>
