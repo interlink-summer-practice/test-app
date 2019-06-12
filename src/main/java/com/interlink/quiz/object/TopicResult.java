@@ -1,11 +1,16 @@
 package com.interlink.quiz.object;
 
-public class TopicResult {
+public class TopicResult implements Comparable<TopicResult>{
 
     private Topic topic;
     private long numberOfQuestions;
     private long numberOfCorrectAnswers;
     private double result;
+
+    @Override
+    public int compareTo(TopicResult o) {
+        return Double.compare(this.getResult(), o.getResult());
+    }
 
     public Topic getTopic() {
         return topic;

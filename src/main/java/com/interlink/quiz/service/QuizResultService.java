@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class QuizResultService {
@@ -94,7 +95,7 @@ public class QuizResultService {
             }
         }
 
-        return new ArrayList<>(topicResults.values());
+        return topicResults.values().stream().sorted().collect(Collectors.toList());
     }
 
     private void saveUserResult(QuizSession quizSession, int mark) {
