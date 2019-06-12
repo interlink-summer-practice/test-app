@@ -1,5 +1,6 @@
 .appBarTitle {
     margin-left: 20px !important;
+    cursor: pointer;
 }
 
 .mainContent {
