@@ -37,7 +37,7 @@ public class GroupController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        groupDto.setCuratorId(userId);
+        groupDto.setCuratorId(userId.intValue());
 
         return new ResponseEntity<>(groupService.saveGroup(groupDto), HttpStatus.OK);
     }
