@@ -50,7 +50,8 @@ public class GroupRepository {
                 "where group_id = :groupId and user_id = :userId")
                 .setParameter("quizSessionId", quizSession.getId())
                 .setParameter("groupId", group.getId())
-                .setParameter("userId", user.getId());
+                .setParameter("userId", user.getId())
+                .executeUpdate();
         transaction.commit();
     }
 
