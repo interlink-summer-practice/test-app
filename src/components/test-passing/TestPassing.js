@@ -77,7 +77,7 @@ export default class TestPassing extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props.topics);
+        console.log(this.props.topics.countOfQuestionsInQuiz);
 
         if (this.props.topics.questionsFromLink) {
             this.setState((state) => {
