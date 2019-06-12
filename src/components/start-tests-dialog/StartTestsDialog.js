@@ -98,7 +98,7 @@ class StartTestsDialog extends React.Component {
                     <DialogTitle id="form-dialog-title">Start tests</DialogTitle>
                     <DialogContent>
                         {
-                            this.props.isAdmin
+                            this.props.isCurator
                                 ? (
                                     <TextField
                                         onChange={(e) => {
@@ -141,7 +141,7 @@ class StartTestsDialog extends React.Component {
                         </Button>
 
                         {
-                            this.props.isAdmin
+                            this.props.isCurator
                                 ? (
                                     <Button color="primary" onClick={this.createTests}>
                                         Create tests

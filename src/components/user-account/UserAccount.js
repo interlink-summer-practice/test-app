@@ -3,6 +3,7 @@ import './UserAccount.css';
 import PassedTest from "../passed-test/PassedTest";
 import axios from 'axios';
 import {Redirect} from "react-router-dom";
+import GroupItem from "../group-item/GroupItem";
 
 export default class UserAccount extends React.Component {
 
@@ -13,13 +14,17 @@ export default class UserAccount extends React.Component {
     componentDidMount() {
 
         if (localStorage.getItem('auth-token') !== null) {
-            axios.get('/account')
+            const requestUrl = this.props.isCurator ? '/account/groups' : '/account';
+
+            axios.get(requestUrl)
                 .then(res => {
+                    console.log(res);
                     this.setState({
                         account: res.data
                     });
 
                 });
+
         }
 
     }
@@ -30,7 +35,7 @@ export default class UserAccount extends React.Component {
             return <Redirect to='/'/>
         }
 
-        if (this.state.account !== null) {
+        if (this.state.account !== null && !this.props.isCurator) {
             return (
                 <div>
                     <div className="userPassedTests">
@@ -43,7 +48,7 @@ export default class UserAccount extends React.Component {
                                             topics: passedTest.topics,
                                             percentOfPassingQuiz: passedTest.percentOfPassingQuiz,
                                             difficulty: passedTest.difficulty,
-                                            passed : passedTest.passed
+                                            passed: passedTest.passed
 
                                         }
 
@@ -54,6 +59,20 @@ export default class UserAccount extends React.Component {
                     </div>
                 </div>
             );
+        }
+
+        if (this.state.account !== null && this.props.isCurator) {
+            return (
+                <div className="userPassedTests">
+                    {
+                        this.state.account.map((group, index) => {
+                            return (
+                               <GroupItem group={group} key={index}/>
+                            )
+                        })
+                    }
+                </div>
+            )
         }
 
         return (

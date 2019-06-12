@@ -26,6 +26,10 @@ import TestsLinkDialog from "./components/tests-link-dialog/TestsLinkDialog";
 import TestsLinkResolver from "./components/tests-link-resolver/TestsLinkResolver";
 import UserAccountStatistic from "./components/user-account-statistic/UserAccountStatistic";
 
+
+export const ADMIN_SECRET = '1111';
+export const USER_SECRET = '2222';
+
 (function () {
     const token = localStorage.getItem('auth-token');
     if (token) {
@@ -44,7 +48,7 @@ export default class App extends Component {
         isStartTestsDialogOpen: false,
         isTestsLinkDialogOpen: false,
         isAuthenticated: localStorage.getItem('auth-token'),
-        isAdmin: false,
+        isCurator: localStorage.getItem('isCurator') === ADMIN_SECRET,
         lastTestsLink: '',
         userStatistic: []
     };
@@ -58,6 +62,7 @@ export default class App extends Component {
         localStorage.removeItem('auth-token');
         localStorage.removeItem('userFirstName');
         localStorage.removeItem('userLastName');
+        localStorage.removeItem('isCurator');
         history.push('/');
     };
 
@@ -81,7 +86,7 @@ export default class App extends Component {
             isDrawerOpen: false,
             isLoginDialogOpen: !this.state.isLoginDialogOpen,
             isAuthenticated: isAuthenticated,
-            isAdmin: isAdmin
+            isCurator: isAdmin
         });
     };
 
@@ -226,7 +231,7 @@ export default class App extends Component {
                     <SignUpDialog open={this.state.isSignUpDialogOpen} signUpDialogHandler={this.signUpDialogHandler}/>
                     <StartTestsDialog open={this.state.isStartTestsDialogOpen}
                                       startTestsDialogHandler={this.startTestsDialogHandler}
-                                      isAdmin={this.state.isAdmin}
+                                      isAdmin={this.state.isCurator}
                                       testsLinkDialogHandler={this.testsLinkDialogHandler}
 
                     />
