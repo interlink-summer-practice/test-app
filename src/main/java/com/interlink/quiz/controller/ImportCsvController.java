@@ -33,8 +33,7 @@ public class ImportCsvController {
 
     @GetMapping("/test")
     public User test() {
-        Long id = 1L;
-        return userJpaRepository.findById(id).orElse(new User());
+        int id = 1;
+        return userJpaRepository.findById(id);
     }
-
 }

@@ -7,6 +7,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManagerFactory;
 import java.util.List;
 
 @Repository
@@ -15,8 +16,8 @@ public class GroupRepository {
     private final SessionFactory sessionFactory;
 
     @Autowired
-    public GroupRepository(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    public GroupRepository(EntityManagerFactory entityManagerFactory) {
+        sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
     }
 
     public Group getGroupById(Long id) {

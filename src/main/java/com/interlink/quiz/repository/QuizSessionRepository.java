@@ -8,6 +8,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManagerFactory;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -17,8 +18,8 @@ public class QuizSessionRepository {
     private final SessionFactory sessionFactory;
 
     @Autowired
-    public QuizSessionRepository(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    public QuizSessionRepository(EntityManagerFactory entityManagerFactory) {
+        sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
     }
 
     public void createQuizSession(QuizSession quizSession) {

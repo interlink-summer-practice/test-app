@@ -1,8 +1,12 @@
 package com.interlink.quiz;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.flywaydb.core.Flyway;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
@@ -19,15 +23,16 @@ import java.util.Properties;
 @Configuration
 public class ApplicationConfig {
 
-    @Bean
-    public LocalSessionFactoryBean sessionFactory() {
-        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-        sessionFactory.setDataSource(dataSource());
-        sessionFactory.setPackagesToScan("com.interlink.quiz");
-        sessionFactory.setHibernateProperties(hibernateProperties());
-
-        return sessionFactory;
-    }
+//    @Bean
+//    public LocalSessionFactoryBean sessionFactory(DataSource dataSource,
+//                                                  Properties properties) {
+//        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
+//        sessionFactory.setDataSource(dataSource);
+//        sessionFactory.setPackagesToScan("com.interlink.quiz");
+//        sessionFactory.setHibernateProperties(properties);
+//
+//        return sessionFactory;
+//    }
 //
 //    @Bean
 //    public PlatformTransactionManager hibernateTransactionManager() {
@@ -38,9 +43,9 @@ public class ApplicationConfig {
 //    }
 
     @Bean
-    public Flyway flyway() {
+    public Flyway flyway(DataSource dataSource) {
         Flyway flyway = Flyway.configure()
-                .dataSource(dataSource())
+                .dataSource(dataSource)
                 .locations("/db/migration/")
                 .load();
         flyway.migrate();
@@ -48,17 +53,17 @@ public class ApplicationConfig {
         return flyway;
     }
 
-    @Bean
-    public DataSource dataSource() {
-        return new EmbeddedDatabaseBuilder()
-                .setType(EmbeddedDatabaseType.HSQL)
-                .build();
-    }
+//    @Bean
+//    public DataSource dataSource() {
+//        return new EmbeddedDatabaseBuilder()
+//                .setType(EmbeddedDatabaseType.HSQL)
+//                .build();
+//    }
 
     @Bean
     public JpaVendorAdapter jpaVendorAdapter() {
         HibernateJpaVendorAdapter bean = new HibernateJpaVendorAdapter();
-        bean.setDatabase(Database.H2);
+        bean.setDatabase(Database.POSTGRESQL);
         bean.setGenerateDdl(true);
         bean.setShowSql(true);
 
@@ -81,24 +86,25 @@ public class ApplicationConfig {
         return new JpaTransactionManager(entityManagerFactory);
     }
 
-//    @Bean
-//    public DataSource dataSource() {
-//        HikariConfig config = new HikariConfig();
-//        config.setJdbcUrl("jdbc:postgresql://localhost:5432/quizzes");
-//        config.setUsername("postgres");
-//        config.setPassword("postgres");
-//        config.setDriverClassName("org.postgresql.Driver");
-//
-//        return new HikariDataSource(config);
-//    }
-//
-    private Properties hibernateProperties() {
-        Properties hibernateProperties = new Properties();
-        hibernateProperties.setProperty(
+    @Bean
+    public DataSource dataSource() {
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl("jdbc:postgresql://localhost:5432/quizzes");
+        config.setUsername("postgres");
+        config.setPassword("postgres");
+        config.setDriverClassName("org.postgresql.Driver");
+
+        return new HikariDataSource(config);
+    }
+
+    @Bean
+    public Properties properties() {
+        Properties properties = new Properties();
+        properties.setProperty(
                 "hibernate.ddl-auto", "create-drop");
-        hibernateProperties.setProperty(
+        properties.setProperty(
                 "hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
 
-        return hibernateProperties;
+        return properties;
     }
 }

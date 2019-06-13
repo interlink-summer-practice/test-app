@@ -10,6 +10,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManagerFactory;
 import java.util.List;
 
 @Repository
@@ -18,8 +19,8 @@ public class QuizAnswerRepository {
     private final SessionFactory sessionFactory;
 
     @Autowired
-    public QuizAnswerRepository(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    public QuizAnswerRepository(EntityManagerFactory entityManagerFactory) {
+        sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
     }
 
     public void saveQuizAnswer(QuizAnswer quizAnswer) {
