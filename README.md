@@ -24,9 +24,9 @@ create database quizzes;
 docker-compose up
 ````
 
-### Frontend-проект (in terminal go ahead to folder project)
+### III. Frontend-проект (in terminal go ahead to folder project)
 
-* on terminal:
+on terminal:
 ````
 docker-compose build
 docker-compose up
