@@ -22,9 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
-        securedEnabled = true,
-        jsr250Enabled = false,
-        prePostEnabled = false
+        securedEnabled = true
 )
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -35,13 +33,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public SecurityConfig(UserAuthDetailsService userAuthDetailsService,
                           JwtAuthenticationEntryPoint unauthorizedHandler,
                           JwtTokenProvider jwtTokenProvider) {
+
         this.userAuthDetailsService = userAuthDetailsService;
         this.unauthorizedHandler = unauthorizedHandler;
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+    public void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(authenticationProvider());
     }
 
@@ -50,16 +49,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .cors()
                 .and()
-                    .csrf()
-                    .disable()
-                    .exceptionHandling()
-                    .authenticationEntryPoint(unauthorizedHandler)
+                .csrf()
+                .disable()
+                .exceptionHandling()
+                .authenticationEntryPoint(unauthorizedHandler)
                 .and()
-                    .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                    .authorizeRequests()
-                    .antMatchers("/",
+                .authorizeRequests()
+                .antMatchers("/",
                         "/favicon.ico",
                         "/**/*.png",
                         "/**/*.gif",
