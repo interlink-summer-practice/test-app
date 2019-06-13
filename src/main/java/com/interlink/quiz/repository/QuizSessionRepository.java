@@ -29,7 +29,7 @@ public interface QuizSessionRepository extends JpaRepository<QuizSession, Intege
     @Query(value = "select qs.* " +
             "from group_members gm " +
             "         left join quiz_session qs on gm.quiz_session_id = qs.id " +
-            "where gm.user_id = :userId", nativeQuery = true)
+            "where qs.user_id = :userId", nativeQuery = true)
     List<QuizSession> findAllByGroupMembers(@Param("userId") int userId);
 
 
@@ -39,7 +39,7 @@ public interface QuizSessionRepository extends JpaRepository<QuizSession, Intege
             "select qs.* " +
             "from group_members gm " +
             "         left join quiz_session qs on gm.quiz_session_id = qs.id " +
-            "where gm.user_id = :userId", nativeQuery = true)
+            "where qs.user_id = :userId", nativeQuery = true)
     List<QuizSession> findAllByUserId(@Param("userId") int userId);
 
     @Transactional

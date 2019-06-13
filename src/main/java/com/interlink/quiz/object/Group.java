@@ -26,7 +26,7 @@ public class Group {
     @ManyToMany
     @JoinTable(
             name = "group_members",
-            joinColumns = {@JoinColumn(name = "user_id")},
+            joinColumns = {@JoinColumn(name = "group_id")},
             inverseJoinColumns = {@JoinColumn(name = "quiz_session_id")}
     )
     private List<QuizSession> sessions;

@@ -73,7 +73,6 @@ public class GroupService {
                     && questionService.isDoneQuiz(quizSession)) {
 
                 results.add(createMemberResultDto(quizSession));
-                break;
             }
         }
 
