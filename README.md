@@ -1,13 +1,13 @@
 # Tests application
 Constructor of tests for InterLink LLC.
 ## Set up
-####I. Docker
+### I. Docker
 on terminal:
 ````
 docker network create tests-app-net
 ````
 
-####II. Backend (in terminal go ahead to folder project)
+### II. Backend (in terminal go ahead to folder project)
 
 tool window gradle -> clean -> build
 
@@ -24,7 +24,7 @@ create database quizzes;
 docker-compose up
 ````
 
-####Frontend-проект (in terminal go ahead to folder project)
+### Frontend-проект (in terminal go ahead to folder project)
 
 * on terminal:
 ````
