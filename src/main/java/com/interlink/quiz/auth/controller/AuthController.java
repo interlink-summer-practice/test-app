@@ -35,7 +35,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest,
+                                              HttpSession httpSession) {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -46,6 +47,8 @@ public class AuthController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtTokenProvider.generateToken(authentication);
+
+        httpSession.invalidate();
 
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, userService.isCurator(authentication)));
     }
