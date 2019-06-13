@@ -42,7 +42,7 @@ public class QuizSessionRepository {
 
     public List<QuizSession> getQuizSessionBySessionId(String sessionId) {
         return sessionFactory.getCurrentSession()
-                .createQuery("from QuizSession where session_id = :session_id", QuizSession.class)
+                .createQuery("from QuizSession where session_id = :session_id and user_id = null", QuizSession.class)
                 .setParameter("session_id", sessionId)
                 .list();
     }
