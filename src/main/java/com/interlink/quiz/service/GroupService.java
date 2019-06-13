@@ -47,7 +47,7 @@ public class GroupService {
     }
 
     public List<GroupResultDto> getResultsByGroups(Long userId) throws IOException {
-        List<Group> groups = groupRepository.findByCuratorId(userId.intValue());
+        List<Group> groups = groupRepository.findAllByCuratorId(userId.intValue());
         List<GroupResultDto> result = new ArrayList<>();
         for (Group group : groups) {
             result.add(getResultByGroup(group));

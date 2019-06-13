@@ -14,7 +14,7 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
 
     Group findById(int id);
 
-    List<Group> findByCuratorId(int curatorId);
+    List<Group> findAllByCuratorId(int curatorId);
 
     @Transactional
     @Query(value = "update group_members set quiz_session_id = :quizSessionId " +

@@ -8,20 +8,30 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManagerFactory;
 import java.util.List;
 
 @Repository
-public class QuizAnswerRepository {
+public interface QuizAnswerRepository extends JpaRepository<QuizAnswer, Integer> {
 
-    private final SessionFactory sessionFactory;
+    List<QuizAnswer> findAllByQuizSessionId(int quizSessionId);
 
-    @Autowired
-    public QuizAnswerRepository(EntityManagerFactory entityManagerFactory) {
-        sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
-    }
+    @Query(value = "select distinct on(qa.question_id) qa.* " +
+            "from quiz_answers qa " +
+            "left join questions q on qa.question_id = q.id " +
+            "left join quiz_session qs on qa.quiz_session_id = qs.id " +
+            "where qs.user_id = :userId " +
+            "  and q.topic_id = :topicId " +
+            "group by qs.id, qa.id", nativeQuery = true)
+    Long countByUserAndTopic(@Param("userId") int userId, @Param("topicId") int topicId);
+
+    @Query("select count(qa) from QuizAnswer qa ")
+    Long countOfRightAnswerByQuizSessionAndTopic();
 
     public void saveQuizAnswer(QuizAnswer quizAnswer) {
         Session session = sessionFactory.getCurrentSession();
@@ -88,6 +98,5 @@ public class QuizAnswerRepository {
                 .list();
 
         return list.size();
-
     }
 }

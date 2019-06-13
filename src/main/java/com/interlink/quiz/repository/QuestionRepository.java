@@ -18,19 +18,9 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
 
     Question findById(int id);
 
-    List<Question> findByTopicAndDifficulty(Topic topic, String difficulty);
+    List<Question> findAllByTopicAndDifficulty(Topic topic, String difficulty);
 
     Long countByTopicAndDifficulty(Topic topic, String difficulty);
-
-    @Query(value = "select distinct on(qa.question_id) qa.* " +
-            "from quiz_answers qa " +
-            "left join questions q on qa.question_id = q.id " +
-            "left join quiz_session qs on qa.quiz_session_id = qs.id " +
-            "left join users u on qs.user_id = u.id " +
-            "where u.id = :userId " +
-            "  and q.topic_id = :topicId " +
-            "group by qs.id, qa.id", nativeQuery = true)
-    Long countByUserAndTopic(@Param("userId") int userId, @Param("topicId") int topicId);
 
     public List<Question> getNotPassedQuestionsByTopic(Topic topic, QuizSession quizSession, String difficulty) {
 
