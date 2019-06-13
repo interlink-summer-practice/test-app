@@ -1,7 +1,9 @@
 package com.interlink.quiz.object;
 
 import javax.persistence.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "groups")
@@ -24,10 +26,10 @@ public class Group {
     @ManyToMany
     @JoinTable(
             name = "group_members",
-            joinColumns = {@JoinColumn(name = "group_id")},
-            inverseJoinColumns = {@JoinColumn(name = "user_id")}
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "quiz_session_id")}
     )
-    private List<User> members;
+    private List<QuizSession> sessions;
 
     public int getId() {
         return id;
@@ -61,11 +63,11 @@ public class Group {
         this.curator = curator;
     }
 
-    public List<User> getMembers() {
-        return members;
+    public List<QuizSession> getSessions() {
+        return sessions;
     }
 
-    public void setMembers(List<User> members) {
-        this.members = members;
+    public void setSessions(List<QuizSession> sessions) {
+        this.sessions = sessions;
     }
 }

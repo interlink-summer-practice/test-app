@@ -24,20 +24,17 @@ public class GroupService {
 
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
-    private final QuizSessionRepository quizSessionRepository;
     private final QuestionService questionService;
     private final QuizResultService quizResultService;
 
     @Autowired
     public GroupService(GroupRepository groupRepository,
                         UserRepository userRepository,
-                        QuizSessionRepository quizSessionRepository,
                         QuestionService questionService,
                         QuizResultService quizResultService) {
 
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
-        this.quizSessionRepository = quizSessionRepository;
         this.questionService = questionService;
         this.quizResultService = quizResultService;
     }
@@ -70,14 +67,13 @@ public class GroupService {
         groupResultDto.setQuizUrl(group.getQuizUrl());
 
         List<MemberResultDto> results = new ArrayList<>();
-        for (User member : group.getMembers()) {
-            for (QuizSession quizSession : quizSessionRepository.findAllByGroupMembers(member.getId())) {
-                if (questionService.isAlreadyPassedQuiz(topics, quizSession, difficulties)
-                        && questionService.isDoneQuiz(quizSession)) {
 
-                    results.add(createMemberResultDto(quizSession));
-                    break;
-                }
+        for (QuizSession quizSession : group.getSessions()) {
+            if (questionService.isAlreadyPassedQuiz(topics, quizSession, difficulties)
+                    && questionService.isDoneQuiz(quizSession)) {
+
+                results.add(createMemberResultDto(quizSession));
+                break;
             }
         }
 
