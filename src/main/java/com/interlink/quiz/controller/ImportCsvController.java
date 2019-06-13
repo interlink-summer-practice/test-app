@@ -1,9 +1,12 @@
 package com.interlink.quiz.controller;
 
 import com.interlink.quiz.csv.CsvParserService;
+import com.interlink.quiz.object.User;
+import com.interlink.quiz.repository.UserJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,10 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class ImportCsvController {
 
     private final CsvParserService csvParserService;
+    private final UserJpaRepository userJpaRepository;
 
     @Autowired
-    public ImportCsvController(CsvParserService csvParserService) {
+    public ImportCsvController(CsvParserService csvParserService,
+                               UserJpaRepository userJpaRepository) {
         this.csvParserService = csvParserService;
+        this.userJpaRepository = userJpaRepository;
     }
 
     @PostMapping("/import")
@@ -24,4 +30,11 @@ public class ImportCsvController {
 
         return new ResponseEntity(HttpStatus.OK);
     }
+
+    @GetMapping("/test")
+    public User test() {
+        Long id = 1L;
+        return userJpaRepository.findById(id).orElse(new User());
+    }
+
 }
