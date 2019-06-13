@@ -56,12 +56,12 @@ public class AuthController {
     @PostMapping("/registration")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest,
                                           HttpSession httpSession) {
-        if (userService.getUserByEmail(signUpRequest.getEmail()) != null) {
+        if (userService.findByEmail(signUpRequest.getEmail()) != null) {
 
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
 
-        userService.register(signUpRequest, httpSession);
+        userService.save(signUpRequest, httpSession);
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

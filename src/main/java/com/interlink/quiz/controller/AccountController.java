@@ -33,13 +33,16 @@ public class AccountController {
     }
 
     @GetMapping("/account")
-    public AccountDto getTestHistory(@RequestHeader(value = "auth-token", required = false) String token) {
+    public ResponseEntity<?> getTestHistory(@RequestHeader(value = "auth-token", required = false) String token) {
         Long userId = null;
         if (!token.isEmpty()) {
             userId = jwtTokenProvider.getUserIdFromJWT(token);
         }
+        if (userId == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
 
-        return quizResultService.getHistoryOfQuizzesByUser(userId);
+        return new ResponseEntity<>(quizResultService.getHistoryOfQuizzesByUser(userId.intValue()), HttpStatus.OK);
     }
 
     @GetMapping("/account/statistic")

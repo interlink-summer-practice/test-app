@@ -55,10 +55,10 @@ public class QuizResultService {
         return quizResult;
     }
 
-    public AccountDto getHistoryOfQuizzesByUser(Long userId) {
-        if (userId == null) return new AccountDto();
+    public AccountDto getHistoryOfQuizzesByUser(int userId) {
+        if (userId == 0) return new AccountDto();
 
-        User user = userRepository.getUserById(userId);
+        User user = userRepository.findById(userId);
         AccountDto accountDto = new AccountDto();
         accountDto.setFirstName(user.getFirstName());
         accountDto.setLastName(user.getLastName());
@@ -75,7 +75,7 @@ public class QuizResultService {
     public List<TopicResult> getTopicsResultByUser(Long userId){
         if (userId == null) return new ArrayList<>();
 
-        User user = userRepository.getUserById(userId);
+        User user = userRepository.findById(userId.intValue());
 
         Map<Topic, TopicResult> topicResults = new HashMap<>();
         List<QuizSession> quizSessions = quizSessionRepository.getQuizSessionsByUser(user);

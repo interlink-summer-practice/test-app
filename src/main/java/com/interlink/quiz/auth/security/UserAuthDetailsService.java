@@ -20,7 +20,7 @@ public class UserAuthDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.getUserByEmail(username);
+        User user = userRepository.findByEmail(username);
         if (user == null) {
             throw new UsernameNotFoundException("User " + username + " not found!");
         }
@@ -29,7 +29,7 @@ public class UserAuthDetailsService implements UserDetailsService {
     }
 
     public UserDetails loadUserById(Long id) {
-        User user = userRepository.getUserById(id);
+        User user = userRepository.findById(id.intValue());
         if (user == null) {
             throw new UsernameNotFoundException("User not found with id : " + id);
         }

@@ -66,7 +66,7 @@ public class QuestionService {
                 quizSessions = quizSessionRepository.getQuizSessionBySessionId(httpSession.getId());
             } else {
                 quizSessions = quizSessionRepository.getQuizSessionsByUser(
-                        userRepository.getUserById(userId));
+                        userRepository.findById(userId.intValue()));
             }
             for (QuizSession quizSession : quizSessions) {
                 if (isAlreadyPassedQuiz(topics, quizSession, Collections.singletonList(difficulty))) {
@@ -110,12 +110,12 @@ public class QuestionService {
     public QuizDto getQuestionsToGroup(CuratorQuiz curatorQuiz,
                                        Long userId,
                                        HttpSession httpSession,
-                                       Long groupId,
+                                       int groupId,
                                        String quizUrl) {
 
         List<Topic> topics = Arrays.stream(curatorQuiz.getTopics()).collect(toList());
         List<String> difficulties = Arrays.stream(curatorQuiz.getDifficulties()).collect(toList());
-        User user = userRepository.getUserById(userId);
+        User user = userRepository.findById(userId.intValue());
         QuizDto quizDto = new QuizDto();
         if (isPresentQuestionsWithThisDifficulty(topics, difficulties)) {
             List<QuestionDto> questions = getQuestionsByTopicsAndDifficulties(topics, difficulties);
@@ -151,11 +151,11 @@ public class QuestionService {
             quizDto.setQuizSession(createQuizSessionDto(newQuizSession));
             quizDto.setQuestions(questions);
 
-            Group group = groupRepository.getGroupById(groupId);
+            Group group = groupRepository.findById(groupId);
             group.getMembers().add(user);
             group.setQuizUrl(quizUrl);
-            groupRepository.addMemberToGroup(group);
-            groupRepository.setQuizSessionForMember(group, user, newQuizSession);
+            groupRepository.save(group);
+            groupRepository.updateQuizSessionForMember(group.getId(), user.getId(), newQuizSession.getId());
 
             return quizDto;
         }
@@ -269,7 +269,7 @@ public class QuestionService {
         newQuizSession.setDifficulties(difficulties);
         newQuizSession.setQuestions(questions);
         if (userId != null) {
-            newQuizSession.setUser(userRepository.getUserById(userId));
+            newQuizSession.setUser(userRepository.findById(userId.intValue()));
         }
         quizSessionRepository.createQuizSession(newQuizSession);
 

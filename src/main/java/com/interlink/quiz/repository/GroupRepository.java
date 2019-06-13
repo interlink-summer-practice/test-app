@@ -1,65 +1,25 @@
 package com.interlink.quiz.repository;
 
 import com.interlink.quiz.object.Group;
-import com.interlink.quiz.object.QuizSession;
-import com.interlink.quiz.object.User;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManagerFactory;
 import java.util.List;
 
 @Repository
-public class GroupRepository {
+public interface GroupRepository extends JpaRepository<Group, Integer> {
 
-    private final SessionFactory sessionFactory;
+    Group findById(int id);
 
-    @Autowired
-    public GroupRepository(EntityManagerFactory entityManagerFactory) {
-        sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
-    }
+    List<Group> findByCuratorId(int curatorId);
 
-    public Group getGroupById(Long id) {
-        return sessionFactory.getCurrentSession()
-                .get(Group.class, id.intValue());
-    }
-
-    public Group saveGroup(Group group) {
-        Session session = sessionFactory.getCurrentSession();
-        Transaction transaction = session.beginTransaction();
-        session.save(group);
-        transaction.commit();
-
-        return group;
-    }
-
-    public void addMemberToGroup(Group group) {
-        Session session = sessionFactory.getCurrentSession();
-        Transaction transaction = session.beginTransaction();
-        session.update(group);
-        transaction.commit();
-    }
-
-    public void setQuizSessionForMember(Group group, User user, QuizSession quizSession) {
-        Session session = sessionFactory.getCurrentSession();
-        Transaction transaction = session.beginTransaction();
-        session.createNativeQuery("" +
-                "update group_members set quiz_session_id = :quizSessionId " +
-                "where group_id = :groupId and user_id = :userId")
-                .setParameter("quizSessionId", quizSession.getId())
-                .setParameter("groupId", group.getId())
-                .setParameter("userId", user.getId())
-                .executeUpdate();
-        transaction.commit();
-    }
-
-    public List<Group> getGroupsByCurator(int userId) {
-        return sessionFactory.getCurrentSession()
-                .createQuery("from Group g where g.curator.id = :userId", Group.class)
-                .setParameter("userId", userId)
-                .list();
-    }
+    @Transactional
+    @Query(value = "update group_members set quiz_session_id = :quizSessionId " +
+            "where group_id = :groupId and user_id = :userId", nativeQuery = true)
+    void updateQuizSessionForMember(@Param("quizSessionId") int quizSessionId,
+                                    @Param("groupId") int groupId,
+                                    @Param("userId") int userId);
 }
