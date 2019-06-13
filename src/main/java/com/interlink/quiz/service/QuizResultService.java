@@ -46,7 +46,7 @@ public class QuizResultService {
         QuizSession quizSession = quizSessionRepository.getQuizSessionById(quizSessionDto.getId());
         quizResult.setMark(quizSessionRepository.getMarkByQuizSession(quizSession));
         quizResult.setCountOfQuestion(quizSession.getQuestions().size());
-        quizResult.setCountOfCorrectAnswers(quizAnswerRepository.getCountOfRightAnswerBySession(quizSession));
+        quizResult.setCountOfCorrectAnswers(quizAnswerRepository.countOfRightAnswerByQuizSessionId(quizSession.getId()));
         quizResult.setPercentOfPassingQuiz(
                 quizResult.getCountOfCorrectAnswers() * 100.0 / quizResult.getCountOfQuestion());
         quizResult.setTopicResults(getTopicResultsBySessions(quizSession));
@@ -87,8 +87,10 @@ public class QuizResultService {
                 if (!topicResults.containsKey(topic)) {
                     TopicResult topicResult = new TopicResult();
                     topicResult.setTopic(topic);
-                    int countOfQuestionByTopic = questionRepository.getCountOfQuestionByTopic(user, topic);
-                    int countOfRightAnswerByTopic = quizAnswerRepository.getCountOfRightAnswerByTopic(user, topic);
+                    int countOfQuestionByTopic =
+                            quizAnswerRepository.findAllByUserIdAndTopicId(user.getId(), topic.getId()).size();
+                    int countOfRightAnswerByTopic =
+                            quizAnswerRepository.findAllRightAnswerByUserIdAndTopicId(user.getId(), topic.getId()).size();
                     double resultByTopic = countOfRightAnswerByTopic * 100.0 / countOfQuestionByTopic;
                     topicResult.setNumberOfCorrectAnswers(countOfRightAnswerByTopic);
                     topicResult.setNumberOfQuestions(countOfQuestionByTopic);
@@ -123,7 +125,7 @@ public class QuizResultService {
         quizResultDto.setDate(quizSession.getDate());
         quizResultDto.setTopics(quizSession.getTopics());
         quizResultDto.setCountOfQuestions(Integer.toUnsignedLong(quizSession.getQuestions().size()));
-        quizResultDto.setCountOfCorrectAnswers(quizAnswerRepository.getCountOfRightAnswerBySession(quizSession));
+        quizResultDto.setCountOfCorrectAnswers(quizAnswerRepository.countOfRightAnswerByQuizSessionId(quizSession.getId()));
         quizResultDto.setPercentOfPassingQuiz(quizResultDto.getCountOfCorrectAnswers() * 100.0 / quizResultDto.getCountOfQuestions());
 
         if (!questionService.isDoneQuiz(quizSession)) {
@@ -142,7 +144,7 @@ public class QuizResultService {
                         .filter(question -> question.getTopic() == topic)
                         .count());
         topicResult.setNumberOfCorrectAnswers(
-                quizAnswerRepository.getCountOfRightAnswerBySessionAndTopic(quizSession, topic));
+                quizAnswerRepository.countOfRightAnswerByQuizSessionIdAndTopicId(quizSession.getId(), topic.getId()));
         topicResult.setResult(topicResult.getNumberOfCorrectAnswers() * 100.0 / topicResult.getNumberOfQuestions());
 
         return topicResult;

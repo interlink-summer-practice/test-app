@@ -82,7 +82,7 @@ public class QuestionService {
                     } else {
                         quizDto.setQuizSession(createQuizSessionDto(quizSession));
                         quizDto.setQuestions(getNotPassedQuestionsByTopics(topics, quizSession));
-                        quizDto.setCountOfPassedQuestions(quizAnswerRepository.getCountOfPassedQuestions(quizSession));
+                        quizDto.setCountOfPassedQuestions(quizAnswerRepository.countByQuizSessionId(quizSession.getId()));
 
                         return quizDto;
                     }
@@ -134,7 +134,7 @@ public class QuestionService {
                     } else {
                         quizDto.setQuizSession(createQuizSessionDto(quizSession));
                         quizDto.setQuestions(getNotPassedQuestionsByTopics(topics, quizSession));
-                        quizDto.setCountOfPassedQuestions(quizAnswerRepository.getCountOfPassedQuestions(quizSession));
+                        quizDto.setCountOfPassedQuestions(quizAnswerRepository.countByQuizSessionId(quizSession.getId()));
 
                         return quizDto;
                     }
@@ -181,7 +181,7 @@ public class QuestionService {
         QuizSession quizSession = quizSessionRepository.getQuizSessionById(quizSessionDto.getId());
         quizSession.setDate(LocalDateTime.now().toString());
         quizSessionRepository.updateQuizSession(quizSession);
-        quizAnswerRepository.deleteQuizAnswersByQuizSession(quizSession);
+        quizAnswerRepository.deleteAllByQuizSessionId(quizSession.getId());
         if (userId == null) {
             userResultRepository.deleteUserResult(quizSession);
         }
@@ -191,7 +191,7 @@ public class QuestionService {
         List<Question> questions = new ArrayList<>();
         for (Topic topic : topics) {
             for (String difficulty : difficulties) {
-                questions.addAll(questionRepository.getQuestionsByTopic(topic, difficulty));
+                questions.addAll(questionRepository.findAllByTopicAndDifficulty(topic, difficulty));
             }
         }
 
@@ -204,7 +204,7 @@ public class QuestionService {
         List<Question> questions = new ArrayList<>();
         for (Topic topic : topics) {
             for (String difficulty : difficulties) {
-                questions.addAll(questionRepository.getQuestionsByTopic(topic, difficulty));
+                questions.addAll(questionRepository.findAllByTopicAndDifficulty(topic, difficulty));
             }
         }
 
@@ -219,7 +219,7 @@ public class QuestionService {
         List<Question> questions = new ArrayList<>();
         for (Topic topic : topics) {
             for (String difficulty : quizSession.getDifficulties()) {
-                questions.addAll(questionRepository.getNotPassedQuestionsByTopic(topic, quizSession, difficulty));
+                questions.addAll(questionRepository.findAllNotPassedQuestions(topic.getId(), difficulty, quizSession.getId()));
             }
         }
 
@@ -244,7 +244,7 @@ public class QuestionService {
         long sum = 0;
         for (Topic topic : topics) {
             for (String difficulty : difficulties) {
-                sum += questionRepository.getCountByTopicAndDifficulty(difficulty, topic);
+                sum += questionRepository.countByTopicAndDifficulty(topic, difficulty);
             }
         }
 
@@ -252,7 +252,7 @@ public class QuestionService {
     }
 
     public boolean isDoneQuiz(QuizSession quizSession) {
-        List<QuizAnswer> answers = quizAnswerRepository.getAnswersByQuizSession(quizSession);
+        List<QuizAnswer> answers = quizAnswerRepository.findAllByQuizSessionId(quizSession.getId());
         Set<Question> questions = answers.stream().map(QuizAnswer::getQuestion).collect(toSet());
 
         return quizSession.getQuestions().size() == questions.size();
