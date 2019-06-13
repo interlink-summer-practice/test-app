@@ -6,85 +6,48 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManagerFactory;
 import java.math.BigInteger;
 import java.util.List;
 
 @Repository
-public class QuizSessionRepository {
+public interface QuizSessionRepository extends JpaRepository<QuizSession, Integer> {
 
-    private final SessionFactory sessionFactory;
 
-    @Autowired
-    public QuizSessionRepository(EntityManagerFactory entityManagerFactory) {
-        sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
-    }
+    QuizSession findById(int id);
 
-    public void createQuizSession(QuizSession quizSession) {
-        Session session = sessionFactory.getCurrentSession();
-        Transaction transaction = session.beginTransaction();
-        session.save(quizSession);
-        transaction.commit();
-    }
+    List<QuizSession> findAllBySessionId(String sessionId);
 
-    public void updateQuizSession(QuizSession quizSession) {
-        Session session = sessionFactory.getCurrentSession();
-        Transaction transaction = session.beginTransaction();
-        session.update(quizSession);
-        transaction.commit();
-    }
 
-    public QuizSession getQuizSessionById(int id) {
-        return sessionFactory.getCurrentSession()
-                .get(QuizSession.class, id);
-    }
+    @Transactional
+    @Query(value = "select qs.* " +
+            "from group_members gm " +
+            "         left join quiz_session qs on gm.quiz_session_id = qs.id " +
+            "where gm.user_id = :userId", nativeQuery = true)
+    List<QuizSession> findAllByGroupMembers(@Param("userId") int userId);
 
-    public List<QuizSession> getQuizSessionBySessionId(String sessionId) {
-        return sessionFactory.getCurrentSession()
-                .createQuery("from QuizSession where session_id = :session_id and user_id = null", QuizSession.class)
-                .setParameter("session_id", sessionId)
-                .list();
-    }
 
-    public List<QuizSession> getQuizSessionsByUser(User user) {
-        return sessionFactory.getCurrentSession()
-                .createNativeQuery("select * from quiz_session where user_id = :userId" +
-                        "    EXCEPT " +
-                        "select qs.* " +
-                        "from group_members gm " +
-                        "         left join quiz_session qs on gm.quiz_session_id = qs.id " +
-                        "where gm.user_id = :userId", QuizSession.class)
-                .setParameter("userId", user.getId())
-                .list();
-    }
+    @Transactional
+    @Query(value = "select * from quiz_session where user_id = :userId" +
+            "    EXCEPT " +
+            "select qs.* " +
+            "from group_members gm " +
+            "         left join quiz_session qs on gm.quiz_session_id = qs.id " +
+            "where gm.user_id = :userId", nativeQuery = true)
+    List<QuizSession> findAllByUserId(@Param("userId") int userId);
 
-    public List<QuizSession> getQuizSessionsByGroupMember(User user) {
-        return sessionFactory.getCurrentSession()
-                .createNativeQuery("select qs.* " +
-                        "from group_members gm " +
-                        "         left join quiz_session qs on gm.quiz_session_id = qs.id " +
-                        "where gm.user_id = :userId", QuizSession.class)
-                .setParameter("userId", user.getId())
-                .list();
-    }
-
-    public int getMarkByQuizSession(QuizSession quizSession) {
-        try {
-            BigInteger mark = (BigInteger) sessionFactory.getCurrentSession()
-                    .createNativeQuery("SELECT sum(q.mark) " +
-                            "FROM quiz_session qs" +
-                            "         LEFT JOIN quiz_answers qa on qs.id = qa.quiz_session_id " +
-                            "         LEFT JOIN answers a on qa.answer_id = a.id " +
-                            "         LEFT JOIN questions q on a.id = q.answer_id " +
-                            "WHERE qs.id = :quiz_session_id AND qa.answer_id = q.answer_id;")
-                    .setParameter("quiz_session_id", quizSession.getId())
-                    .uniqueResult();
-            return mark.intValue();
-        } catch (NullPointerException e) {
-            return 0;
-        }
-    }
-
+    @Transactional
+    @Query(value = "SELECT sum(q.mark) " +
+            "FROM quiz_session qs" +
+            "         LEFT JOIN quiz_answers qa on qs.id = qa.quiz_session_id " +
+            "         LEFT JOIN answers a on qa.answer_id = a.id " +
+            "         LEFT JOIN questions q on a.id = q.answer_id " +
+            "WHERE qs.id = :quiz_session_id AND qa.answer_id = q.answer_id", nativeQuery = true)
+    Integer getMarkByQuizSessionId(@Param("quiz_session_id") int quizSessionId);
 }

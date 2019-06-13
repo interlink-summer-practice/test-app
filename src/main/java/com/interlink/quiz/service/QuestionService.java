@@ -63,10 +63,10 @@ public class QuestionService {
             quizDto.setCountOfQuestionsInQuiz(questions.size());
             List<QuizSession> quizSessions;
             if (userId == null) {
-                quizSessions = quizSessionRepository.getQuizSessionBySessionId(httpSession.getId());
+                quizSessions = quizSessionRepository.findAllBySessionId(httpSession.getId());
             } else {
-                quizSessions = quizSessionRepository.getQuizSessionsByUser(
-                        userRepository.findById(userId.intValue()));
+                quizSessions = quizSessionRepository.findAllByUserId(
+                        userRepository.findById(userId.intValue()).getId());
             }
             for (QuizSession quizSession : quizSessions) {
                 if (isAlreadyPassedQuiz(topics, quizSession, Collections.singletonList(difficulty))) {
@@ -122,7 +122,7 @@ public class QuestionService {
         if (isPresentQuestionsWithThisDifficulty(topics, difficulties)) {
             List<QuestionDto> questions = getQuestionsByTopicsAndDifficulties(topics, difficulties);
             quizDto.setCountOfQuestionsInQuiz(questions.size());
-            List<QuizSession> quizSessions = quizSessionRepository.getQuizSessionsByGroupMember(user);
+            List<QuizSession> quizSessions = quizSessionRepository.findAllByGroupMembers(user.getId());
             for (QuizSession quizSession : quizSessions) {
                 if (isAlreadyPassedQuiz(topics, quizSession, difficulties)) {
                     if (isDoneQuiz(quizSession)) {
@@ -168,22 +168,22 @@ public class QuestionService {
     }
 
     public void addQuestionsInQuizSession(QuizSessionDto quizSessionDto) {
-        QuizSession quizSession = quizSessionRepository.getQuizSessionById(quizSessionDto.getId());
+        QuizSession quizSession = quizSessionRepository.findById(quizSessionDto.getId());
         quizSession.setQuestions(
                 getQuestionsByTopics(quizSession.getTopics(), quizSession.getDifficulties()).stream()
                         .map(this::createQuestionFromQuestionDto)
                         .collect(Collectors.toList())
         );
-        quizSessionRepository.updateQuizSession(quizSession);
+        quizSessionRepository.save(quizSession);
     }
 
     public void updateResultsOfPassedQuiz(QuizSessionDto quizSessionDto, Long userId) {
-        QuizSession quizSession = quizSessionRepository.getQuizSessionById(quizSessionDto.getId());
+        QuizSession quizSession = quizSessionRepository.findById(quizSessionDto.getId());
         quizSession.setDate(LocalDateTime.now().toString());
-        quizSessionRepository.updateQuizSession(quizSession);
+        quizSessionRepository.save(quizSession);
         quizAnswerRepository.deleteAllByQuizSessionId(quizSession.getId());
         if (userId == null) {
-            userResultRepository.deleteUserResult(quizSession);
+            userResultRepository.deleteAllByQuizSessionId(quizSession.getId());
         }
     }
 
@@ -275,7 +275,7 @@ public class QuestionService {
             newQuizSession.setUser(userRepository.findById(userId.intValue()));
         }
 
-        quizSessionRepository.createQuizSession(newQuizSession);
+        quizSessionRepository.save(newQuizSession);
 
         return newQuizSession;
     }

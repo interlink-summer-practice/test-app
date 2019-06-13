@@ -43,8 +43,8 @@ public class QuizResultService {
 
     public QuizResult getQuizResult(QuizSessionDto quizSessionDto, Long userId) {
         QuizResult quizResult = new QuizResult();
-        QuizSession quizSession = quizSessionRepository.getQuizSessionById(quizSessionDto.getId());
-        quizResult.setMark(quizSessionRepository.getMarkByQuizSession(quizSession));
+        QuizSession quizSession = quizSessionRepository.findById(quizSessionDto.getId());
+        quizResult.setMark(quizSessionRepository.getMarkByQuizSessionId(quizSession.getId()));
         quizResult.setCountOfQuestion(quizSession.getQuestions().size());
         quizResult.setCountOfCorrectAnswers(quizAnswerRepository.countOfRightAnswerByQuizSessionId(quizSession.getId()));
         quizResult.setPercentOfPassingQuiz(
@@ -67,7 +67,7 @@ public class QuizResultService {
         accountDto.setLastName(user.getLastName());
 
         List<QuizResultDto> results = new ArrayList<>();
-        for (QuizSession quizSession : quizSessionRepository.getQuizSessionsByUser(user)) {
+        for (QuizSession quizSession : quizSessionRepository.findAllByUserId(user.getId())) {
             results.add(createQuizResultDto(quizSession));
         }
         accountDto.setResults(results);
@@ -81,7 +81,7 @@ public class QuizResultService {
         User user = userRepository.findById(userId.intValue());
 
         Map<Topic, TopicResult> topicResults = new HashMap<>();
-        List<QuizSession> quizSessions = quizSessionRepository.getQuizSessionsByUser(user);
+        List<QuizSession> quizSessions = quizSessionRepository.findAllByUserId(user.getId());
         for (QuizSession quizSession : quizSessions) {
             for (Topic topic : quizSession.getTopics()) {
                 if (!topicResults.containsKey(topic)) {
@@ -107,7 +107,7 @@ public class QuizResultService {
         UserResult userResult = new UserResult();
         userResult.setQuizSession(quizSession);
         userResult.setResult(mark);
-        userResultRepository.saveUserResult(userResult);
+        userResultRepository.save(userResult);
     }
 
     private List<TopicResult> getTopicResultsBySessions(QuizSession quizSession) {

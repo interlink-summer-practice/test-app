@@ -37,7 +37,7 @@ public class QuizAnswerService {
         QuizAnswer quizAnswer = new QuizAnswer();
         quizAnswer.setAnswer(answerRepository.findById(quizAnswerDto.getAnswerId()));
         quizAnswer.setQuestion(questionRepository.findById(quizAnswerDto.getQuestionId()));
-        quizAnswer.setQuizSession(quizSessionRepository.getQuizSessionById(quizAnswerDto.getQuizSessionId()));
+        quizAnswer.setQuizSession(quizSessionRepository.findById(quizAnswerDto.getQuizSessionId()));
 
         return quizAnswer;
     }
