@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.flywaydb.core.Flyway;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -16,9 +17,9 @@ import java.util.Properties;
 public class ApplicationConfig {
 
     @Bean
-    public LocalSessionFactoryBean sessionFactory() {
+    public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-        sessionFactory.setDataSource(dataSource());
+        sessionFactory.setDataSource(dataSource);
         sessionFactory.setPackagesToScan("com.interlink.quiz");
         sessionFactory.setHibernateProperties(hibernateProperties());
 
@@ -26,17 +27,17 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public PlatformTransactionManager hibernateTransactionManager() {
+    public PlatformTransactionManager hibernateTransactionManager(DataSource dataSource) {
         HibernateTransactionManager transactionManager
                 = new HibernateTransactionManager();
-        transactionManager.setSessionFactory(sessionFactory().getObject());
+        transactionManager.setSessionFactory(sessionFactory(dataSource).getObject());
         return transactionManager;
     }
 
     @Bean
-    public Flyway flyway() {
+    public Flyway flyway(DataSource dataSource) {
         Flyway flyway = Flyway.configure()
-                .dataSource(dataSource())
+                .dataSource(dataSource)
                 .locations("/db/migration/")
                 .load();
         flyway.migrate();
@@ -45,12 +46,12 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public DataSource dataSource() {
+    public DataSource dataSource(Environment env) {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:postgresql://localhost:5432/quizzes");
-        config.setUsername("postgres");
-        config.setPassword("postgres");
-        config.setDriverClassName("org.postgresql.Driver");
+        config.setJdbcUrl(env.getProperty("spring.datasource.url"));
+        config.setUsername(env.getProperty("spring.datasource.username"));
+        config.setPassword(env.getProperty("spring.datasource.password"));
+        config.setDriverClassName(env.getProperty("spring.datasource.driver-class-name"));
 
         return new HikariDataSource(config);
     }
