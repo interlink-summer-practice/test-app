@@ -8,7 +8,10 @@ import com.interlink.quiz.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -72,7 +75,7 @@ public class QuizResultService {
         return accountDto;
     }
 
-    public List<TopicResult> getTopicsResultByUser(Long userId){
+    public List<TopicResult> getTopicsResultByUser(Long userId) {
         if (userId == null) return new ArrayList<>();
 
         User user = userRepository.getUserById(userId);

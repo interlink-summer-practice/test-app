@@ -101,9 +101,11 @@ public class QuestionService {
                     )
             );
             quizDto.setQuestions(questions);
+
             return quizDto;
         }
         quizDto.setQuizSession(new QuizSessionDto());
+
         return quizDto;
     }
 
@@ -268,9 +270,11 @@ public class QuestionService {
         newQuizSession.setTopics(topics);
         newQuizSession.setDifficulties(difficulties);
         newQuizSession.setQuestions(questions);
+
         if (userId != null) {
             newQuizSession.setUser(userRepository.getUserById(userId));
         }
+
         quizSessionRepository.createQuizSession(newQuizSession);
 
         return newQuizSession;

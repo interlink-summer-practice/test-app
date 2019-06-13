@@ -4,7 +4,6 @@ import com.interlink.quiz.object.*;
 import com.interlink.quiz.object.dto.GroupDto;
 import com.interlink.quiz.object.dto.GroupResultDto;
 import com.interlink.quiz.object.dto.MemberResultDto;
-import com.interlink.quiz.object.dto.QuizSessionDto;
 import com.interlink.quiz.repository.GroupRepository;
 import com.interlink.quiz.repository.QuizSessionRepository;
 import com.interlink.quiz.repository.UserRepository;
@@ -45,17 +44,6 @@ public class GroupService {
 
     public Group saveGroup(GroupDto groupDto) {
         return groupRepository.saveGroup(createGroup(groupDto));
-    }
-
-    public void addMemberToGroup(Long groupId, Long userId, String quizUrl, QuizSessionDto quizSessionDto) {
-        Group group = groupRepository.getGroupById(groupId);
-        group.getMembers().add(userRepository.getUserById(userId));
-        group.setQuizUrl(quizUrl);
-        groupRepository.addMemberToGroup(group);
-        groupRepository.setQuizSessionForMember(
-                group,
-                userRepository.getUserById(userId),
-                quizSessionRepository.getQuizSessionById(quizSessionDto.getId()));
     }
 
     public List<GroupResultDto> getResultsByGroups(Long userId) throws IOException {
