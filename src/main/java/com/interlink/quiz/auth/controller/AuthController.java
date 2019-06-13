@@ -44,10 +44,8 @@ public class AuthController {
                         loginRequest.getPassword()
                 )
         );
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtTokenProvider.generateToken(authentication);
-
         httpSession.invalidate();
 
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, userService.isCurator(authentication)));
@@ -56,13 +54,11 @@ public class AuthController {
     @PostMapping("/registration")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest,
                                           HttpSession httpSession) {
-        if (userService.getUserByEmail(signUpRequest.getEmail()) != null) {
 
+        if (userService.getUserByEmail(signUpRequest.getEmail()) != null) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
-
         userService.register(signUpRequest, httpSession);
-
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         signUpRequest.getEmail(),

@@ -1,7 +1,5 @@
 package com.interlink.quiz.object.dto;
 
-import com.interlink.quiz.object.TopicResult;
-
 import java.util.List;
 
 public class AccountDto {
