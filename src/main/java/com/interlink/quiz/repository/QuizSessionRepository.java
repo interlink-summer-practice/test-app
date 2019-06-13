@@ -43,14 +43,29 @@ public class QuizSessionRepository {
 
     public List<QuizSession> getQuizSessionBySessionId(String sessionId) {
         return sessionFactory.getCurrentSession()
-                .createQuery("from QuizSession where session_id = :session_id", QuizSession.class)
+                .createQuery("from QuizSession where session_id = :session_id and user_id = null", QuizSession.class)
                 .setParameter("session_id", sessionId)
                 .list();
     }
 
     public List<QuizSession> getQuizSessionsByUser(User user) {
         return sessionFactory.getCurrentSession()
-                .createQuery("from QuizSession qs where qs.user.id = :userId", QuizSession.class)
+                .createNativeQuery("select * from quiz_session where user_id = :userId" +
+                        "    EXCEPT " +
+                        "select qs.* " +
+                        "from group_members gm " +
+                        "         left join quiz_session qs on gm.quiz_session_id = qs.id " +
+                        "where gm.user_id = :userId", QuizSession.class)
+                .setParameter("userId", user.getId())
+                .list();
+    }
+
+    public List<QuizSession> getQuizSessionsByGroupMember(User user) {
+        return sessionFactory.getCurrentSession()
+                .createNativeQuery("select qs.* " +
+                        "from group_members gm " +
+                        "         left join quiz_session qs on gm.quiz_session_id = qs.id " +
+                        "where gm.user_id = :userId", QuizSession.class)
                 .setParameter("userId", user.getId())
                 .list();
     }
@@ -71,4 +86,5 @@ public class QuizSessionRepository {
             return 0;
         }
     }
+
 }

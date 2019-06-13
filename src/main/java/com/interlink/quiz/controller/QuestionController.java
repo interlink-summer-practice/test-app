@@ -1,16 +1,11 @@
 package com.interlink.quiz.controller;
 
 import com.interlink.quiz.auth.security.JwtTokenProvider;
-import com.interlink.quiz.csv.CsvParserService;
 import com.interlink.quiz.object.CuratorQuiz;
 import com.interlink.quiz.object.Topic;
 import com.interlink.quiz.object.dto.FilteredQuizDto;
-import com.interlink.quiz.object.dto.QuizAnswerDto;
 import com.interlink.quiz.object.dto.QuizDto;
-import com.interlink.quiz.object.dto.QuizSessionDto;
-import com.interlink.quiz.service.GroupService;
 import com.interlink.quiz.service.QuestionService;
-import com.interlink.quiz.service.QuizAnswerService;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,22 +20,13 @@ import java.util.Base64;
 public class QuestionController {
 
     private final QuestionService questionService;
-    private final QuizAnswerService quizAnswerService;
-    private final GroupService groupService;
-    private final CsvParserService csvParserService;
     private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
     public QuestionController(QuestionService questionService,
-                              QuizAnswerService quizAnswerService,
-                              GroupService groupService,
-                              CsvParserService csvParserService,
                               JwtTokenProvider jwtTokenProvider) {
 
         this.questionService = questionService;
-        this.quizAnswerService = quizAnswerService;
-        this.groupService = groupService;
-        this.csvParserService = csvParserService;
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
@@ -78,8 +64,7 @@ public class QuestionController {
         byte[] decode = Base64.getDecoder().decode(url);
         String test = new String(decode);
         CuratorQuiz curatorQuiz = new ObjectMapper().readValue(test, CuratorQuiz.class);
-        QuizDto quizDto = questionService.getQuestionsToGroup(curatorQuiz, userId, httpSession);
-        groupService.addMemberToGroup(curatorQuiz.getGroupId(), userId, url);
+        QuizDto quizDto = questionService.getQuestionsToGroup(curatorQuiz, userId, httpSession, curatorQuiz.getGroupId(), url);
 
         return new ResponseEntity<>(quizDto, HttpStatus.OK);
     }
@@ -97,6 +82,7 @@ public class QuestionController {
         byte[] decode = Base64.getDecoder().decode(topicUrl);
         String topics = new String(decode);
         Topic[] topicArray = new ObjectMapper().readValue(topics, Topic[].class);
+
         return new ResponseEntity<>(questionService.getQuestionsByUrl(topicArray, userId, httpSession), HttpStatus.OK);
     }
 }

@@ -9,9 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -27,7 +24,7 @@ public class QuestionService {
     private final QuizSessionRepository quizSessionRepository;
     private final QuizAnswerRepository quizAnswerRepository;
     private final UserResultRepository userResultRepository;
-    private final TopicRepository topicRepository;
+    private final GroupRepository groupRepository;
 
     @Autowired
     public QuestionService(QuestionRepository questionRepository,
@@ -35,14 +32,14 @@ public class QuestionService {
                            QuizSessionRepository quizSessionRepository,
                            QuizAnswerRepository quizAnswerRepository,
                            UserResultRepository userResultRepository,
-                           TopicRepository topicRepository) {
+                           GroupRepository groupRepository) {
 
         this.questionRepository = questionRepository;
         this.userRepository = userRepository;
         this.quizSessionRepository = quizSessionRepository;
         this.quizAnswerRepository = quizAnswerRepository;
         this.userResultRepository = userResultRepository;
-        this.topicRepository = topicRepository;
+        this.groupRepository = groupRepository;
     }
 
     public QuizDto getQuestionsByUrl(Topic[] topics,
@@ -112,16 +109,18 @@ public class QuestionService {
 
     public QuizDto getQuestionsToGroup(CuratorQuiz curatorQuiz,
                                        Long userId,
-                                       HttpSession httpSession) {
+                                       HttpSession httpSession,
+                                       Long groupId,
+                                       String quizUrl) {
 
         List<Topic> topics = Arrays.stream(curatorQuiz.getTopics()).collect(toList());
         List<String> difficulties = Arrays.stream(curatorQuiz.getDifficulties()).collect(toList());
-
+        User user = userRepository.getUserById(userId);
         QuizDto quizDto = new QuizDto();
         if (isPresentQuestionsWithThisDifficulty(topics, difficulties)) {
             List<QuestionDto> questions = getQuestionsByTopicsAndDifficulties(topics, difficulties);
             quizDto.setCountOfQuestionsInQuiz(questions.size());
-            List<QuizSession> quizSessions = quizSessionRepository.getQuizSessionsByUser(userRepository.getUserById(userId));
+            List<QuizSession> quizSessions = quizSessionRepository.getQuizSessionsByGroupMember(user);
             for (QuizSession quizSession : quizSessions) {
                 if (isAlreadyPassedQuiz(topics, quizSession, difficulties)) {
                     if (isDoneQuiz(quizSession)) {
@@ -140,23 +139,29 @@ public class QuestionService {
                 }
             }
 
-            quizDto.setQuizSession(createQuizSessionDto(
-                    createNewQuizSession(
-                            httpSession,
-                            userId,
-                            topics,
-                            difficulties,
-                            questions.stream()
-                                    .map(this::createQuestionFromQuestionDto)
-                                    .collect(Collectors.toList()))
-                    )
-            );
+            QuizSession newQuizSession = createNewQuizSession(
+                    httpSession,
+                    userId,
+                    topics,
+                    difficulties,
+                    questions.stream()
+                            .map(this::createQuestionFromQuestionDto)
+                            .collect(toList()));
+
+            quizDto.setQuizSession(createQuizSessionDto(newQuizSession));
             quizDto.setQuestions(questions);
+
+            Group group = groupRepository.getGroupById(groupId);
+            group.getMembers().add(user);
+            group.setQuizUrl(quizUrl);
+            groupRepository.addMemberToGroup(group);
+            groupRepository.setQuizSessionForMember(group, user, newQuizSession);
 
             return quizDto;
         }
 
         quizDto.setQuizSession(new QuizSessionDto());
+
         return quizDto;
     }
 
