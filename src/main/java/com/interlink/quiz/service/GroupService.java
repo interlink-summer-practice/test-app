@@ -70,14 +70,11 @@ public class GroupService {
         groupResultDto.setQuizUrl(group.getQuizUrl());
 
         List<MemberResultDto> results = new ArrayList<>();
-        for (User member : group.getMembers()) {
-            for (QuizSession quizSession : quizSessionRepository.getQuizSessionsByGroupMember(member)) {
-                if (questionService.isAlreadyPassedQuiz(topics, quizSession, difficulties)
-                        && questionService.isDoneQuiz(quizSession)) {
+        for (QuizSession quizSession : group.getQuizSessions()) {
+            if (questionService.isAlreadyPassedQuiz(topics, quizSession, difficulties)
+                    && questionService.isDoneQuiz(quizSession)) {
 
-                    results.add(createMemberResultDto(quizSession));
-                    break;
-                }
+                results.add(createMemberResultDto(quizSession));
             }
         }
 

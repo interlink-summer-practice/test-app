@@ -35,23 +35,10 @@ public class GroupRepository {
         return group;
     }
 
-    public void addMemberToGroup(Group group) {
+    public void addQuizSessionToGroup(Group group) {
         Session session = sessionFactory.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         session.update(group);
-        transaction.commit();
-    }
-
-    public void setQuizSessionForMember(Group group, User user, QuizSession quizSession) {
-        Session session = sessionFactory.getCurrentSession();
-        Transaction transaction = session.beginTransaction();
-        session.createNativeQuery("" +
-                "update group_members set quiz_session_id = :quizSessionId " +
-                "where group_id = :groupId and user_id = :userId")
-                .setParameter("quizSessionId", quizSession.getId())
-                .setParameter("groupId", group.getId())
-                .setParameter("userId", user.getId())
-                .executeUpdate();
         transaction.commit();
     }
 

@@ -54,7 +54,7 @@ public class QuizSessionRepository {
                         "select qs.* " +
                         "from group_members gm " +
                         "         left join quiz_session qs on gm.quiz_session_id = qs.id " +
-                        "where gm.user_id = :userId", QuizSession.class)
+                        "where qs.user_id = :userId", QuizSession.class)
                 .setParameter("userId", user.getId())
                 .list();
     }
@@ -64,7 +64,7 @@ public class QuizSessionRepository {
                 .createNativeQuery("select qs.* " +
                         "from group_members gm " +
                         "         left join quiz_session qs on gm.quiz_session_id = qs.id " +
-                        "where gm.user_id = :userId", QuizSession.class)
+                        "where qs.user_id = :userId", QuizSession.class)
                 .setParameter("userId", user.getId())
                 .list();
     }

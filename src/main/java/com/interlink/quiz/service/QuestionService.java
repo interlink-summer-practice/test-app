@@ -154,10 +154,9 @@ public class QuestionService {
             quizDto.setQuestions(questions);
 
             Group group = groupRepository.getGroupById(groupId);
-            group.getMembers().add(user);
+            group.getQuizSessions().add(newQuizSession);
             group.setQuizUrl(quizUrl);
-            groupRepository.addMemberToGroup(group);
-            groupRepository.setQuizSessionForMember(group, user, newQuizSession);
+            groupRepository.addQuizSessionToGroup(group);
 
             return quizDto;
         }

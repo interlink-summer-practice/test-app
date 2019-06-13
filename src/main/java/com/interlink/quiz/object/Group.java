@@ -25,9 +25,17 @@ public class Group {
     @JoinTable(
             name = "group_members",
             joinColumns = {@JoinColumn(name = "group_id")},
-            inverseJoinColumns = {@JoinColumn(name = "user_id")}
+            inverseJoinColumns = {@JoinColumn(name = "quiz_session_id")}
     )
-    private List<User> members;
+    private List<QuizSession> quizSessions;
+
+    public List<QuizSession> getQuizSessions() {
+        return quizSessions;
+    }
+
+    public void setQuizSessions(List<QuizSession> quizSessions) {
+        this.quizSessions = quizSessions;
+    }
 
     public int getId() {
         return id;
@@ -59,13 +67,5 @@ public class Group {
 
     public void setCurator(User curator) {
         this.curator = curator;
-    }
-
-    public List<User> getMembers() {
-        return members;
-    }
-
-    public void setMembers(List<User> members) {
-        this.members = members;
     }
 }
