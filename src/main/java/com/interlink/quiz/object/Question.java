@@ -28,7 +28,7 @@ public class Question {
     @JoinColumn(name = "answer_id")
     private Answer rightAnswer;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "question_answers",
             joinColumns = @JoinColumn(name = "question_id"),

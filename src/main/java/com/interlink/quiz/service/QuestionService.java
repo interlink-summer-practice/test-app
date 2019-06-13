@@ -157,7 +157,7 @@ public class QuestionService {
             group.getMembers().add(user);
             group.setQuizUrl(quizUrl);
             groupRepository.save(group);
-            groupRepository.updateQuizSessionForMember(group.getId(), user.getId(), newQuizSession.getId());
+            groupRepository.updateQuizSessionForMember(newQuizSession.getId(), group.getId(), user.getId());
 
             return quizDto;
         }

@@ -44,7 +44,7 @@ public class QuizResultService {
     public QuizResult getQuizResult(QuizSessionDto quizSessionDto, Long userId) {
         QuizResult quizResult = new QuizResult();
         QuizSession quizSession = quizSessionRepository.findById(quizSessionDto.getId());
-        quizResult.setMark(quizSessionRepository.getMarkByQuizSessionId(quizSession.getId()));
+        quizResult.setMark(quizSessionRepository.getMarkByQuizSessionId(quizSession.getId()).intValue());
         quizResult.setCountOfQuestion(quizSession.getQuestions().size());
         quizResult.setCountOfCorrectAnswers(quizAnswerRepository.countOfRightAnswerByQuizSessionId(quizSession.getId()));
         quizResult.setPercentOfPassingQuiz(

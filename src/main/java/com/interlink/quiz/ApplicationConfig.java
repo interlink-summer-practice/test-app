@@ -3,13 +3,8 @@ package com.interlink.quiz;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.flywaydb.core.Flyway;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -18,29 +13,9 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import java.util.Properties;
 
 @Configuration
 public class ApplicationConfig {
-
-//    @Bean
-//    public LocalSessionFactoryBean sessionFactory(DataSource dataSource,
-//                                                  Properties properties) {
-//        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-//        sessionFactory.setDataSource(dataSource);
-//        sessionFactory.setPackagesToScan("com.interlink.quiz");
-//        sessionFactory.setHibernateProperties(properties);
-//
-//        return sessionFactory;
-//    }
-//
-//    @Bean
-//    public PlatformTransactionManager hibernateTransactionManager() {
-//        HibernateTransactionManager transactionManager
-//                = new HibernateTransactionManager();
-//        transactionManager.setSessionFactory(sessionFactory().getObject());
-//        return transactionManager;
-//    }
 
     @Bean
     public Flyway flyway(DataSource dataSource) {
@@ -52,13 +27,6 @@ public class ApplicationConfig {
 
         return flyway;
     }
-
-//    @Bean
-//    public DataSource dataSource() {
-//        return new EmbeddedDatabaseBuilder()
-//                .setType(EmbeddedDatabaseType.HSQL)
-//                .build();
-//    }
 
     @Bean
     public JpaVendorAdapter jpaVendorAdapter() {
@@ -95,16 +63,5 @@ public class ApplicationConfig {
         config.setDriverClassName("org.postgresql.Driver");
 
         return new HikariDataSource(config);
-    }
-
-    @Bean
-    public Properties properties() {
-        Properties properties = new Properties();
-        properties.setProperty(
-                "hibernate.ddl-auto", "create-drop");
-        properties.setProperty(
-                "hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-
-        return properties;
     }
 }

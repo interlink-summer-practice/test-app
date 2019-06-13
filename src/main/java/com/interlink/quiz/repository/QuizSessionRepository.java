@@ -43,11 +43,11 @@ public interface QuizSessionRepository extends JpaRepository<QuizSession, Intege
     List<QuizSession> findAllByUserId(@Param("userId") int userId);
 
     @Transactional
-    @Query(value = "SELECT sum(q.mark) " +
+    @Query(value = "SELECT coalesce(sum(q.mark), 0)" +
             "FROM quiz_session qs" +
             "         LEFT JOIN quiz_answers qa on qs.id = qa.quiz_session_id " +
             "         LEFT JOIN answers a on qa.answer_id = a.id " +
             "         LEFT JOIN questions q on a.id = q.answer_id " +
             "WHERE qs.id = :quiz_session_id AND qa.answer_id = q.answer_id", nativeQuery = true)
-    Integer getMarkByQuizSessionId(@Param("quiz_session_id") int quizSessionId);
+    Long getMarkByQuizSessionId(@Param("quiz_session_id") int quizSessionId);
 }
