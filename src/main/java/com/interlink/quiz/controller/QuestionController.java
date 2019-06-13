@@ -99,35 +99,4 @@ public class QuestionController {
 
         return new ResponseEntity<>(questionService.getQuestionsByUrl(topicArray, userId, httpSession), HttpStatus.OK);
     }
-
-
-    @PostMapping("/quiz-answer")
-    public ResponseEntity saveQuizAnswer(@RequestBody QuizAnswerDto quizAnswerDto) {
-        quizAnswerService.saveQuizAnswer(quizAnswerDto);
-
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
-    @PostMapping("/import")
-    public ResponseEntity saveQuizFromCsvFile(@RequestBody byte[] file) {
-        csvParserService.parseCsvFileToDataBase(file);
-
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
-    @PutMapping("/quiz-answer")
-    public void updateQuizSessionAndAnswers(@RequestBody QuizSessionDto quizSessionDto,
-                                            @RequestHeader(value = "auth-token", required = false) String token) {
-        Long userId = null;
-        if (!token.isEmpty()) {
-            userId = jwtTokenProvider.getUserIdFromJWT(token);
-        }
-
-        questionService.updateResultsOfPassedQuiz(quizSessionDto, userId);
-    }
-
-    @PostMapping("/quiz-session")
-    public void addQuestionsInQuizSession(@RequestBody QuizSessionDto quizSessionDto) {
-        questionService.addQuestionsInQuizSession(quizSessionDto);
-    }
 }

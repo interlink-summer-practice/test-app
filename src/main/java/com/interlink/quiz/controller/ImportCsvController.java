@@ -19,7 +19,7 @@ public class ImportCsvController {
     }
 
     @PostMapping("/import")
-    public ResponseEntity saveQuizFromCsvFile(@RequestBody byte[] file) {
+    public ResponseEntity<?> saveQuizFromCsvFile(@RequestBody byte[] file) {
         csvParserService.parseCsvFileToDataBase(file);
 
         return new ResponseEntity(HttpStatus.OK);
