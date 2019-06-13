@@ -5,49 +5,32 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManagerFactory;
 import java.util.List;
 
 @Repository
-public class QuestionRepository {
+public interface QuestionRepository extends JpaRepository<Question, Integer> {
 
-    private final SessionFactory sessionFactory;
+    Question findById(int id);
 
-    @Autowired
-    public QuestionRepository(EntityManagerFactory entityManagerFactory) {
-        sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
-    }
+    List<Question> findByTopicAndDifficulty(Topic topic, String difficulty);
 
-    public void saveQuestion(Question question) {
-        Session session = sessionFactory.getCurrentSession();
-        Transaction transaction = session.beginTransaction();
-        session.save(question);
-        transaction.commit();
-    }
+    Long countByTopicAndDifficulty(Topic topic, String difficulty);
 
-    public Question getQuestionById(int id) {
-        return sessionFactory.getCurrentSession()
-                .get(Question.class, id);
-    }
-
-    public Long getCountByTopicAndDifficulty(String difficulty, Topic topic) {
-        return (Long) sessionFactory.getCurrentSession()
-                .createQuery("select count(q) from Question q " +
-                        "WHERE topic = :topic and difficulty = :difficulty")
-                .setParameter("topic", topic)
-                .setParameter("difficulty", difficulty)
-                .uniqueResult();
-    }
-
-    public List<Question> getQuestionsByTopic(Topic topic, String difficulty) {
-        return sessionFactory.getCurrentSession()
-                .createQuery("FROM Question WHERE topic = :topic AND difficulty = :difficulty", Question.class)
-                .setParameter("topic", topic)
-                .setParameter("difficulty", difficulty)
-                .list();
-    }
+    @Query(value = "select distinct on(qa.question_id) qa.* " +
+            "from quiz_answers qa " +
+            "left join questions q on qa.question_id = q.id " +
+            "left join quiz_session qs on qa.quiz_session_id = qs.id " +
+            "left join users u on qs.user_id = u.id " +
+            "where u.id = :userId " +
+            "  and q.topic_id = :topicId " +
+            "group by qs.id, qa.id", nativeQuery = true)
+    Long countByUserAndTopic(@Param("userId") int userId, @Param("topicId") int topicId);
 
     public List<Question> getNotPassedQuestionsByTopic(Topic topic, QuizSession quizSession, String difficulty) {
 

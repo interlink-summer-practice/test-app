@@ -20,6 +20,6 @@ public class TopicController {
 
     @GetMapping("/topics")
     public List<Topic> getTopics() {
-        return topicService.getTopics();
+        return topicService.findAll();
     }
 }

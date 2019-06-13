@@ -35,8 +35,8 @@ public class QuizAnswerService {
 
     private QuizAnswer createQuizAnswer(QuizAnswerDto quizAnswerDto) {
         QuizAnswer quizAnswer = new QuizAnswer();
-        quizAnswer.setAnswer(answerRepository.getAnswerById(quizAnswerDto.getAnswerId()));
-        quizAnswer.setQuestion(questionRepository.getQuestionById(quizAnswerDto.getQuestionId()));
+        quizAnswer.setAnswer(answerRepository.findById(quizAnswerDto.getAnswerId()));
+        quizAnswer.setQuestion(questionRepository.findById(quizAnswerDto.getQuestionId()));
         quizAnswer.setQuizSession(quizSessionRepository.getQuizSessionById(quizAnswerDto.getQuizSessionId()));
 
         return quizAnswer;

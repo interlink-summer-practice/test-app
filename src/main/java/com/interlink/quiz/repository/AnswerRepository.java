@@ -5,36 +5,15 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManagerFactory;
 
 @Repository
-public class AnswerRepository {
+public interface AnswerRepository extends JpaRepository<Answer, Integer> {
 
-    private final SessionFactory sessionFactory;
+    Answer findById(int id);
 
-    @Autowired
-    public AnswerRepository(EntityManagerFactory entityManagerFactory) {
-        sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
-    }
-
-    public void saveAnswer(Answer answer) {
-        Session session = sessionFactory.getCurrentSession();
-        Transaction transaction = session.beginTransaction();
-        session.save(answer);
-        transaction.commit();
-    }
-
-    public Answer getAnswerByName(String name) {
-        return sessionFactory.getCurrentSession()
-                .createQuery("from Answer where lower(name) = lower(:name)", Answer.class)
-                .setParameter("name", name)
-                .uniqueResult();
-    }
-
-    public Answer getAnswerById(int id) {
-        return sessionFactory.getCurrentSession()
-                .get(Answer.class, id);
-    }
+    Answer findByName(String name);
 }

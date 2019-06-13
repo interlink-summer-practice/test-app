@@ -42,7 +42,7 @@ public class GroupService {
         this.quizResultService = quizResultService;
     }
 
-    public Group saveGroup(GroupDto groupDto) {
+    public Group save(GroupDto groupDto) {
         return groupRepository.save(createGroup(groupDto));
     }
 

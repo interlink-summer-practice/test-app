@@ -38,23 +38,23 @@ public class CsvParserService {
         for (QuizLine quizLine : lines) {
             String[] answersArray = quizLine.getAnswers().split("\\n");
             List<Answer> answers = new ArrayList<>();
-            for (String s : answersArray) {
-                Answer answer = answerRepository.getAnswerByName(s);
+            for (String answerName : answersArray) {
+                Answer answer = answerRepository.findByName(answerName);
                 if (answer == null) {
                     answer = new Answer();
-                    answer.setName(s);
-                    answerRepository.saveAnswer(answer);
+                    answer.setName(answerName);
+                    answerRepository.save(answer);
                 }
                 answers.add(answer);
             }
 
-            Answer rightAnswer = answerRepository.getAnswerByName(quizLine.getRightAnswer());
+            Answer rightAnswer = answerRepository.findByName(quizLine.getRightAnswer());
 
-            Topic topic = topicRepository.getTopicByName(quizLine.getTopic());
+            Topic topic = topicRepository.findByName(quizLine.getTopic());
             if (topic == null) {
                 topic = new Topic();
                 topic.setName(quizLine.getTopic());
-                topicRepository.saveTopic(topic);
+                topicRepository.save(topic);
             }
 
             Question question = new Question();
@@ -76,7 +76,7 @@ public class CsvParserService {
             question.setTopic(topic);
             question.setRightAnswer(rightAnswer);
             question.setAnswers(answers);
-            questionRepository.saveQuestion(question);
+            questionRepository.save(question);
         }
     }
 

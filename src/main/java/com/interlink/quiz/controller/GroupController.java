@@ -39,6 +39,6 @@ public class GroupController {
 
         groupDto.setCuratorId(userId.intValue());
 
-        return new ResponseEntity<>(groupService.saveGroup(groupDto), HttpStatus.OK);
+        return new ResponseEntity<>(groupService.save(groupDto), HttpStatus.OK);
     }
 }

@@ -64,7 +64,7 @@ public class UserService {
         user.setLastName(signUpRequest.getLastName());
         user.setEmail(signUpRequest.getEmail());
         user.setPasswordHash(passwordEncoder.encode(signUpRequest.getPassword()));
-        user.setRoles(Collections.singletonList(roleRepository.getRoleByName("STUDENT")));
+        user.setRoles(Collections.singletonList(roleRepository.findByName("STUDENT")));
 
         return user;
     }
