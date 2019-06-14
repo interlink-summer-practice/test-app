@@ -22,7 +22,8 @@ public interface QuizSessionRepository extends JpaRepository<QuizSession, Intege
 
     QuizSession findById(int id);
 
-    List<QuizSession> findAllBySessionIdAndUserIsNull(String sessionId);
+    @Query("select qs from QuizSession qs where qs.sessionId = :sessionId and qs.user = null")
+    List<QuizSession> findAllBySessionIdAndUserIsNull(@Param("sessionId") String sessionId);
 
     @Query(value = "select qs.* " +
             "from group_members gm " +
