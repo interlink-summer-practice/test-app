@@ -22,18 +22,14 @@ public interface QuizSessionRepository extends JpaRepository<QuizSession, Intege
 
     QuizSession findById(int id);
 
-    List<QuizSession> findAllBySessionId(String sessionId);
+    List<QuizSession> findAllBySessionIdAndUserIsNull(String sessionId);
 
-
-    @Transactional
     @Query(value = "select qs.* " +
             "from group_members gm " +
             "         left join quiz_session qs on gm.quiz_session_id = qs.id " +
             "where qs.user_id = :userId", nativeQuery = true)
     List<QuizSession> findAllByGroupMembers(@Param("userId") int userId);
 
-
-    @Transactional
     @Query(value = "select * from quiz_session where user_id = :userId" +
             "    EXCEPT " +
             "select qs.* " +
@@ -42,7 +38,6 @@ public interface QuizSessionRepository extends JpaRepository<QuizSession, Intege
             "where qs.user_id = :userId", nativeQuery = true)
     List<QuizSession> findAllByUserId(@Param("userId") int userId);
 
-    @Transactional
     @Query(value = "SELECT coalesce(sum(q.mark), 0)" +
             "FROM quiz_session qs" +
             "         LEFT JOIN quiz_answers qa on qs.id = qa.quiz_session_id " +

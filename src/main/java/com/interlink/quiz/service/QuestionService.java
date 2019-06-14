@@ -63,7 +63,7 @@ public class QuestionService {
             quizDto.setCountOfQuestionsInQuiz(questions.size());
             List<QuizSession> quizSessions;
             if (userId == null) {
-                quizSessions = quizSessionRepository.findAllBySessionId(httpSession.getId());
+                quizSessions = quizSessionRepository.findAllBySessionIdAndUserIsNull(httpSession.getId());
             } else {
                 quizSessions = quizSessionRepository.findAllByUserId(
                         userRepository.findById(userId.intValue()).getId());

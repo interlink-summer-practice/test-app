@@ -33,16 +33,5 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
                                              @Param("difficulty") String difficulty,
                                              @Param("quizSessionId") int quizSessionId);
 
-    @Query(value = "" +
-            "select distinct on(qa.question_id) qa.* " +
-            "from quiz_answers qa " +
-            "   left join questions q on qa.question_id = q.id " +
-            "   left join quiz_session qs on qa.quiz_session_id = qs.id " +
-            "   left join users u on qs.user_id = u.id " +
-            "where u.id = :userId and q.topic_id = :topicId " +
-            "group by qs.id, qa.id", nativeQuery = true)
-    List<Question> findAllByUserIdAndTopicId(@Param("userId") int userId,
-                                             @Param("topicId") int topicId);
-
     Long countByTopicAndDifficulty(Topic topic, String difficulty);
 }

@@ -70,7 +70,7 @@ public class UserService {
     }
 
     private void saveGuestResults(User user, HttpSession httpSession) {
-        List<QuizSession> quizSessions = quizSessionRepository.findAllBySessionId(httpSession.getId());
+        List<QuizSession> quizSessions = quizSessionRepository.findAllBySessionIdAndUserIsNull(httpSession.getId());
         for (QuizSession quizSession : quizSessions) {
             quizSession.setUser(user);
             quizSessionRepository.save(quizSession);

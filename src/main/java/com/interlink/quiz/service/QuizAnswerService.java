@@ -8,6 +8,7 @@ import com.interlink.quiz.repository.QuizAnswerRepository;
 import com.interlink.quiz.repository.QuizSessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class QuizAnswerService {
@@ -29,7 +30,8 @@ public class QuizAnswerService {
         this.quizSessionRepository = quizSessionRepository;
     }
 
-    public void saveQuizAnswer(QuizAnswerDto quizAnswerDto) {
+    @Transactional
+    public void save(QuizAnswerDto quizAnswerDto) {
         quizAnswerRepository.save(createQuizAnswer(quizAnswerDto));
     }
 

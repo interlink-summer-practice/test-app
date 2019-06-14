@@ -10,6 +10,7 @@ import com.interlink.quiz.repository.UserRepository;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class GroupService {
         this.quizResultService = quizResultService;
     }
 
+    @Transactional
     public Group save(GroupDto groupDto) {
         return groupRepository.save(createGroup(groupDto));
     }

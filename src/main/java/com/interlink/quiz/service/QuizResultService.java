@@ -22,7 +22,6 @@ public class QuizResultService {
     private final QuizAnswerRepository quizAnswerRepository;
     private final UserRepository userRepository;
     private final QuestionService questionService;
-    private final QuestionRepository questionRepository;
 
     @Autowired
     public QuizResultService(
@@ -30,15 +29,13 @@ public class QuizResultService {
             UserResultRepository userResultRepository,
             QuizAnswerRepository quizAnswerRepository,
             UserRepository userRepository,
-            QuestionService questionService,
-            QuestionRepository questionRepository) {
+            QuestionService questionService) {
 
         this.quizSessionRepository = quizSessionRepository;
         this.userResultRepository = userResultRepository;
         this.quizAnswerRepository = quizAnswerRepository;
         this.userRepository = userRepository;
         this.questionService = questionService;
-        this.questionRepository = questionRepository;
     }
 
     public QuizResult getQuizResult(QuizSessionDto quizSessionDto, Long userId) {

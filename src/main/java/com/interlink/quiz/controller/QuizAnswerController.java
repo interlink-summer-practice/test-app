@@ -28,7 +28,7 @@ public class QuizAnswerController {
 
     @PostMapping("/quiz-answer")
     public ResponseEntity saveQuizAnswer(@RequestBody QuizAnswerDto quizAnswerDto) {
-        quizAnswerService.saveQuizAnswer(quizAnswerDto);
+        quizAnswerService.save(quizAnswerDto);
 
         return new ResponseEntity(HttpStatus.OK);
     }
