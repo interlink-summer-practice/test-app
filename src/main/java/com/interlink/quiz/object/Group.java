@@ -1,9 +1,7 @@
 package com.interlink.quiz.object;
 
 import javax.persistence.*;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Entity
 @Table(name = "groups")
@@ -29,7 +27,15 @@ public class Group {
             joinColumns = {@JoinColumn(name = "group_id")},
             inverseJoinColumns = {@JoinColumn(name = "quiz_session_id")}
     )
-    private List<QuizSession> sessions;
+    private List<QuizSession> quizSessions;
+
+    public List<QuizSession> getQuizSessions() {
+        return quizSessions;
+    }
+
+    public void setQuizSessions(List<QuizSession> quizSessions) {
+        this.quizSessions = quizSessions;
+    }
 
     public int getId() {
         return id;
@@ -61,13 +67,5 @@ public class Group {
 
     public void setCurator(User curator) {
         this.curator = curator;
-    }
-
-    public List<QuizSession> getSessions() {
-        return sessions;
-    }
-
-    public void setSessions(List<QuizSession> sessions) {
-        this.sessions = sessions;
     }
 }
