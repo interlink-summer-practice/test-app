@@ -59,7 +59,7 @@ public class QuestionService {
         if (difficulty.equals("Середнє") || difficulty.equals("Складне")) return new QuizDto();
         QuizDto quizDto = new QuizDto();
         if (isPresentQuestionsWithThisDifficulty(topics, Collections.singletonList(difficulty))) {
-            List<QuestionDto> questions = getQuestionsByTopics(topics, Collections.singletonList(difficulty));
+            List<QuestionDto> questions = getQuestionsByTopicsAndDifficulties(topics, Collections.singletonList(difficulty));
             quizDto.setCountOfQuestionsInQuiz(questions.size());
             List<QuizSession> quizSessions;
             if (userId == null) {
@@ -154,7 +154,7 @@ public class QuestionService {
             quizDto.setQuestions(questions);
 
             Group group = groupRepository.findById(groupId);
-            group.getSessions().add(newQuizSession);
+            group.getQuizSessions().add(newQuizSession);
             group.setQuizUrl(quizUrl);
             groupRepository.save(group);
 
@@ -169,7 +169,7 @@ public class QuestionService {
     public void addQuestionsInQuizSession(QuizSessionDto quizSessionDto) {
         QuizSession quizSession = quizSessionRepository.findById(quizSessionDto.getId());
         quizSession.setQuestions(
-                getQuestionsByTopics(quizSession.getTopics(), quizSession.getDifficulties()).stream()
+                getQuestionsByTopicsAndDifficulties(quizSession.getTopics(), quizSession.getDifficulties()).stream()
                         .map(this::createQuestionFromQuestionDto)
                         .collect(Collectors.toList())
         );
@@ -184,19 +184,6 @@ public class QuestionService {
         if (userId == null) {
             userResultRepository.deleteAllByQuizSessionId(quizSession.getId());
         }
-    }
-
-    private List<QuestionDto> getQuestionsByTopics(List<Topic> topics, List<String> difficulties) {
-        List<Question> questions = new ArrayList<>();
-        for (Topic topic : topics) {
-            for (String difficulty : difficulties) {
-                questions.addAll(questionRepository.findAllByTopicAndDifficulty(topic, difficulty));
-            }
-        }
-
-        return questions.stream()
-                .map(this::createQuestionDto)
-                .collect(toList());
     }
 
     private List<QuestionDto> getQuestionsByTopicsAndDifficulties(List<Topic> topics, List<String> difficulties) {

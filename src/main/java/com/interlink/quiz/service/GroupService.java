@@ -1,11 +1,13 @@
 package com.interlink.quiz.service;
 
-import com.interlink.quiz.object.*;
+import com.interlink.quiz.object.CuratorQuiz;
+import com.interlink.quiz.object.Group;
+import com.interlink.quiz.object.QuizSession;
+import com.interlink.quiz.object.Topic;
 import com.interlink.quiz.object.dto.GroupDto;
 import com.interlink.quiz.object.dto.GroupResultDto;
 import com.interlink.quiz.object.dto.MemberResultDto;
 import com.interlink.quiz.repository.GroupRepository;
-import com.interlink.quiz.repository.QuizSessionRepository;
 import com.interlink.quiz.repository.UserRepository;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +72,7 @@ public class GroupService {
 
         List<MemberResultDto> results = new ArrayList<>();
 
-        for (QuizSession quizSession : group.getSessions()) {
+        for (QuizSession quizSession : group.getQuizSessions()) {
             if (questionService.isAlreadyPassedQuiz(topics, quizSession, difficulties)
                     && questionService.isDoneQuiz(quizSession)) {
 

@@ -1,16 +1,12 @@
 package com.interlink.quiz.repository;
 
-import com.interlink.quiz.object.*;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.interlink.quiz.object.Question;
+import com.interlink.quiz.object.Topic;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManagerFactory;
 import java.util.List;
 
 @Repository

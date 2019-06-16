@@ -4,7 +4,10 @@ import com.interlink.quiz.object.*;
 import com.interlink.quiz.object.dto.AccountDto;
 import com.interlink.quiz.object.dto.QuizResultDto;
 import com.interlink.quiz.object.dto.QuizSessionDto;
-import com.interlink.quiz.repository.*;
+import com.interlink.quiz.repository.QuizAnswerRepository;
+import com.interlink.quiz.repository.QuizSessionRepository;
+import com.interlink.quiz.repository.UserRepository;
+import com.interlink.quiz.repository.UserResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
